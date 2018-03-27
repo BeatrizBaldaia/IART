@@ -29,7 +29,9 @@ enum Hobby {Reading, WatchingTV, FamilyTime,
 	Shopping,
 	Traveling};
 enum JobArea {Science, Education, Politics};
-enum Religion {Christianity, Gnosticism, Islam,	Judaism, Buddhism, Hinduism};
+#define NUMBER_JOBS 3;
+enum Religion {Christianity, Gnosticism, Islam,	Judaism, Buddhism, Hinduism, Atheism};
+#define NUMBER_RELIGIONS 7;
 
 class Person {
 private:
@@ -44,6 +46,7 @@ private:
 public:
 	Person();
 	virtual ~Person();
+	double aval_func(Person person); //afinidade entre duas pessoas
 };
 
 #endif /* SRC_PERSON_H_ */
