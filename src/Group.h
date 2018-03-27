@@ -33,11 +33,11 @@ public:
 	Group(int id);
 	virtual ~Group();
 	void calculate_attributes();
-	double func_afinity(Group other) const;//afinidade entre dois grupos
-	double eval_age(Group other) const;
-	double eval_jobs(Group other) const;
-	double eval_hobbies(Group other) const;
-	double eval_religions(Group other) const;
+	double func_afinity(const Group &other) const;//afinidade entre dois grupos
+	double eval_age(const Group &other) const;
+	double eval_jobs(const Group &other) const;
+	double eval_hobbies(const Group &other) const;
+	double eval_religions(const Group &other) const;
 
 };
 

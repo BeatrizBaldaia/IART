@@ -57,33 +57,42 @@ void Group::calculate_attributes() {
 	}
 }
 
-double Group::func_afinity(Group other) const {
+double Group::func_afinity(const Group &other) const {
 	return this->eval_age(other)
 			+ this->eval_jobs(other)
 			+ this->eval_hobbies(other)
 			+ this->eval_religions(other);
 }
 
-double Group::eval_jobs(Group other) const {
-	//TODO: implement eval_jobs
-	return 0;
-}
-
-double Group::eval_age(Group other) const {
+double Group::eval_jobs(const Group &other) const {
 	double res = 0;
-	res += 1 - (abs(this->age_groups[0] - other.age_groups[0]));
-	res += 1 - (abs(this->age_groups[1] - other.age_groups[1]));
-	res += 1 - (abs(this->age_groups[2] - other.age_groups[2]));
-	res += 1 - (abs(this->age_groups[3] - other.age_groups[3]));
+	for (int i = 0; i < NUMBER_JOBS; i++) {
+		res += 1 - abs(this->jobs[i] - other.jobs[i]);
+	}
 	return res;
 }
 
-double Group::eval_hobbies(Group other) const {
-	//TODO: implement eval_jobs
-	return 0;
+double Group::eval_age(const Group &other) const {
+	double res = 0;
+	res += 1 - abs(this->age_groups[0] - other.age_groups[0]);
+	res += 1 - abs(this->age_groups[1] - other.age_groups[1]);
+	res += 1 - abs(this->age_groups[2] - other.age_groups[2]);
+	res += 1 - abs(this->age_groups[3] - other.age_groups[3]);
+	return res;
 }
 
-double Group::eval_religions(Group other) const {
-	//TODO: implement eval_jobs
-	return 0;
+double Group::eval_hobbies(const Group &other) const {
+	double res = 0;
+	for (int i = 0; i < NUMBER_HOBBIES; i++) {
+		res += 1 - abs(this->hobbies[i] - other.hobbies[i]);
+	}
+	return res;
+}
+
+double Group::eval_religions(const Group &other) const {
+	double res = 0;
+	for (int i = 0; i < NUMBER_RELIGIONS; i++) {
+		res += 1 - abs(this->religions[i] - other.religions[i]);
+	}
+	return res;
 }
