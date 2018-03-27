@@ -3,6 +3,7 @@
 #include "Group.h"
 #include <map>
 #include <stdio.h>
+#include <float.h>
 
 
 void genetic_algorithm(){
@@ -45,12 +46,28 @@ int main(int argc, const char * argv[]) {
 }
 
 
+/**
+ * Sum of affinities of group pairs sharing the same table minus penalty
+ *
+ */
+double aval_fuct(const vector<int> &solution, const vector<vector<double>> &groupsAffinity) {
+	double res = 0, penalty = -DBL_MAX;
 
-int aval_fuct(vector<int> solution) {
-	int res = 0;
+	for (int i = 0; i < solution.size(); i++) {
+		for (int j = i + 1; j < solution.size(); j++) {
+			double affinity = groupsAffinity.at(i).at(j);
+			if (solution.at(i) == solution.at(j)) { // same table
+				res += affinity;
+			} else if (affinity > penalty) { // if new max affinity in separated tables
+				penalty = affinity;
+			}
+		}
+	}
+
+	res -= penalty;
 
     //Funcao de afinidade entra cada par de groups na mesma mesa
-	//funcao de pemnalizacao, valor dos gruopos com maior afinidade que nao estao na mesma mesa
+	//funcao de penalizacao, valor dos grupos com maior afinidade que nao estao na mesma mesa
 	//AB
 	//AC
 	//BC
