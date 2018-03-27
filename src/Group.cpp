@@ -6,8 +6,22 @@
  */
 
 #include "Group.h"
+#include <cmath>
 
-Group::Group() {
+//TODO: Correct ages.
+AgeGroup getAgeStage(int age) {
+	if (age < 10) {
+		return Child;
+	} else if (age < 20) {
+		return Teen;
+	} else if (age < 50) {
+		return Adult;
+	} else {
+		return Elder;
+	}
+}
+
+Group::Group(int id) : id(id) {
 	// TODO Auto-generated constructor stub
 
 }
@@ -16,34 +30,77 @@ Group::~Group() {
 	// TODO Auto-generated destructor stub
 }
 
-double Group::func_afinity(Group other) {
+double* Group::getAgeDistribution() const {
+	return this->ageDistribution;
+}
+
+double* Group::getJobDistribution() const {
+	return this->jobDistribution;
+}
+
+double* Group::getReligionDistribution() const {
+	return this->religionDistribution;
+}
+
+double* Group::getHobbiesDistribution() const{
+	return this->hobbiesDistribution;
+}
+
+void Group::calculate_attributes() {
+	for (const Person &person : members) {
+		//age
+		ageDistribution[getAgeStage(person.age)]++;
+		//job
+		jobDistribution[person.job]++;
+		//religion
+		religionDistribution[person.religion]++;
+		//hobbies
+		for (const Hobby &hobby : person.hobbies) {
+			hobbiesDistribution[hobby]++;
+		}
+	}
+	for (double &age_group : ageDistribution) {
+		ageDistribution /= members.size();
+	}
+	for (double &job : jobDistribution) {
+		job /= members.size();
+	}
+	for (double &religion : religionDistribution) {
+		religion /= members.size();
+	}
+	for (double &hobby : hobbiesDistribution) {
+		hobby /= members.size();
+	}
+}
+
+double Group::func_afinity(const Group &other) const {
 	return this->eval_age(other)
 			+ this->eval_jobs(other)
 			+ this->eval_hobbies(other)
 			+ this->eval_religions(other);
 }
 
-double Group::eval_jobs(Group other) {
-	double res = 1;
-
-		for(int i = 0; i < NUMBER_JOBS; i++) {
-			res -= abs(this->jobDistribution[i] - other.getJobDistribution()[i]);
-		}
-
-		return res;
-}
-
-double Group::eval_age(Group other) {
+double Group::eval_age(const Group &other) const {
 	double res = 1;
 
 	for(int i = 0; i < 4; i++) {
 		res -= abs(this->ageDistribution[i] - other.getAgeDistribution()[i]);
 	}
-
-	return res;
 }
 
-double Group::eval_hobbies(Group other) {
+double Group::eval_jobs(const Group &other) const {
+	double res = 1;
+
+	for(int i = 0; i < NUMBER_JOBS; i++) {
+		res -= abs(this->jobDistribution[i] - other.getJobDistribution()[i]);
+	}
+
+	return res;
+
+}
+
+
+double Group::eval_hobbies(const Group &other) const {
 	double res = 1;
 
 		for(int i = 0; i < NUMBER_HOBBIES; i++) {
@@ -51,9 +108,11 @@ double Group::eval_hobbies(Group other) {
 		}
 
 		return res;
+
 }
 
-double Group::eval_religions(Group other) {
+
+double Group::eval_religions(const Group &other) const {
 	double res = 1;
 
 		for(int i = 0; i < NUMBER_RELIGIONS; i++) {
@@ -63,18 +122,4 @@ double Group::eval_religions(Group other) {
 		return res;
 }
 
-double* Group::getAgeDistribution() {
-	return this->ageDistribution;
-}
 
-double* Group::getJobDistribution() {
-	return this->jobDistribution;
-}
-
-double* Group::getReligionDistribution() {
-	return this->religionDistribution;
-}
-
-double* Group::getHobbiesDistribution() {
-	return this->hobbiesDistribution;
-}
