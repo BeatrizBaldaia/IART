@@ -1,20 +1,18 @@
 /*
- * Person.cpp
+ * Table.cpp
  *
  *  Created on: 27/03/2018
- *      Author: anabela
+ *      Author: Utilizador
  */
 
-#include "Person.h"
+#include "Table.h"
 
-Person::Person() {
+Table::Table() {
 	// TODO Auto-generated constructor stub
-
-
 
 }
 
-Person::~Person() {
+Table::~Table() {
 	// TODO Auto-generated destructor stub
 }
 
