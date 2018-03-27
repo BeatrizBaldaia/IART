@@ -20,6 +20,14 @@ void genetic_algorithm(){
 		//Second gen
 }
 
+void calcGroupsAffinity(vector<vector<double>> &groupsAffinity, const vector<Group> &groups) {
+	for (int row = 0; row < groups.size(); row++) {
+		for (int col = row + 1; col < groups.size(); col++) {
+			groupsAffinity[row][col] = groups.at(row).func_afinity(groups.at(col));
+		}
+	}
+}
+
 /**
  * argv[1] = nome do ficheiro de pessoas
  * argv[2] = nome do ficheiro de de mesas
@@ -29,6 +37,8 @@ int main(int argc, const char * argv[]) {
 	vector<Person> people;
 	vector<Group> groups;
 	vector<Table> tables;
+	vector<vector<double>> groupsAffinity(groups.size(), vector<double>(groups.size()));
+	calcGroupsAffinity(groupsAffinity, groups);
 	vector<int> solution;//cada indice equivale a um group e o valor do mesmo equivale a mesa onde ela se vai sentar
 	genetic_algorithm();
 	return 0;
