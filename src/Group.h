@@ -10,17 +10,22 @@
 
 #include "Person.h"
 
+
 class Group {
 private:
-	vector<Person *> membres;
-	double age_group[4];//Child, Teen, Adoult, eldrer
-	double job[NUMBER_JOBS];//
-	double religions[NUMBER_RELIGIONS];//
-	double hobbies[NUMBER_HOBBIES];
+	vector<Person *> members;
+	double ageDistribution[4];
+	double jobDistribution[NUMBER_JOBS];
+	double religionDistribution[NUMBER_RELIGIONS];
+	double hobbiesDistribution[NUMBER_HOBBIES];
 
 public:
 	Group();
 	virtual ~Group();
+	double * getAgeDistribution();
+	double * getJobDistribution();
+	double * getReligionDistribution();
+	double * getHobbiesDistribution();
 	double func_afinity(Group other);//afinidade entre dois grupos
 	double eval_age(Group other);
 	double eval_jobs(Group other);

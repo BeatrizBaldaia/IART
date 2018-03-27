@@ -24,25 +24,57 @@ double Group::func_afinity(Group other) {
 }
 
 double Group::eval_jobs(Group other) {
-	//TODO: implement eval_jobs
-	return 0;
+	double res = 1;
+
+		for(int i = 0; i < NUMBER_JOBS; i++) {
+			res -= abs(this->jobDistribution[i] - other.getJobDistribution()[i]);
+		}
+
+		return res;
 }
 
 double Group::eval_age(Group other) {
-	double res = 0;
-	res += 100 - (this->age_group[0] - other.age_group[0]);
-	res += 100 - (this->age_group[1] - other.age_group[1]);
-	res += 100 - (this->age_group[2] - other.age_group[2]);
-	res += 100 - (this->age_group[3] - other.age_group[3]);
+	double res = 1;
+
+	for(int i = 0; i < 4; i++) {
+		res -= abs(this->ageDistribution[i] - other.getAgeDistribution()[i]);
+	}
+
 	return res;
 }
 
 double Group::eval_hobbies(Group other) {
-	//TODO: implement eval_jobs
-	return 0;
+	double res = 1;
+
+		for(int i = 0; i < NUMBER_HOBBIES; i++) {
+			res -= abs(this->hobbiesDistribution[i] - other.getHobbiesDistribution()[i]);
+		}
+
+		return res;
 }
 
 double Group::eval_religions(Group other) {
-	//TODO: implement eval_jobs
-	return 0;
+	double res = 1;
+
+		for(int i = 0; i < NUMBER_RELIGIONS; i++) {
+			res -= abs(this->religionDistribution[i] - other.getReligionDistribution()[i]);
+		}
+
+		return res;
+}
+
+double* Group::getAgeDistribution() {
+	return this->ageDistribution;
+}
+
+double* Group::getJobDistribution() {
+	return this->jobDistribution;
+}
+
+double* Group::getReligionDistribution() {
+	return this->religionDistribution;
+}
+
+double* Group::getHobbiesDistribution() {
+	return this->hobbiesDistribution;
 }

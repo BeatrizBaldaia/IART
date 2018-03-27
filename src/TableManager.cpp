@@ -29,7 +29,7 @@ int main(int argc, const char * argv[]) {
 	vector<Person> people;
 	vector<Group> groups;
 	vector<Table> tables;
-	vector<int> solution;//cada indice equivale a um group e o valor do mesmo equivale a mesa onde ela se vai sentar
+	vector<int> solution;//cada indice equivale a um grupo e o valor do mesmo equivale a mesa onde este se vai ficar
 	genetic_algorithm();
 	return 0;
 }

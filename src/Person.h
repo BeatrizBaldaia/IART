@@ -13,6 +13,11 @@
 
 using namespace std;
 
+#define CHILDHOOD 0
+#define ADOLESCENCE 1
+#define ADULTHOOD 2
+#define OLDAGE 3
+
 enum Hobby {Reading, WatchingTV, FamilyTime,
 	GoingToMovies,
 	Fishing,
@@ -28,8 +33,10 @@ enum Hobby {Reading, WatchingTV, FamilyTime,
 	Shopping,
 	Traveling};
 #define NUMBER_HOBBIES 16
+
 enum JobArea {Science, Education, Politics};
 #define NUMBER_JOBS 3
+
 enum Religion {Christianity, Gnosticism, Islam,	Judaism, Buddhism, Hinduism, Atheism};
 #define NUMBER_RELIGIONS 7
 
