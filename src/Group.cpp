@@ -6,6 +6,7 @@
  */
 
 #include "Group.h"
+#include <cmath>
 
 //TODO: Correct ages.
 AgeGroup getGroup(int age) {
@@ -70,10 +71,10 @@ double Group::eval_jobs(Group other) const {
 
 double Group::eval_age(Group other) const {
 	double res = 0;
-	res += 100 - (this->age_groups[0] - other.age_groups[0]);
-	res += 100 - (this->age_groups[1] - other.age_groups[1]);
-	res += 100 - (this->age_groups[2] - other.age_groups[2]);
-	res += 100 - (this->age_groups[3] - other.age_groups[3]);
+	res += 1 - (abs(this->age_groups[0] - other.age_groups[0]));
+	res += 1 - (abs(this->age_groups[1] - other.age_groups[1]));
+	res += 1 - (abs(this->age_groups[2] - other.age_groups[2]));
+	res += 1 - (abs(this->age_groups[3] - other.age_groups[3]));
 	return res;
 }
 
