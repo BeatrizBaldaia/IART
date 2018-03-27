@@ -17,8 +17,15 @@ Group::~Group() {
 }
 
 double Group::func_afinity(Group other) {
-	return this->eval_age(other) + this->eval_jobs(other)
-			+ eval_hobbies(other) + eval_religions(other);
+	return this->eval_age(other)
+			+ this->eval_jobs(other)
+			+ this->eval_hobbies(other)
+			+ this->eval_religions(other);
+}
+
+double Group::eval_jobs(Group other) {
+	//TODO: implement eval_jobs
+	return 0;
 }
 
 double Group::eval_age(Group other) {
@@ -28,4 +35,14 @@ double Group::eval_age(Group other) {
 	res += 100 - (this->age_group[2] - other.age_group[2]);
 	res += 100 - (this->age_group[3] - other.age_group[3]);
 	return res;
+}
+
+double Group::eval_hobbies(Group other) {
+	//TODO: implement eval_jobs
+	return 0;
+}
+
+double Group::eval_religions(Group other) {
+	//TODO: implement eval_jobs
+	return 0;
 }

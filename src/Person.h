@@ -10,7 +10,6 @@
 
 #include <iostream>
 #include <vector>
-#include "Hobby.h"
 
 using namespace std;
 
@@ -28,10 +27,11 @@ enum Hobby {Reading, WatchingTV, FamilyTime,
 	TeamSports,
 	Shopping,
 	Traveling};
+#define NUMBER_HOBBIES 16
 enum JobArea {Science, Education, Politics};
-#define NUMBER_JOBS 3;
+#define NUMBER_JOBS 3
 enum Religion {Christianity, Gnosticism, Islam,	Judaism, Buddhism, Hinduism, Atheism};
-#define NUMBER_RELIGIONS 7;
+#define NUMBER_RELIGIONS 7
 
 class Person {
 private:

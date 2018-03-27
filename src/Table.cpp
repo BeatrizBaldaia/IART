@@ -8,11 +8,18 @@
 #include "Table.h"
 
 Table::Table() {
-	// TODO Auto-generated constructor stub
+	this->numberOfSeats=0;
+}
 
+int Table::getNumberOfSeats() const {
+	return numberOfSeats;
+}
+
+void Table::setNumberOfSeats(int numberOfSeats) {
+	this->numberOfSeats = numberOfSeats;
 }
 
 Table::~Table() {
-	// TODO Auto-generated destructor stub
+	//TODO: destructor stub
 }
 

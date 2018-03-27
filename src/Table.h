@@ -9,9 +9,13 @@
 #define SRC_TABLE_H_
 
 class Table {
+private:
+	int numberOfSeats;
 public:
 	Table();
 	virtual ~Table();
+	int getNumberOfSeats() const;
+	void setNumberOfSeats(int numberOfSeats);
 };
 
 #endif /* SRC_TABLE_H_ */

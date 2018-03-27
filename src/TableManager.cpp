@@ -2,9 +2,11 @@
 #include "Table.h"
 #include "Group.h"
 #include <map>
+#include <stdio.h>
 
 
-void genetic_algoritm(){
+void genetic_algorithm(){
+	printf("I am the genetic algorithm");
 	//Create random pool of solutions
 	//REPEAT ate ...
 		//SEE aval of each solution
@@ -28,7 +30,7 @@ int main(int argc, const char * argv[]) {
 	vector<Group> groups;
 	vector<Table> tables;
 	vector<int> solution;//cada indice equivale a um group e o valor do mesmo equivale a mesa onde ela se vai sentar
-	genetic_algoritm();
+	genetic_algorithm();
 	return 0;
 }
 
