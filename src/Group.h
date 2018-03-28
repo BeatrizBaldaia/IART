@@ -52,6 +52,14 @@ public:
 	void setId(int id) {
 		this->id = id;
 	}
+
+	const vector<const Person*>& getMembers() const {
+		return members;
+	}
+
+	void setMembers(const vector<const Person*>& members) {
+		this->members = members;
+	}
 };
 
 #endif /* SRC_GROUP_H_ */

@@ -7,6 +7,7 @@
 
 #include "Group.h"
 #include <cmath>
+#include "Person.h"
 
 void Group::addMember(const Person * newMember){
 	this->members.push_back(newMember);
@@ -51,29 +52,35 @@ const double* Group::getHobbiesDistribution() const{
 }
 
 void Group::calculate_attributes() {
-	for (const Person &person : members) {
+	cout << "calculate_attributes\n";
+	for (unsigned int i = 0; i < members.size(); i++) {
+		cout << "for "<<members[i]->getName()<<"\n";
 		//age
-		ageDistribution[getAgeStage(person.getAge())]++;
+		ageDistribution[getAgeStage(members[i]->getAge())]++;
+		cout << " age\n";
 		//job
-		jobDistribution[person.getJob()]++;
+		jobDistribution[members[i]->getJob()]++;
+		cout << " job\n";
 		//religion
-		religionDistribution[person.getReligion()]++;
+		religionDistribution[members[i]->getReligion()]++;
+		cout << " religion\n";
 		//hobbies
-		for (const Hobby &hobby : person.getHobbies()) {
-			hobbiesDistribution[hobby]++;
+		for (unsigned int j = 0; j < members[i]->getHobbies().size(); j++) {
+			hobbiesDistribution[members[i]->getHobbies()[j]]++;
+			cout << "  hobby\n";
 		}
 	}
-	for (double &age_group : ageDistribution) {
-		age_group /= members.size();
+	for (unsigned int i = 0; i < NUMBER_AGES; i++) {
+		ageDistribution[i] /= members.size();
 	}
-	for (double &job : jobDistribution) {
-		job /= members.size();
+	for (unsigned int i = 0; i < NUMBER_JOBS; i++) {
+		jobDistribution[i] /= members.size();
 	}
-	for (double &religion : religionDistribution) {
-		religion /= members.size();
+	for (unsigned int i = 0; i < NUMBER_RELIGIONS; i++) {
+		religionDistribution[i] /= members.size();
 	}
-	for (double &hobby : hobbiesDistribution) {
-		hobby /= members.size();
+	for (unsigned int i = 0; i < NUMBER_HOBBIES; i++) {
+		hobbiesDistribution[i] /= members.size();
 	}
 }
 

@@ -18,6 +18,8 @@ TableManager::TableManager(const char * peopleFile, const char * tablesFile) {
 	this->creatGroups();
 	for (unsigned int i=0; i <this->groups.size(); i++){
 		cout<<"Group: "<<this->groups[i].getId()<<"\n";
+		cout<<"	p: "<<this->groups[i].getMembers()[0]->getName()<<"\n";
+
 		this->groups[i].calculate_attributes();
 	}
 }
@@ -164,6 +166,7 @@ Group * TableManager::getGroup(int id){
 		}
 	}
 	Group g(id);
+	cout << "Creating group!\n";
 	this->groups.push_back(g);
 	return &(this->groups.back());
 }

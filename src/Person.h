@@ -19,7 +19,7 @@ using namespace std;
 #define ADOLESCENCE 1
 #define ADULTHOOD 2
 #define OLDAGE 3
-
+#define NUMBER_AGES 4
 
 
 class Person {

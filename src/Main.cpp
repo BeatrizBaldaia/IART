@@ -21,7 +21,7 @@ int main(int argc, const char * argv[]) {
 		return 1;
 	}
 	TableManager tableManager(argv[1], argv[2]);
-
+	cerr<<"FIM\n";
 	return 0;
 }
 
