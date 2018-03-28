@@ -21,6 +21,12 @@ private:
 	void getPeopleFromFile(const char* filename);
 	void getTablesFromFile(const char* filename);
 	void creatGroups();
+
+	vector<int> elitismSelection(const vector<vector<int> > &population, int n_elite = -1) const;
+	vector<int> selectParents(const vector<vector<int> > &population) const;
+	vector<vector<int> > crossParents(const vector<vector<int> > &population, const vector<int> &parentIndexes, double p_cross) const;
+	void mutateChildren(vector<vector<int> > &children, double p_mut) const;
+	void selectNextGen(vector<vector<int> > &population, const vector<int> &elitedParentsIndexes, const vector<vector<int> > &children) const;
 public:
 	TableManager(const char * peopleFile, const char * tablesFile);
 	void calcGroupsAffinity();
