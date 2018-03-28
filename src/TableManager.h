@@ -19,6 +19,7 @@ private:
 	vector<Table> tables;
 	vector<vector<double> > groupsAffinity;//(groups.size(), vector<double>(groups.size()));//matriz de afinidades
 	void getPeopleFromFile(const char* filename);
+	void getTablesFromFile(const char* filename);
 public:
 	TableManager(const char * peopleFile, const char * tablesFile);
 	void calcGroupsAffinity();

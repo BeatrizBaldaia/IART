@@ -14,6 +14,7 @@ HobbyMap HobbyMap;
 
 TableManager::TableManager(const char * peopleFile, const char * tablesFile) {
 	this->getPeopleFromFile(peopleFile);
+	this->getTablesFromFile(tablesFile);
 }
 
 
@@ -37,8 +38,8 @@ vector<int> TableManager::geneticAlgorithm(vector<vector<int> > population){
  * Generate the affinity matrix (with all affinities between groups)
  */
 void TableManager::calcGroupsAffinity() {
-	for (int row = 0; row < groups.size(); row++) {
-		for (int col = row + 1; col < groups.size(); col++) {
+	for (unsigned int row = 0; row < groups.size(); row++) {
+		for (unsigned int col = row + 1; col < groups.size(); col++) {
 			groupsAffinity[row][col] = groups.at(row).func_afinity(groups.at(col));
 		}
 	}
@@ -53,8 +54,8 @@ void TableManager::calcGroupsAffinity() {
 double TableManager::aval_fuct(const vector<int> &solution) {
 	double res = 0, penalty = -DBL_MAX;
 
-	for (int i = 0; i < solution.size(); i++) {
-		for (int j = i + 1; j < solution.size(); j++) {
+	for (unsigned int i = 0; i < solution.size(); i++) {
+		for (unsigned int j = i + 1; j < solution.size(); j++) {
 			double affinity = this->groupsAffinity.at(i).at(j);
 			if (solution.at(i) == solution.at(j)) { // same table
 				res += affinity;
@@ -114,6 +115,37 @@ void TableManager::getPeopleFromFile(const char* filename){
 		myfile.close();
 	}
 	myfile.close();
+	return;
+}
+void TableManager::getTablesFromFile(const char* filename){
+	cout << "getTablesFromFile\n";
+	fstream myfile;
+	string line;
+	myfile.open (filename);
+	if (myfile.is_open()) {
+		while ( getline (myfile,line) ) {
+			stringstream table;
+			cout << line << '\n'; // TODO: delete
+			table << line;
+			string lugares;
+			string nuTables;
+			getline (table,lugares,';');
+			getline (table,nuTables,';');
+			int numberOfTables = atoi(nuTables.c_str());
+			int numberOfSeats = atoi(lugares.c_str());
+			while(numberOfTables>0){
+				numberOfTables--;
+				Table t = Table();
+				t.setNumberOfSeats(numberOfSeats);
+				this->tables.push_back(t);
+			}
+		}
+		myfile.close();
+	}
+	myfile.close();
+	for(unsigned int i = 0; i < this->tables.size(); i++){
+		cout << "Table "<<i<<": "<<this->tables[i].getNumberOfSeats()<<"\n";
+	}
 	return;
 }
 
