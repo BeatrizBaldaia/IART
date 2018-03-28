@@ -20,24 +20,31 @@ AgeGroup getGroup(int age);
 
 #include "Person.h"
 
+
 class Group {
 private:
 	int id;
 	vector<const Person &> members;
-	double age_groups[4];//Child, Teen, Adult, Elder
-	double jobs[NUMBER_JOBS];//
-	double religions[NUMBER_RELIGIONS];//
-	double hobbies[NUMBER_HOBBIES];
+	double ageDistribution[4];
+	double jobDistribution[NUMBER_JOBS];
+	double religionDistribution[NUMBER_RELIGIONS];
+	double hobbiesDistribution[NUMBER_HOBBIES];
+
 
 public:
 	Group(int id);
 	virtual ~Group();
+	double * getAgeDistribution() const;
+	double * getJobDistribution() const;
+	double * getReligionDistribution() const;
+	double * getHobbiesDistribution() const;
 	void calculate_attributes();
 	double func_afinity(const Group &other) const;//afinidade entre dois grupos
 	double eval_age(const Group &other) const;
 	double eval_jobs(const Group &other) const;
 	double eval_hobbies(const Group &other) const;
 	double eval_religions(const Group &other) const;
+
 
 };
 

@@ -38,6 +38,7 @@ int main(int argc, const char * argv[]) {
 	vector<Person> people;
 	vector<Group> groups;
 	vector<Table> tables;
+
 	vector<vector<double>> groupsAffinity(groups.size(), vector<double>(groups.size()));
 	calcGroupsAffinity(groupsAffinity, groups);
 	vector<int> solution;//cada indice equivale a um group e o valor do mesmo equivale a mesa onde ela se vai sentar
