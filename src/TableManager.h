@@ -25,7 +25,11 @@ public:
 	TableManager(const char * peopleFile, const char * tablesFile);
 	void calcGroupsAffinity();
 	vector<vector<int> > getRandomPopulation(int popSize) const;
-	vector<int> geneticAlgorithm(vector<vector<int> > &population) const;
+
+	/**
+	 * Elitism turned off by default.
+	 */
+	vector<int> geneticAlgorithm(vector<vector<int> > &population, double p_cross, double p_mut, int max_stale_gens, int max_gens, int n_elite = -1) const;
 
 	double aval_fuct(const vector<int> &solution);
 	Group * getGroup(int id);
