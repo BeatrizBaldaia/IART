@@ -18,12 +18,12 @@ private:
 	vector<Group> groups;
 	vector<Table> tables;
 	vector<vector<double> > groupsAffinity;//(groups.size(), vector<double>(groups.size()));//matriz de afinidades
-
+	void getPeopleFromFile(const char* filename);
 public:
-	TableManager(string peopleFile, string tablesFile);
+	TableManager(const char * peopleFile, const char * tablesFile);
 	void calcGroupsAffinity();
 	vector<int> getRandomSolution();
-	vector<int> geneticAlgorithm(vector<vector<int>> population);
+	vector<int> geneticAlgorithm(vector<vector<int> > population);
 
 	double aval_fuct(const vector<int> &solution);
 };

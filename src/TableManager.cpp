@@ -12,8 +12,12 @@ JobAreaMap JobAreaMap;
 ReligionMap ReligionMap;
 HobbyMap HobbyMap;
 
+TableManager::TableManager(const char * peopleFile, const char * tablesFile) {
+	this->getPeopleFromFile(peopleFile);
+}
 
-vector<int> TableManager::geneticAlgorithm(vector<vector<int>> population){
+
+vector<int> TableManager::geneticAlgorithm(vector<vector<int> > population){
 	printf("I am the genetic algorithm");
 	//Create random pool of solutions
 	//REPEAT ate ...
@@ -70,9 +74,8 @@ double TableManager::aval_fuct(const vector<int> &solution) {
 	return res;
 }
 
-vector<Person> getPeopleFromFile(const char* filename){
+void TableManager::getPeopleFromFile(const char* filename){
 	cout << "getPeopleFromFile\n";
-	vector<Person> res;
 	fstream myfile;
 	string line;
 	stringstream person;
@@ -106,12 +109,12 @@ vector<Person> getPeopleFromFile(const char* filename){
 				cout << "	"<< toString(hobbies.back()) << '\n';
 			}
 			p.setHobbies(hobbies);
-			res.push_back(p);
+			this->people.push_back(p);
 		}
 		myfile.close();
 	}
 	myfile.close();
-	return res;
+	return;
 }
 
 void vizinho_func() {
