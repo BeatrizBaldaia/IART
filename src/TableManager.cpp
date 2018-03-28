@@ -37,7 +37,7 @@ vector<int> TableManager::geneticAlgorithm(vector<vector<int> > &population,
 	while (currentGen < max_gens && numStaleGens < max_stale_gens) {
 		vector<int> elitedParentsIndexes = elitismSelection(population, n_elite);
 		vector<int> parentIndexes = selectParents(population);
-		vector<vector<int>> children = crossParents(population, parentIndexes, p_cross);
+		vector<vector<int> > children = crossParents(population, parentIndexes, p_cross);
 		mutateChildren(children, p_mut);
 		selectNextGen(population, elitedParentsIndexes, children);
 		currentGen++;
@@ -184,8 +184,24 @@ Group * TableManager::getGroup(int id){
 	this->groups.push_back(g);
 	return &(this->groups.back());
 }
+
 void vizinho_func() {
 
 	//Trocar um group de mesa
+
+}
+vector<int> TableManager::elitismSelection(const vector<vector<int> > &population, int n_elite /*=-1*/) const{
+
+}
+vector<int> TableManager::selectParents(const vector<vector<int> > &population) const{
+
+}
+vector<vector<int> > TableManager::crossParents(const vector<vector<int> > &population, const vector<int> &parentIndexes, double p_cross) const{
+
+}
+void TableManager::mutateChildren(vector<vector<int> > &children, double p_mut) const{
+
+}
+void TableManager::selectNextGen(vector<vector<int> > &population, const vector<int> &elitedParentsIndexes, const vector<vector<int> > &children) const{
 
 }
