@@ -78,10 +78,10 @@ void TableManager::getPeopleFromFile(const char* filename){
 	cout << "getPeopleFromFile\n";
 	fstream myfile;
 	string line;
-	stringstream person;
 	myfile.open (filename);
 	if (myfile.is_open()) {
 		while ( getline (myfile,line) ) {
+			stringstream person;
 			cout << line << '\n'; // TODO: delete
 			person << line;
 			Person p = Person();
