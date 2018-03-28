@@ -25,7 +25,12 @@ TableManager::TableManager(const char * peopleFile, const char * tablesFile) {
 }
 
 
-vector<int> TableManager::geneticAlgorithm(vector<vector<int> > &population, double p_cross, double p_mut, int max_stale_gens, int max_gens, int n_elite = -1) const {
+vector<int> TableManager::geneticAlgorithm(vector<vector<int> > &population,
+		double p_cross,
+		double p_mut,
+		int max_stale_gens,
+		int max_gens,
+		int n_elite /*= 0*/) const {
 	printf("I am the genetic algorithm");
 	//REPEAT ate ...
 		//SEE aval of each solution
