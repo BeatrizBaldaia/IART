@@ -32,6 +32,16 @@ vector<int> TableManager::geneticAlgorithm(vector<vector<int> > &population,
 		int max_gens,
 		int n_elite /*= 0*/) const {
 	printf("I am the genetic algorithm");
+	int currentGen = 0;
+	int numStaleGens = 0;
+	while (currentGen < max_gens && numStaleGens < max_stale_gens) {
+		vector<int> elitedParentsIndexes = elitismSelection(population, n_elite);
+		vector<int> parentIndexes = selectParents(population);
+		vector<vector<int>> children = crossParents(population, parentIndexes, p_cross);
+		mutateChildren(children, p_mut);
+		selectNextGen(population, elitedParentsIndexes, children);
+		currentGen++;
+	}
 	//REPEAT ate ...
 		//SEE aval of each solution
 		//Calcular % of selection
