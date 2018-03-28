@@ -48,12 +48,58 @@ private:
 	vector<Hobby> hobbies;
 	JobArea job;
 	Religion religion;
-
-
 public:
 	Person();
 	virtual ~Person();
 	double aval_func(Person person); //afinidade entre duas pessoas
+
+	int getAge() const {
+		return age;
+	}
+
+	void setAge(int age) {
+		this->age = age;
+	}
+
+	int getGroup() const {
+		return group;
+	}
+
+	void setGroup(int group) {
+		this->group = group;
+	}
+
+	JobArea getJob() const {
+		return job;
+	}
+
+	void setJob(JobArea job) {
+		this->job = job;
+	}
+
+	const string& getName() const {
+		return name;
+	}
+
+	void setName(const string& name) {
+		this->name = name;
+	}
+
+	Religion getReligion() const {
+		return religion;
+	}
+
+	void setReligion(Religion religion) {
+		this->religion = religion;
+	}
+
+	const vector<Hobby>& getHobbies() const {
+		return hobbies;
+	}
+
+	void setHobbies(const vector<Hobby>& hobbies) {
+		this->hobbies = hobbies;
+	}
 };
 
 #endif /* SRC_PERSON_H_ */

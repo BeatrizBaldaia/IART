@@ -24,20 +24,19 @@ AgeGroup getGroup(int age);
 class Group {
 private:
 	int id;
-	vector<const Person &> members;
+	vector<const Person *> members; //TODO: See diferrence
 	double ageDistribution[4];
 	double jobDistribution[NUMBER_JOBS];
 	double religionDistribution[NUMBER_RELIGIONS];
 	double hobbiesDistribution[NUMBER_HOBBIES];
 
-
 public:
 	Group(int id);
 	virtual ~Group();
-	double * getAgeDistribution() const;
-	double * getJobDistribution() const;
-	double * getReligionDistribution() const;
-	double * getHobbiesDistribution() const;
+	const double * getAgeDistribution() const;
+	const double * getJobDistribution() const;
+	const double * getReligionDistribution() const;
+	const double * getHobbiesDistribution() const;
 	void calculate_attributes();
 	double func_afinity(const Group &other) const;//afinidade entre dois grupos
 	double eval_age(const Group &other) const;

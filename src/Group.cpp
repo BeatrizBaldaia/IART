@@ -30,37 +30,37 @@ Group::~Group() {
 	// TODO Auto-generated destructor stub
 }
 
-double* Group::getAgeDistribution() const {
+const double* Group::getAgeDistribution() const {
 	return this->ageDistribution;
 }
 
-double* Group::getJobDistribution() const {
+const double* Group::getJobDistribution() const {
 	return this->jobDistribution;
 }
 
-double* Group::getReligionDistribution() const {
+const double* Group::getReligionDistribution() const {
 	return this->religionDistribution;
 }
 
-double* Group::getHobbiesDistribution() const{
+const double* Group::getHobbiesDistribution() const{
 	return this->hobbiesDistribution;
 }
 
 void Group::calculate_attributes() {
 	for (const Person &person : members) {
 		//age
-		ageDistribution[getAgeStage(person.age)]++;
+		ageDistribution[getAgeStage(person.getAge())]++;
 		//job
-		jobDistribution[person.job]++;
+		jobDistribution[person.getJob()]++;
 		//religion
-		religionDistribution[person.religion]++;
+		religionDistribution[person.getReligion()]++;
 		//hobbies
-		for (const Hobby &hobby : person.hobbies) {
+		for (const Hobby &hobby : person.getHobbies()) {
 			hobbiesDistribution[hobby]++;
 		}
 	}
 	for (double &age_group : ageDistribution) {
-		ageDistribution /= members.size();
+		age_group /= members.size();
 	}
 	for (double &job : jobDistribution) {
 		job /= members.size();

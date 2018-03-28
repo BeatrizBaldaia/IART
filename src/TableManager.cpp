@@ -2,6 +2,9 @@
 #include <map>
 #include <stdio.h>
 #include <float.h>
+#include <iostream>
+#include <fstream>
+#include <sstream>
 
 
 vector<int> TableManager::geneticAlgorithm(vector<vector<int>> population){
@@ -19,6 +22,7 @@ vector<int> TableManager::geneticAlgorithm(vector<vector<int>> population){
 		//Second gen
 }
 
+
 /**
  * Generate the affinity matrix (with all affinities between groups)
  */
@@ -34,7 +38,7 @@ void TableManager::calcGroupsAffinity() {
 /**
  * Calculates the fitness value of one possible solution
  * Sum of affinities of group pairs sharing the same table minus penalty
- *
+ * TODO: Missing maximization of empty tables?
  */
 double TableManager::aval_fuct(const vector<int> &solution) {
 	double res = 0, penalty = -DBL_MAX;
@@ -57,6 +61,29 @@ double TableManager::aval_fuct(const vector<int> &solution) {
 	//AB
 	//AC
 	//BC
+	return res;
+}
+
+vector<Person> getPeopleFromFile(const char* filename){
+	cout << "getPeopleFromFile\n";
+	fstream myfile;
+	string line;
+	stringstream person;
+	myfile.open (filename);
+	if (myfile.is_open()) {
+		while ( getline (myfile,line) ) {
+			cout << line << '\n'; // TODO: delete
+			person << line;
+			Person p = Person();
+			string value;
+			getline (myfile,value,';');
+			p.setName(value);
+			cout << "Name: "<<p.getName() << '\n';
+		}
+		myfile.close();
+	}
+	myfile.close();
+	vector<Person> res;
 	return res;
 }
 
