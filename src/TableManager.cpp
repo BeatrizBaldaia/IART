@@ -52,7 +52,7 @@ int main(int argc, const char * argv[]) {
 
 /**
  * Sum of affinities of group pairs sharing the same table minus penalty
- *
+ * TODO: Missing maximization of empty tables?
  */
 double aval_fuct(const vector<int> &solution, const vector<vector<double> > &groupsAffinity) {
 	double res = 0, penalty = -DBL_MAX;
