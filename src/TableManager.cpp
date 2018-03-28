@@ -186,22 +186,22 @@ Group * TableManager::getGroup(int id){
 }
 
 void vizinho_func() {
-
+	//TODO: implement
 	//Trocar um group de mesa
 
 }
 vector<int> TableManager::elitismSelection(const vector<vector<int> > &population, int n_elite /*=-1*/) const{
-
+	//TODO: implement
 }
 vector<int> TableManager::selectParents(const vector<vector<int> > &population) const{
-
+	//TODO: implement
 }
 vector<vector<int> > TableManager::crossParents(const vector<vector<int> > &population, const vector<int> &parentIndexes, double p_cross) const{
-
+	//TODO: implement
 }
 void TableManager::mutateChildren(vector<vector<int> > &children, double p_mut) const{
-
+	//TODO: implement
 }
 void TableManager::selectNextGen(vector<vector<int> > &population, const vector<int> &elitedParentsIndexes, const vector<vector<int> > &children) const{
-
+	//TODO: implement
 }
