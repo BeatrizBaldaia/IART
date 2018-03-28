@@ -17,11 +17,15 @@ private:
 	vector<Person> people;
 	vector<Group> groups;
 	vector<Table> tables;
-	//vector<int> solution;//cada indice equivale a um grupo e o valor do mesmo equivale a mesa onde este se vai ficar
+	vector<vector<double> > groupsAffinity;//(groups.size(), vector<double>(groups.size()));//matriz de afinidades
 
 public:
-	TableManager();
-	int aval_fuct(vector<int> solution);
+	TableManager(string peopleFile, string tablesFile);
+	void calcGroupsAffinity();
+	vector<int> getRandomSolution();
+	vector<int> geneticAlgorithm(vector<vector<int>> population);
+
+	double aval_fuct(const vector<int> &solution);
 };
 
 
