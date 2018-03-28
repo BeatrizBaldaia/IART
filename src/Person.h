@@ -10,6 +10,8 @@
 
 #include <iostream>
 #include <vector>
+#include <map>
+#include"EnumCreation.h"
 
 using namespace std;
 
@@ -18,27 +20,7 @@ using namespace std;
 #define ADULTHOOD 2
 #define OLDAGE 3
 
-enum Hobby {Reading, WatchingTV, FamilyTime,
-	GoingToMovies,
-	Fishing,
-	Computer,
-	Gardening,
-	RentingMovies,
-	Walking,
-	Exercise,
-	ListeningToMusic,
-	Entertaining,
-	Hunting,
-	TeamSports,
-	Shopping,
-	Traveling};
-#define NUMBER_HOBBIES 16
 
-enum JobArea {Science, Education, Politics};
-#define NUMBER_JOBS 3
-
-enum Religion {Christianity, Gnosticism, Islam,	Judaism, Buddhism, Hinduism, Atheism};
-#define NUMBER_RELIGIONS 7
 
 class Person {
 private:

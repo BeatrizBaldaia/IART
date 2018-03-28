@@ -7,6 +7,12 @@
 #include <iostream>
 #include <fstream>
 #include <sstream>
+#include <stdlib.h>
+#include <string>
+
+JobAreaMap JobAreaMap;
+ReligionMap ReligionMap;
+HobbyMap HobbyMap;
 
 vector<Person> getPeopleFromFile(const char* filename);
 void genetic_algorithm(){
@@ -80,6 +86,7 @@ double aval_fuct(const vector<int> &solution, const vector<vector<double> > &gro
 
 vector<Person> getPeopleFromFile(const char* filename){
 	cout << "getPeopleFromFile\n";
+	vector<Person> res;
 	fstream myfile;
 	string line;
 	stringstream person;
@@ -90,14 +97,34 @@ vector<Person> getPeopleFromFile(const char* filename){
 			person << line;
 			Person p = Person();
 			string value;
-			getline (myfile,value,';');
+			getline (person,value,';');
 			p.setName(value);
 			cout << "Name: "<<p.getName() << '\n';
+			getline (person,value,';');
+			p.setAge(atoi(value.c_str()));
+			cout << "Age: "<<p.getAge() << '\n';
+			getline (person,value,';');
+			p.setGroup(atoi(value.c_str()));
+			cout << "Group: "<<p.getGroup() << '\n';
+			//TODO: add to a group
+			getline (person,value,';');
+			p.setJob(JobAreaMap[value]);
+			cout << "Job: "<< toString(p.getJob()) << '\n';
+			getline (person,value,';');
+			p.setReligion(ReligionMap[value]);
+			cout << "Religion: "<< toString(p.getReligion()) << '\n';
+			vector<Hobby> hobbies;
+			cout << "Hobbies:\n";
+			while ( getline (person,value,',') ) {
+				hobbies.push_back(HobbyMap[value]);
+				cout << "	"<< toString(hobbies.back()) << '\n';
+			}
+			p.setHobbies(hobbies);
+			res.push_back(p);
 		}
 		myfile.close();
 	}
 	myfile.close();
-	vector<Person> res;
 	return res;
 }
 
