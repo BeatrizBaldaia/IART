@@ -25,7 +25,7 @@ TableManager::TableManager(const char * peopleFile, const char * tablesFile) {
 }
 
 
-vector<int> TableManager::geneticAlgorithm(vector<vector<int> > population){
+vector<int> TableManager::geneticAlgorithm(vector<vector<int> > &population) const {
 	printf("I am the genetic algorithm");
 	//Create random pool of solutions
 	//REPEAT ate ...

@@ -24,8 +24,8 @@ private:
 public:
 	TableManager(const char * peopleFile, const char * tablesFile);
 	void calcGroupsAffinity();
-	vector<int> getRandomSolution();
-	vector<int> geneticAlgorithm(vector<vector<int> > population);
+	vector<vector<int> > getRandomPopulation(int popSize) const;
+	vector<int> geneticAlgorithm(vector<vector<int> > &population) const;
 
 	double aval_fuct(const vector<int> &solution);
 	Group * getGroup(int id);
