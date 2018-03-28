@@ -15,6 +15,11 @@ HobbyMap HobbyMap;
 TableManager::TableManager(const char * peopleFile, const char * tablesFile) {
 	this->getPeopleFromFile(peopleFile);
 	this->getTablesFromFile(tablesFile);
+	this->creatGroups();
+	for (unsigned int i=0; i <this->groups.size(); i++){
+		cout<<"Group: "<<this->groups[i].getId()<<"\n";
+		this->groups[i].calculate_attributes();
+	}
 }
 
 
@@ -96,7 +101,6 @@ void TableManager::getPeopleFromFile(const char* filename){
 			getline (person,value,';');
 			p.setGroup(atoi(value.c_str()));
 			cout << "Group: "<<p.getGroup() << '\n';
-			//TODO: add to a group
 			getline (person,value,';');
 			p.setJob(JobAreaMap[value]);
 			cout << "Job: "<< toString(p.getJob()) << '\n';
@@ -148,7 +152,21 @@ void TableManager::getTablesFromFile(const char* filename){
 	}
 	return;
 }
-
+void TableManager::creatGroups(){
+	for (unsigned int i = 0; i < this->people.size(); i++) {
+		this->getGroup(this->people[i].getGroup())->addMember(&(this->people[i]));
+	}
+}
+Group * TableManager::getGroup(int id){
+	for( unsigned int i = 0; i < this->groups.size(); i++) {
+		if(this->groups[i].getId() == id) {
+			return &(this->groups[i]);
+		}
+	}
+	Group g(id);
+	this->groups.push_back(g);
+	return &(this->groups.back());
+}
 void vizinho_func() {
 
 	//Trocar um group de mesa

@@ -20,6 +20,7 @@ private:
 	vector<vector<double> > groupsAffinity;//(groups.size(), vector<double>(groups.size()));//matriz de afinidades
 	void getPeopleFromFile(const char* filename);
 	void getTablesFromFile(const char* filename);
+	void creatGroups();
 public:
 	TableManager(const char * peopleFile, const char * tablesFile);
 	void calcGroupsAffinity();
@@ -27,6 +28,7 @@ public:
 	vector<int> geneticAlgorithm(vector<vector<int> > population);
 
 	double aval_fuct(const vector<int> &solution);
+	Group * getGroup(int id);
 };
 
 

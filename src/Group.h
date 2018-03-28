@@ -43,8 +43,15 @@ public:
 	double eval_jobs(const Group &other) const;
 	double eval_hobbies(const Group &other) const;
 	double eval_religions(const Group &other) const;
+	void addMember(const Person * newMember);
 
+	int getId() const {
+		return id;
+	}
 
+	void setId(int id) {
+		this->id = id;
+	}
 };
 
 #endif /* SRC_GROUP_H_ */
