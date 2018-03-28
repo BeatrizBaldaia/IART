@@ -27,12 +27,9 @@ AgeGroup getAgeStage(int age) {
 }
 
 Group::Group(int id) : id(id) {
-	// TODO Auto-generated constructor stub
-
 }
 
 Group::~Group() {
-	// TODO Auto-generated destructor stub
 }
 
 const double* Group::getAgeDistribution() const {

@@ -24,7 +24,7 @@ AgeGroup getGroup(int age);
 class Group {
 private:
 	int id;
-	vector<const Person *> members; //TODO: See diferrence
+	vector<const Person *> members;
 	double ageDistribution[4];
 	double jobDistribution[NUMBER_JOBS];
 	double religionDistribution[NUMBER_RELIGIONS];

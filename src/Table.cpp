@@ -20,6 +20,5 @@ void Table::setNumberOfSeats(int numberOfSeats) {
 }
 
 Table::~Table() {
-	//TODO: destructor stub
 }
 

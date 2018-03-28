@@ -100,7 +100,6 @@ void TableManager::getPeopleFromFile(const char* filename){
 	if (myfile.is_open()) {
 		while ( getline (myfile,line) ) {
 			stringstream person;
-			cout << line << '\n'; // TODO: delete
 			person << line;
 			Person p = Person();
 			string value;
@@ -141,7 +140,6 @@ void TableManager::getTablesFromFile(const char* filename){
 	if (myfile.is_open()) {
 		while ( getline (myfile,line) ) {
 			stringstream table;
-			cout << line << '\n'; // TODO: delete
 			table << line;
 			string lugares;
 			string nuTables;
