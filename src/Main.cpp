@@ -9,8 +9,8 @@
  * argv[1] = nome do ficheiro de pessoas
  * argv[2] = nome do ficheiro de de mesas
  */
-int main(int argc, const char * argv[]) {
-	return 0;
-}
+//int main(int argc, const char * argv[]) {
+//	return 0;
+//}
 
 

@@ -4,8 +4,11 @@
 #include <map>
 #include <stdio.h>
 #include <float.h>
+#include <iostream>
+#include <fstream>
+#include <sstream>
 
-
+vector<Person> getPeopleFromFile(const char* filename);
 void genetic_algorithm(){
 	printf("I am the genetic algorithm");
 	//Create random pool of solutions
@@ -21,7 +24,7 @@ void genetic_algorithm(){
 		//Second gen
 }
 
-void calcGroupsAffinity(vector<vector<double>> &groupsAffinity, const vector<Group> &groups) {
+void calcGroupsAffinity(vector<vector<double> > &groupsAffinity, const vector<Group> &groups) {
 	for (int row = 0; row < groups.size(); row++) {
 		for (int col = row + 1; col < groups.size(); col++) {
 			groupsAffinity[row][col] = groups.at(row).func_afinity(groups.at(col));
@@ -35,11 +38,11 @@ void calcGroupsAffinity(vector<vector<double>> &groupsAffinity, const vector<Gro
  */
 int main(int argc, const char * argv[]) {
 
-	vector<Person> people;
+	vector<Person> people = getPeopleFromFile("people.txt");
 	vector<Group> groups;
 	vector<Table> tables;
 
-	vector<vector<double>> groupsAffinity(groups.size(), vector<double>(groups.size()));
+	vector<vector<double> > groupsAffinity(groups.size(), vector<double>(groups.size()));
 	calcGroupsAffinity(groupsAffinity, groups);
 	vector<int> solution;//cada indice equivale a um group e o valor do mesmo equivale a mesa onde ela se vai sentar
 	genetic_algorithm();
@@ -51,7 +54,7 @@ int main(int argc, const char * argv[]) {
  * Sum of affinities of group pairs sharing the same table minus penalty
  *
  */
-double aval_fuct(const vector<int> &solution, const vector<vector<double>> &groupsAffinity) {
+double aval_fuct(const vector<int> &solution, const vector<vector<double> > &groupsAffinity) {
 	double res = 0, penalty = -DBL_MAX;
 
 	for (int i = 0; i < solution.size(); i++) {
@@ -72,6 +75,29 @@ double aval_fuct(const vector<int> &solution, const vector<vector<double>> &grou
 	//AB
 	//AC
 	//BC
+	return res;
+}
+
+vector<Person> getPeopleFromFile(const char* filename){
+	cout << "getPeopleFromFile\n";
+	fstream myfile;
+	string line;
+	stringstream person;
+	myfile.open (filename);
+	if (myfile.is_open()) {
+		while ( getline (myfile,line) ) {
+			cout << line << '\n'; // TODO: delete
+			person << line;
+			Person p = Person();
+			string value;
+			getline (myfile,value,';');
+			p.setName(value);
+			cout << "Name: "<<p.getName() << '\n';
+		}
+		myfile.close();
+	}
+	myfile.close();
+	vector<Person> res;
 	return res;
 }
 
