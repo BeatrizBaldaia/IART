@@ -39,6 +39,7 @@ public:
 
 	double aval_fuct(const vector<int> &solution);
 	Group * getGroup(int id);
+	vector<vector<int> > TableManager::vizinho_func(vector<int> &solution);
 };
 
 

@@ -181,10 +181,18 @@ Group * TableManager::getGroup(int id){
 	return &(this->groups.back());
 }
 
-void vizinho_func() {
-	//TODO: implement
-	//Trocar um group de mesa
-
+vector<vector<int> > TableManager::vizinho_func(vector<int> &solution) { //indice group value table number
+	vector<vector<int> > res;
+	for (unsigned int i = 0; i < solution.size(); i++){
+		for (unsigned int j = 0; j < this->tables.size(); j++){
+			vector<int> neighbor = solution;
+			if(solution[i] != j){
+				neighbor[i] = j;
+				res.push_back(neighbor);
+			}
+		}
+	}
+	return res;
 }
 vector<int> TableManager::elitismSelection(const vector<vector<int> > &population, int n_elite /*=-1*/) const{
 	//TODO: implement
