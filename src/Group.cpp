@@ -97,6 +97,8 @@ double Group::eval_age(const Group &other) const {
 	for(int i = 0; i < 4; i++) {
 		res -= abs(this->ageDistribution[i] - other.getAgeDistribution()[i]);
 	}
+
+	return res;
 }
 
 double Group::eval_jobs(const Group &other) const {
@@ -107,7 +109,6 @@ double Group::eval_jobs(const Group &other) const {
 	}
 
 	return res;
-
 }
 
 
