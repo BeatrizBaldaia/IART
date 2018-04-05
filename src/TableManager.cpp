@@ -24,15 +24,14 @@ TableManager::TableManager(const char * peopleFile, const char * tablesFile) {
 	}
 }
 
-
-
 vector<int> TableManager::geneticAlgorithm(vector<vector<int> > &population, double p_cross, double p_mut, int max_stale_gens, int max_gens, int n_elite) const {
 	printf("I am the genetic algorithm");
 	int currentGen = 0;
 	int numStaleGens = 0;
 	while (currentGen < max_gens && numStaleGens < max_stale_gens) {
-		vector<int> elitedParentsIndexes = elitismSelection(population, n_elite);
-		vector<int> parentIndexes = selectParents(population);
+		vector<double> aval = this->avaliete(population);
+		vector<int> elitedParentsIndexes = elitismSelection(population, aval, n_elite);
+		vector<int> parentIndexes = selectParents(population, aval, n_elite);
 		vector<vector<int> > children = crossParents(population, parentIndexes, p_cross);
 		mutateChildren(children, p_mut);
 		selectNextGen(population, elitedParentsIndexes, children);
@@ -51,8 +50,13 @@ vector<int> TableManager::geneticAlgorithm(vector<vector<int> > &population, dou
 
 	return vector<int>();
 }
-
-
+vector<double> TableManager::avaliete(vector<vector<int> > &pop) const {
+	vector<double> res;
+	for(unsigned int i = 0; i < pop.size(); i++) {
+		res.push_back(this->aval_fuct(pop[i]));
+	}
+	return res;
+}
 /**
  * Generate the affinity matrix (with all affinities between groups)
  */
@@ -64,13 +68,12 @@ void TableManager::calcGroupsAffinity() {
 	}
 }
 
-
 /**
  * Calculates the fitness value of one possible solution
  * Sum of affinities of group pairs sharing the same table minus penalty
  * TODO: Missing maximization of empty tables?
  */
-double TableManager::aval_fuct(const vector<int> &solution) {
+double TableManager::aval_fuct(const vector<int> &solution) const {
 	double res = 0, penalty = -DBL_MAX;
 
 	for (unsigned int i = 0; i < solution.size(); i++) {
@@ -194,13 +197,29 @@ vector<vector<unsigned int> > TableManager::vizinho_func(vector<unsigned int> &s
 	}
 	return res;
 }
-vector<int> TableManager::elitismSelection(const vector<vector<int> > &population, int n_elite /*=-1*/) const{
-	//TODO: implement
-	return vector<int>();
+vector<int> TableManager::elitismSelection(const vector<vector<int> > &population, vector<double> aval, int n_elite /*=-1*/) const{
+	vector<int> res;
+	if(n_elite > 0){
+		cerr << "n_elite > 0, ainda não foi implementado!!!\n";
+	}
+	return res;
 }
-vector<int> TableManager::selectParents(const vector<vector<int> > &population) const{
-	//TODO: implement
-	return vector<int>();
+vector<int> TableManager::selectParents(const vector<vector<int> > &population, vector<double> aval, int n_elite) const{
+	vector<int> res;
+	//TODO: incorporate n_elite
+	double scale_F = 0;
+	for(unsigned int i = 0; i < population.size(); i++) {
+		scale_F += aval[i];
+	}
+	for(unsigned int i = 0; i < population.size(); i++) {
+		unsigned int j = 0;
+		double random = (double)rand() / RAND_MAX; //double between 0 and 1
+		while((aval[j]/scale_F) < random){
+			j++;
+		}
+		res.push_back(j);
+	}
+	return res;
 }
 vector<vector<int> > TableManager::crossParents(const vector<vector<int> > &population, const vector<int> &parentIndexes, double p_cross) const{
 	//TODO: implement
@@ -214,3 +233,18 @@ void TableManager::selectNextGen(vector<vector<int> > &population, const vector<
 	//TODO: implement
 	return;
 }
+
+vector<vector<int> > TableManager::getRandomPopulation(unsigned int popSize) const{
+	vector<vector <int> > res;
+	srand (time(NULL));
+	for(unsigned int i = 0; i < popSize; i++) {
+		vector<int> gene;
+		for(unsigned int j = 0; j < this->groups.size(); j++) {
+			int table = rand() % this->tables.size();
+			gene.push_back(table);
+		}
+		res.push_back(gene);
+	}
+	return res;
+}
+

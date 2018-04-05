@@ -1,8 +1,9 @@
 #include <iostream>
+#include <stdlib.h>
 #include "TableManager.h"
 using namespace std;
 
-
+void printVectorVectorInteger(vector<vector<int> > v);
 /**
  * argv[1] = nome do ficheiro de pessoas
  * argv[2] = nome do ficheiro de de mesas
@@ -20,8 +21,23 @@ int main(int argc, const char * argv[]) {
 		return 1;
 	}
 	TableManager tableManager(argv[1], argv[2]);
-
+	double p_cross = atof(argv[3]);
+	double p_mut = atof(argv[4]);
+	int max_stale_gens = atoi(argv[6]);
+	int max_gens = atoi(argv[7]);
+	int n_elite = atoi(argv[5]);
+	vector<vector<int> > population = tableManager.getRandomPopulation(20);//TODO: popSize
+	printVectorVectorInteger(population);
+	tableManager.geneticAlgorithm(population, p_cross, p_mut, max_stale_gens, max_gens, n_elite);
 	cerr<<"FIM\n";
 	return 0;
 }
 
+void printVectorVectorInteger(vector<vector<int> > v) {
+	for(unsigned int i = 0; i < v.size(); i++) {
+		for(unsigned int j = 0; j < v[i].size(); j++) {
+			cout << v[i][j] << " | ";
+		}
+		cout << "\n";
+	}
+}

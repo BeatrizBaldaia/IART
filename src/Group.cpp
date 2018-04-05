@@ -101,7 +101,6 @@ double Group::eval_jobs(const Group &other) const {
 	return res;
 }
 
-
 double Group::eval_hobbies(const Group &other) const {
 	double res = 1;
 
@@ -112,7 +111,6 @@ double Group::eval_hobbies(const Group &other) const {
 		return res;
 
 }
-
 
 double Group::eval_religions(const Group &other) const {
 	double res = 1;

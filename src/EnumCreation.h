@@ -1,10 +1,3 @@
-/*
- * EnumCreation.h
- *
- *  Created on: 28/03/2018
- *      Author: anabela
- */
-
 #ifndef SRC_ENUMCREATION_H_
 #define SRC_ENUMCREATION_H_
 

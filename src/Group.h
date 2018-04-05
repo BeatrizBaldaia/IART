@@ -1,10 +1,3 @@
-/*
- * Group.h
- *
- *  Created on: 27/03/2018
- *      Author: Utilizador
- */
-
 #ifndef SRC_GROUP_H_
 #define SRC_GROUP_H_
 
@@ -17,9 +10,7 @@ enum AgeGroup {
 
 AgeGroup getGroup(int age);
 
-
 #include "Person.h"
-
 
 class Group {
 private:
@@ -44,19 +35,15 @@ public:
 	double eval_hobbies(const Group &other) const;
 	double eval_religions(const Group &other) const;
 	void addMember(const Person * newMember);
-
 	int getId() const {
 		return id;
 	}
-
 	void setId(int id) {
 		this->id = id;
 	}
-
 	const vector<const Person*>& getMembers() const {
 		return members;
 	}
-
 	void setMembers(const vector<const Person*>& members) {
 		this->members = members;
 	}

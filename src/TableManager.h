@@ -22,24 +22,25 @@ private:
 	void getTablesFromFile(const char* filename);
 	void creatGroups();
 
-	vector<int> elitismSelection(const vector<vector<int> > &population, int n_elite = -1) const;
-	vector<int> selectParents(const vector<vector<int> > &population) const;
+	vector<int> elitismSelection(const vector<vector<int> > &population, vector<double> aval, int n_elite = -1) const;
+	vector<int> selectParents(const vector<vector<int> > &population, vector<double> aval, int n_elite) const;
 	vector<vector<int> > crossParents(const vector<vector<int> > &population, const vector<int> &parentIndexes, double p_cross) const;
 	void mutateChildren(vector<vector<int> > &children, double p_mut) const;
 	void selectNextGen(vector<vector<int> > &population, const vector<int> &elitedParentsIndexes, const vector<vector<int> > &children) const;
 public:
 	TableManager(const char * peopleFile, const char * tablesFile);
 	void calcGroupsAffinity();
-	vector<vector<int> > getRandomPopulation(int popSize) const;
+	vector<vector<int> > getRandomPopulation(unsigned int popSize) const;
 
 	/**
 	 * Elitism turned off by default.
 	 */
 	vector<int> geneticAlgorithm(vector<vector<int> > &population, double p_cross, double p_mut, int max_stale_gens, int max_gens, int n_elite = -1) const;
 
-	double aval_fuct(const vector<int> &solution);
+	double aval_fuct(const vector<int> &solution) const;
 	Group * getGroup(int id);
 	vector<vector<unsigned int> > vizinho_func(vector<unsigned int> &solution);
+	vector<double> avaliete(vector<vector<int> > &pop) const;
 };
 
 
