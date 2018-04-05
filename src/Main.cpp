@@ -1,10 +1,3 @@
-/*
- * Main.cpp
- *
- *  Created on: 27/03/2018
- *      Author: Utilizador
- */
-
 #include <iostream>
 #include "TableManager.h"
 using namespace std;

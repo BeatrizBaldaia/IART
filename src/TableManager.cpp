@@ -48,6 +48,8 @@ vector<int> TableManager::geneticAlgorithm(vector<vector<int> > &population, dou
 			//Cross
 		//Mutation
 		//Second gen
+
+	return vector<int>();
 }
 
 
@@ -179,11 +181,11 @@ Group * TableManager::getGroup(int id){
 	return &(this->groups.back());
 }
 
-vector<vector<int> > TableManager::vizinho_func(vector<int> &solution) { //indice group value table number
-	vector<vector<int> > res;
+vector<vector<unsigned int> > TableManager::vizinho_func(vector<unsigned int> &solution) { //indice group value table number
+	vector<vector<unsigned int> > res;
 	for (unsigned int i = 0; i < solution.size(); i++){
 		for (unsigned int j = 0; j < this->tables.size(); j++){
-			vector<int> neighbor = solution;
+			vector<unsigned int> neighbor = solution;
 			if(solution[i] != j){
 				neighbor[i] = j;
 				res.push_back(neighbor);
@@ -194,16 +196,21 @@ vector<vector<int> > TableManager::vizinho_func(vector<int> &solution) { //indic
 }
 vector<int> TableManager::elitismSelection(const vector<vector<int> > &population, int n_elite /*=-1*/) const{
 	//TODO: implement
+	return vector<int>();
 }
 vector<int> TableManager::selectParents(const vector<vector<int> > &population) const{
 	//TODO: implement
+	return vector<int>();
 }
 vector<vector<int> > TableManager::crossParents(const vector<vector<int> > &population, const vector<int> &parentIndexes, double p_cross) const{
 	//TODO: implement
+	return vector<vector<int> >();
 }
 void TableManager::mutateChildren(vector<vector<int> > &children, double p_mut) const{
 	//TODO: implement
+	return;
 }
 void TableManager::selectNextGen(vector<vector<int> > &population, const vector<int> &elitedParentsIndexes, const vector<vector<int> > &children) const{
 	//TODO: implement
+	return;
 }

@@ -1,10 +1,3 @@
-/*
- * Group.cpp
- *
- *  Created on: 27/03/2018
- *      Author: Utilizador
- */
-
 #include "Group.h"
 #include <cmath>
 #include "Person.h"

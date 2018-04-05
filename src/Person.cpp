@@ -8,6 +8,10 @@
 #include "Person.h"
 
 Person::Person() {
+	this->age = 0;
+	this->group = 0;
+	this->religion = Atheism;
+	this->job = Science;
 }
 
 Person::~Person() {
