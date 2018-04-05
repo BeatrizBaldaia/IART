@@ -223,14 +223,55 @@ vector<int> TableManager::selectParents(const vector<vector<int> > &population, 
 }
 vector<vector<int> > TableManager::crossParents(const vector<vector<int> > &population, const vector<int> &parentIndexes, double p_cross) const{
 	//TODO: implement
-	return vector<vector<int> >();
+	vector<vector<int> > res;
+	vector<int> isCrossing;
+	for(unsigned int i = 0; i < parentIndexes.size(); i++) {
+		res.push_back(population.at(parentIndexes[i]));
+		if(((double)rand() / RAND_MAX) < p_cross) {
+			isCrossing.push_back(i);
+		}
+	}
+	for(unsigned int i = 0; i < isCrossing.size() - 1; i++) {
+		int j = i;
+		i++;
+
+		int cross_point = rand() % population[0].size();
+
+		vector<int> aux_i;
+		vector<int> aux_j;
+
+		int k = 0;
+		while(k < cross_point) {
+			aux_i.push_back(res[i][k]);
+			aux_j.push_back(res[j][k]);
+			k++;
+		}
+		while(k < res[0].size()) {
+			aux_i.push_back(res[j][k]);
+			aux_j.push_back(res[i][k]);
+			k++;
+		}
+
+		res.at(i) = aux_i;
+		res.at(j) = aux_j;
+	}
+	return res;
 }
 void TableManager::mutateChildren(vector<vector<int> > &children, double p_mut) const{
-	//TODO: implement
+	for(unsigned int i = 0; i < children.size(); i++) {
+		for(unsigned int j = 0; j < children[i].size(); j++) {
+			if(((double)rand() / RAND_MAX) < p_mut){
+				cerr << "Devia ter mutado!! HOW??\n"; //TODO: mutação
+			}
+		}
+	}
 	return;
 }
 void TableManager::selectNextGen(vector<vector<int> > &population, const vector<int> &elitedParentsIndexes, const vector<vector<int> > &children) const{
-	//TODO: implement
+	population = children;
+	for(unsigned int i = 0; i < elitedParentsIndexes.size(); i++) {
+		population.push_back(elitedParentsIndexes[i]);
+	}
 	return;
 }
 
