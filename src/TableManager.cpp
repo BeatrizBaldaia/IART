@@ -22,19 +22,32 @@ TableManager::TableManager(const char * peopleFile, const char * tablesFile) {
 
 		this->groups[i].calculate_attributes();
 	}
+	printf("Calling: calcGroupsAffinity\n");
+	for(unsigned int i = 0; i < this->groups.size(); i++) {
+		this->groupsAffinity.push_back(vector<double> (this->groups.size()));
+	}
+	this->calcGroupsAffinity();
+	printf("I created a Table Manager!\n");
 }
 
 vector<int> TableManager::geneticAlgorithm(vector<vector<int> > &population, double p_cross, double p_mut, int max_stale_gens, int max_gens, int n_elite) const {
-	printf("I am the genetic algorithm");
+	printf("I am the genetic algorithm\n");
 	int currentGen = 0;
 	int numStaleGens = 0;
 	while (currentGen < max_gens && numStaleGens < max_stale_gens) {
+		printf("Cycle\n");
 		vector<double> aval = this->avaliete(population);
+		printf("Function: avaliete\tDone\n");
 		vector<int> elitedParentsIndexes = elitismSelection(population, aval, n_elite);
+		printf("Function: elitismSelection\tDone\n");
 		vector<int> parentIndexes = selectParents(population, aval, n_elite);
+		printf("Function: selectParents\tDone\n");
 		vector<vector<int> > children = crossParents(population, parentIndexes, p_cross);
+		printf("Function: crossParents\tDone\n");
 		mutateChildren(children, p_mut);
+		printf("Function: mutateChildren\tDone\n");
 		selectNextGen(population, elitedParentsIndexes, children);
+		printf("Function: selectNextGen\tDone\n");
 		currentGen++;
 	}
 	//REPEAT ate ...
@@ -62,7 +75,9 @@ vector<double> TableManager::avaliete(vector<vector<int> > &pop) const {
  */
 void TableManager::calcGroupsAffinity() {
 	for (unsigned int row = 0; row < groups.size(); row++) {
+		printf("ROW\n");
 		for (unsigned int col = row + 1; col < groups.size(); col++) {
+			printf("\tCOL\n");
 			groupsAffinity[row][col] = groups.at(row).func_afinity(groups.at(col));
 		}
 	}
@@ -75,9 +90,9 @@ void TableManager::calcGroupsAffinity() {
  */
 double TableManager::aval_fuct(const vector<int> &solution) const {
 	double res = 0, penalty = -DBL_MAX;
-
 	for (unsigned int i = 0; i < solution.size(); i++) {
 		for (unsigned int j = i + 1; j < solution.size(); j++) {
+			printf("Solution.size() = %d; i = %d; j = %d\n",solution.size(),i,j);
 			double affinity = this->groupsAffinity.at(i).at(j);
 			if (solution.at(i) == solution.at(j)) { // same table
 				res += affinity;
@@ -206,15 +221,15 @@ vector<int> TableManager::elitismSelection(const vector<vector<int> > &populatio
 }
 vector<int> TableManager::selectParents(const vector<vector<int> > &population, vector<double> aval, int n_elite) const{
 	vector<int> res;
-	//TODO: incorporate n_elite
 	double scale_F = 0;
+	//TODO: incorporate n_elite
 	for(unsigned int i = 0; i < population.size(); i++) {
 		scale_F += aval[i];
 	}
 	for(unsigned int i = 0; i < population.size(); i++) {
 		unsigned int j = 0;
 		double random = (double)rand() / RAND_MAX; //double between 0 and 1
-		while((aval[j]/scale_F) < random){
+		while((j < aval.size()) && (aval.at(j)/scale_F) < random){
 			j++;
 		}
 		res.push_back(j);
@@ -226,6 +241,7 @@ vector<vector<int> > TableManager::crossParents(const vector<vector<int> > &popu
 	vector<vector<int> > res;
 	vector<int> isCrossing;
 	for(unsigned int i = 0; i < parentIndexes.size(); i++) {
+		printf("parentIndexes[%d] = %d\n", i, parentIndexes[i]);
 		res.push_back(population.at(parentIndexes[i]));
 		if(((double)rand() / RAND_MAX) < p_cross) {
 			isCrossing.push_back(i);
@@ -235,12 +251,12 @@ vector<vector<int> > TableManager::crossParents(const vector<vector<int> > &popu
 		int j = i;
 		i++;
 
-		int cross_point = rand() % population[0].size();
+		unsigned int cross_point = rand() % population[0].size();
 
 		vector<int> aux_i;
 		vector<int> aux_j;
 
-		int k = 0;
+		unsigned int k = 0;
 		while(k < cross_point) {
 			aux_i.push_back(res[i][k]);
 			aux_j.push_back(res[j][k]);
@@ -262,15 +278,20 @@ void TableManager::mutateChildren(vector<vector<int> > &children, double p_mut) 
 		for(unsigned int j = 0; j < children[i].size(); j++) {
 			if(((double)rand() / RAND_MAX) < p_mut){
 				cerr << "Devia ter mutado!! HOW??\n"; //TODO: mutação
+				//MESA ALEATORIA
 			}
 		}
 	}
 	return;
 }
 void TableManager::selectNextGen(vector<vector<int> > &population, const vector<int> &elitedParentsIndexes, const vector<vector<int> > &children) const{
-	population = children;
+	vector<vector<int> > elited;
 	for(unsigned int i = 0; i < elitedParentsIndexes.size(); i++) {
-		population.push_back(elitedParentsIndexes[i]);
+		elited.push_back(population[elitedParentsIndexes[i]]);
+	}
+	population = children;
+	for(unsigned int i = 0; i < elited.size(); i++) {
+		population.push_back(elited[i]);
 	}
 	return;
 }
