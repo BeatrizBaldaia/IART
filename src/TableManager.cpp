@@ -223,6 +223,7 @@ vector<int> TableManager::selectParents(const vector<vector<int> > &population, 
 	vector<int> res;
 	double scale_F = 0;
 	//TODO: incorporate n_elite
+	//TODO: Corrigir MAL
 	for(unsigned int i = 0; i < population.size(); i++) {
 		scale_F += aval[i];
 	}
