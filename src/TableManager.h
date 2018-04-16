@@ -40,7 +40,7 @@ public:
 	double aval_fuct(const vector<int> &solution) const;
 	Group * getGroup(int id);
 	vector<vector<unsigned int> > vizinho_func(vector<unsigned int> &solution);
-	vector<double> avaliete(vector<vector<int> > &pop) const;
+	vector<double> evaluatePopulation(vector<vector<int> > &pop) const;
 };
 
 

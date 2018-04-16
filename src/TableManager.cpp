@@ -30,13 +30,18 @@ TableManager::TableManager(const char * peopleFile, const char * tablesFile) {
 	printf("I created a Table Manager!\n");
 }
 
+/**
+ *
+ */
 vector<int> TableManager::geneticAlgorithm(vector<vector<int> > &population, double p_cross, double p_mut, int max_stale_gens, int max_gens, int n_elite) const {
 	printf("I am the genetic algorithm\n");
 	int currentGen = 0;
 	int numStaleGens = 0;
 	while (currentGen < max_gens && numStaleGens < max_stale_gens) {
+
+		vector<double> aval = this->evaluatePopulation(population);
+
 		printf("Cycle\n");
-		vector<double> aval = this->avaliete(population);
 		printf("Function: avaliete\tDone\n");
 		vector<int> elitedParentsIndexes = elitismSelection(population, aval, n_elite);
 		printf("Function: elitismSelection\tDone\n");
@@ -63,7 +68,7 @@ vector<int> TableManager::geneticAlgorithm(vector<vector<int> > &population, dou
 
 	return vector<int>();
 }
-vector<double> TableManager::avaliete(vector<vector<int> > &pop) const {
+vector<double> TableManager::evaluatePopulation(vector<vector<int> > &pop) const {
 	vector<double> res;
 	for(unsigned int i = 0; i < pop.size(); i++) {
 		res.push_back(this->aval_fuct(pop[i]));
