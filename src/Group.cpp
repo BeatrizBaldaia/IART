@@ -72,14 +72,17 @@ void Group::calculate_attributes() {
 			cout << "  hobby\n";
 		}
 	}
+
+	int nMembers = members.size();
+
 	for (unsigned int i = 0; i < NUMBER_AGES; i++) {
-		ageDistribution[i] /= members.size();
+		ageDistribution[i] /= nMembers;
 	}
 	for (unsigned int i = 0; i < NUMBER_JOBS; i++) {
-		jobDistribution[i] /= members.size();
+		jobDistribution[i] /= nMembers;
 	}
 	for (unsigned int i = 0; i < NUMBER_RELIGIONS; i++) {
-		religionDistribution[i] /= members.size();
+		religionDistribution[i] /= nMembers;
 	}
 	for (unsigned int i = 0; i < NUMBER_HOBBIES; i++) {
 		hobbiesDistribution[i] /= members.size();
@@ -96,43 +99,110 @@ double Group::func_afinity(const Group &other) const {
 
 double Group::eval_age(const Group &other) const {
 	double res = 1;
+	int notNullFields = 0;
+	vector<double> diffs;
+	bool common = false;
 
 	for(int i = 0; i < 4; i++) {
-		res -= abs(this->ageDistribution[i] - other.getAgeDistribution()[i]);
+		if(!(this->ageDistribution[i] == 0 && other.getAgeDistribution()[i] == 0)) {
+			notNullFields++;
+			diffs.push_back(abs(this->ageDistribution[i] - other.getAgeDistribution()[i]));
+		}
+		if(!common && (this->ageDistribution[i] != 0 && other.getAgeDistribution()[i] != 0)) {
+			common = true;
+		}
+	}
+	if(!common) {
+		return 0;
 	}
 
+	for(int j = 0; j < diffs.size(); j++) {
+		res -= diffs[j] / notNullFields;
+	}
+	cout << endl << "eval_age = " << res << endl;
 	return res;
 }
 
 double Group::eval_jobs(const Group &other) const {
 	double res = 1;
+	int notNullFields = 0;
+	vector<double> diffs;
+	bool common = false;
 
 	for(int i = 0; i < NUMBER_JOBS; i++) {
-		res -= abs(this->jobDistribution[i] - other.getJobDistribution()[i]);
+		if(!(this->jobDistribution[i] == 0 && other.getJobDistribution()[i] == 0)) {
+			notNullFields++;
+			diffs.push_back(abs(this->jobDistribution[i] - other.getJobDistribution()[i]));
+		}
+		if(!common && (this->jobDistribution[i] != 0 && other.getJobDistribution()[i] != 0)) {
+			common = true;
+		}
+	}
+	if(!common) {
+		return 0;
 	}
 
+	for(int j = 0; j < diffs.size(); j++) {
+		res -= diffs[j] / notNullFields;
+	}
+	cout << endl << "eval_jobs = " << res << endl;
 	return res;
 }
 
 double Group::eval_hobbies(const Group &other) const {
 	double res = 1;
+	int notNullFields = 0;
+	vector<double> diffs;
+	bool common = false;
 
-		for(int i = 0; i < NUMBER_HOBBIES; i++) {
-			res -= abs(this->hobbiesDistribution[i] - other.getHobbiesDistribution()[i]);
+	for(int i = 0; i < NUMBER_HOBBIES; i++) {
+		if(!(this->hobbiesDistribution[i] == 0 && other.getHobbiesDistribution()[i] == 0)) {
+			notNullFields++;
+			diffs.push_back(abs(this->hobbiesDistribution[i] - other.getHobbiesDistribution()[i]));
 		}
+		if(!common && (this->hobbiesDistribution[i] != 0 && other.getHobbiesDistribution()[i] != 0)) {
+			common = true;
+			cout << "pelo menos um hobby em comum: " << this->hobbiesDistribution[i] << " ; " << other.getHobbiesDistribution()[i] << endl;
+		}
+	}
+	if(!common) {
+		return 0;
+	}
 
-		return res;
+	for(int j = 0; j < diffs.size(); j++) {
+		res -= diffs[j] / notNullFields;
+	}
+	cout << endl << "eval_hobbies = " << res << endl;
+	return res;
 
 }
 
 double Group::eval_religions(const Group &other) const {
 	double res = 1;
+	int notNullFields = 0;
+	vector<double> diffs;
+	bool common = false;
 
-		for(int i = 0; i < NUMBER_RELIGIONS; i++) {
-			res -= abs(this->religionDistribution[i] - other.getReligionDistribution()[i]);
+	for(int i = 0; i < NUMBER_RELIGIONS; i++) {
+		if(!(this->religionDistribution[i] == 0 && other.getReligionDistribution()[i] == 0)) {
+			notNullFields++;
+			diffs.push_back(abs(this->religionDistribution[i] - other.getReligionDistribution()[i]));
 		}
+		if(!common && (this->religionDistribution[i] != 0 && other.getReligionDistribution()[i] != 0)) {
+			cout << "pelo menos uma relegiao em comum: " << this->religionDistribution[i] << " ; " << other.getReligionDistribution()[i] << endl;
+			common = true;
+		}
+	}
+	if(!common) {
+		return 0;
+	}
 
-		return res;
+	for(int j = 0; j < diffs.size(); j++) {
+		res -= diffs[j] / notNullFields;
+	}
+
+	cout << endl << "eval_religions = " << res << endl;
+	return res;
 }
 
 

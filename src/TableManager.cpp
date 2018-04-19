@@ -7,6 +7,7 @@
 #include <sstream>
 #include <stdlib.h>
 #include <string>
+#include <time.h>
 
 JobAreaMap JobAreaMap;
 ReligionMap ReligionMap;
@@ -83,7 +84,9 @@ void TableManager::calcGroupsAffinity() {
 		printf("ROW\n");
 		for (unsigned int col = row + 1; col < groups.size(); col++) {
 			printf("\tCOL\n");
+			cout << "Affinity between groups " << groups.at(row).getId() << " and " << groups.at(col).getId() << endl;
 			groupsAffinity[row][col] = groups.at(row).func_afinity(groups.at(col));
+			cout << "A afinidade entre este dois e " << groupsAffinity[row][col] << endl;
 		}
 	}
 }

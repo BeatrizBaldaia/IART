@@ -16,10 +16,10 @@ class Group {
 private:
 	int id;
 	vector<const Person *> members;
-	double ageDistribution[4];
-	double jobDistribution[NUMBER_JOBS];
-	double religionDistribution[NUMBER_RELIGIONS];
-	double hobbiesDistribution[NUMBER_HOBBIES];
+	double ageDistribution[4] = {0};
+	double jobDistribution[NUMBER_JOBS] = {0};
+	double religionDistribution[NUMBER_RELIGIONS] = {0};
+	double hobbiesDistribution[NUMBER_HOBBIES] = {0};
 
 public:
 	Group(int id);
