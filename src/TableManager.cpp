@@ -231,18 +231,27 @@ vector<int> TableManager::selectParents(const vector<vector<int> > &population, 
 	vector<int> res;
 	double scale_F = 0;
 	//TODO: incorporate n_elite
-	//TODO: Corrigir MAL
-	for(unsigned int i = 0; i < population.size(); i++) {
-		scale_F += aval[i];
-	}
-	for(unsigned int i = 0; i < population.size(); i++) {
-		unsigned int j = 0;
+	vector<double> randomNumber;
+	for(unsigned int i = 0; i < aval.size(); i++) {
+		scale_F += aval.at(i);
 		double random = (double)rand() / RAND_MAX; //double between 0 and 1
-		while((j < aval.size()) && (aval.at(j)/scale_F) < random){
+		randomNumber.push_back(random);
+	}
+	aval.at(0) = aval.at(0)/scale_F;
+	for(unsigned int i = 1; i < randomNumber.size(); i++) {
+		aval.at(i) = aval.at(i)/scale_F;
+		aval.at(i) = aval.at(i) + aval.at(i-1);
+	}
+	for(unsigned int i = 0; i < randomNumber.size(); i++) {
+		unsigned int j = 0;
+		while(j < aval.size() && randomNumber.at(i) > aval.at(j)){
 			j++;
 		}
 		res.push_back(j);
 	}
+//	for(unsigned int i = 0; i < randomNumber.size(); i++) {
+//		cout << i << " - "<<res.at(i)<<"- "<<randomNumber.at(i)<<"- "<<aval.at(i)/scale_F<<"\n";
+//	}
 	return res;
 }
 vector<vector<int> > TableManager::crossParents(const vector<vector<int> > &population, const vector<int> &parentIndexes, double p_cross) const{
@@ -250,8 +259,10 @@ vector<vector<int> > TableManager::crossParents(const vector<vector<int> > &popu
 	vector<vector<int> > res;
 	vector<int> isCrossing;
 	for(unsigned int i = 0; i < parentIndexes.size(); i++) {
-		printf("parentIndexes[%d] = %d\n", i, parentIndexes[i]);
-		res.push_back(population.at(parentIndexes[i]));
+		printf("parentIndexes[%d] = %d\n", i, parentIndexes.at(i));
+		printf("population.size: %d\n",population.size());
+		res.push_back(population.at(parentIndexes.at(i)));
+		printf("push back\n");
 		if(((double)rand() / RAND_MAX) < p_cross) {
 			isCrossing.push_back(i);
 		}
