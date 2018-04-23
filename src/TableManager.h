@@ -41,6 +41,20 @@ public:
 	Group * getGroup(int id);
 	vector<vector<unsigned int> > vizinho_func(vector<unsigned int> &solution);
 	vector<double> evaluatePopulation(vector<vector<int> > &pop) const;
+
+	/**
+	 * calcula o valor de uma distribuicao de grupos por mesas,
+	 * tendo em conta a afinidade entre os grupos que partilham uma mesa
+	 * e penalizando (eliminar) violacoes as restricoes
+	 */
+	double calculateStateValue(vector<int>);
+
+	/**
+	 * retorna um novo estado (melhor ou pior que o atual).
+	 * para a escolha de um estado pior, calcular a probabilidade de este ser escolhido e gerar um numero aleatorio;
+	 * se esse numero for menor que a probabilidade calculada, ficar nesse novo estado.
+	 */
+	vector<int> getNeighbor(vector<int> currState);
 };
 
 
