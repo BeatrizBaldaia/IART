@@ -42,17 +42,17 @@ vector<int> TableManager::geneticAlgorithm(vector<vector<int> > &population, dou
 		vector<double> aval = this->evaluatePopulation(population);
 
 		printf("Cycle\n");
-		printf("Function: avaliete\tDone\n");
+//		printf("Function: avaliete\tDone\n");
 		vector<int> elitedParentsIndexes = elitismSelection(population, aval, n_elite);
-		printf("Function: elitismSelection\tDone\n");
+//		printf("Function: elitismSelection\tDone\n");
 		vector<int> parentIndexes = selectParents(population, aval, n_elite);
-		printf("Function: selectParents\tDone\n");
+//		printf("Function: selectParents\tDone\n");
 		vector<vector<int> > children = crossParents(population, parentIndexes, p_cross);
-		printf("Function: crossParents\tDone\n");
+//		printf("Function: crossParents\tDone\n");
 		mutateChildren(children, p_mut);
-		printf("Function: mutateChildren\tDone\n");
+//		printf("Function: mutateChildren\tDone\n");
 		selectNextGen(population, elitedParentsIndexes, children);
-		printf("Function: selectNextGen\tDone\n");
+//		printf("Function: selectNextGen\tDone\n");
 		currentGen++;
 	}
 	//REPEAT ate ...
@@ -97,7 +97,7 @@ double TableManager::aval_fuct(const vector<int> &solution) const {
 	double res = 0, penalty = -DBL_MAX;
 	for (unsigned int i = 0; i < solution.size(); i++) {
 		for (unsigned int j = i + 1; j < solution.size(); j++) {
-			printf("Solution.size() = %d; i = %d; j = %d\n",solution.size(),i,j);
+//			printf("Solution.size() = %d; i = %d; j = %d\n",solution.size(),i,j);
 			double affinity = this->groupsAffinity.at(i).at(j);
 			if (solution.at(i) == solution.at(j)) { // same table
 				res += affinity;
@@ -241,7 +241,7 @@ vector<int> TableManager::selectParents(const vector<vector<int> > &population, 
 	}
 	for(unsigned int i = 0; i < randomNumber.size(); i++) {
 		unsigned int j = 0;
-		while(j < aval.size() && randomNumber.at(i) > aval.at(j)){
+		while(j < (aval.size()-1) && randomNumber.at(i) > aval.at(j)){
 			j++;
 		}
 		res.push_back(j);
@@ -256,10 +256,10 @@ vector<vector<int> > TableManager::crossParents(const vector<vector<int> > &popu
 	vector<vector<int> > res;
 	vector<int> isCrossing;
 	for(unsigned int i = 0; i < parentIndexes.size(); i++) {
-		printf("parentIndexes[%d] = %d\n", i, parentIndexes.at(i));
-		printf("population.size: %d\n",population.size());
+//		printf("parentIndexes[%d] = %d\n", i, parentIndexes.at(i));
+//		printf("population.size: %d\n",population.size());
 		res.push_back(population.at(parentIndexes.at(i)));
-		printf("push back\n");
+//		printf("push back\n");
 		if(((double)rand() / RAND_MAX) < p_cross) {
 			isCrossing.push_back(i);
 		}
