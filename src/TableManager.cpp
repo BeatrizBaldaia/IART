@@ -42,7 +42,7 @@ vector<int> TableManager::geneticAlgorithm(vector<vector<int> > &population, dou
 
 		vector<double> aval = this->evaluatePopulation(population);
 
-		printf("Cycle\n");
+		printf("%d Cycle\n",currentGen);
 //		printf("Function: avaliete\tDone\n");
 		vector<int> elitedParentsIndexes = elitismSelection(population, aval, n_elite);
 //		printf("Function: elitismSelection\tDone\n");
@@ -56,17 +56,6 @@ vector<int> TableManager::geneticAlgorithm(vector<vector<int> > &population, dou
 //		printf("Function: selectNextGen\tDone\n");
 		currentGen++;
 	}
-	//REPEAT ate ...
-		//SEE aval of each solution
-		//Calcular % of selection
-		//Random Selection
-		//Random crussover
-			//FOR ALL crossover
-			//Random point of crossover
-			//Cross
-		//Mutation
-		//Second gen
-
 	return vector<int>();
 }
 vector<double> TableManager::evaluatePopulation(vector<vector<int> > &pop) const {
