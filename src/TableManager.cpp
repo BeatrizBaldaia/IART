@@ -8,6 +8,7 @@
 #include <stdlib.h>
 #include <string>
 #include <time.h>
+#include <algorithm>
 
 JobAreaMap JobAreaMap;
 ReligionMap ReligionMap;
@@ -38,25 +39,30 @@ vector<int> TableManager::geneticAlgorithm(vector<vector<int> > &population, dou
 	printf("I am the genetic algorithm\n");
 	int currentGen = 0;
 	int numStaleGens = 0;
+	double max_aval = -DBL_MAX;
+	vector<int> res;
 	while (currentGen < max_gens && numStaleGens < max_stale_gens) {
 
 		vector<double> aval = this->evaluatePopulation(population);
-
 		printf("%d Cycle\n",currentGen);
-//		printf("Function: avaliete\tDone\n");
 		vector<int> elitedParentsIndexes = elitismSelection(population, aval, n_elite);
-//		printf("Function: elitismSelection\tDone\n");
 		vector<int> parentIndexes = selectParents(population, aval, n_elite);
-//		printf("Function: selectParents\tDone\n");
 		vector<vector<int> > children = crossParents(population, parentIndexes, p_cross);
-//		printf("Function: crossParents\tDone\n");
 		mutateChildren(children, p_mut);
-//		printf("Function: mutateChildren\tDone\n");
 		selectNextGen(population, elitedParentsIndexes, children);
-//		printf("Function: selectNextGen\tDone\n");
+		if(max_aval >= *max_element(aval.begin(), aval.end())) {
+			numStaleGens++;
+		} else {
+			max_aval = *max_element(aval.begin(), aval.end());
+			numStaleGens = 0;
+
+			res = population.at(distance(aval.begin(),max_element(aval.begin(), aval.end())));
+		}
+		printf("\t%f\n",max_aval);
 		currentGen++;
+
 	}
-	return vector<int>();
+	return res;
 }
 vector<double> TableManager::evaluatePopulation(vector<vector<int> > &pop) const {
 	vector<double> res;
@@ -100,12 +106,6 @@ double TableManager::aval_fuct(const vector<int> &solution) const {
 	}
 
 	res -= penalty;
-
-    //Funcao de afinidade entra cada par de groups na mesma mesa
-	//funcao de penalizacao, valor dos grupos com maior afinidade que nao estao na mesma mesa
-	//AB
-	//AC
-	//BC
 	return res;
 }
 
@@ -244,14 +244,10 @@ vector<int> TableManager::selectParents(const vector<vector<int> > &population, 
 	return res;
 }
 vector<vector<int> > TableManager::crossParents(const vector<vector<int> > &population, const vector<int> &parentIndexes, double p_cross) const{
-	//TODO: implement
 	vector<vector<int> > res;
 	vector<int> isCrossing;
 	for(unsigned int i = 0; i < parentIndexes.size(); i++) {
-//		printf("parentIndexes[%d] = %d\n", i, parentIndexes.at(i));
-//		printf("population.size: %d\n",population.size());
 		res.push_back(population.at(parentIndexes.at(i)));
-//		printf("push back\n");
 		if(((double)rand() / RAND_MAX) < p_cross) {
 			isCrossing.push_back(i);
 		}
@@ -318,4 +314,3 @@ vector<vector<int> > TableManager::getRandomPopulation(unsigned int popSize) con
 	}
 	return res;
 }
-

@@ -1,5 +1,15 @@
 #include <iostream>
 #include <stdlib.h>
+#include <map>
+#include <stdio.h>
+#include <float.h>
+#include <iostream>
+#include <fstream>
+#include <sstream>
+#include <stdlib.h>
+#include <string>
+#include <time.h>
+#include <algorithm>
 #include "TableManager.h"
 using namespace std;
 
@@ -28,7 +38,10 @@ int main(int argc, const char * argv[]) {
 	int n_elite = atoi(argv[5]);
 	vector<vector<int> > population = tableManager.getRandomPopulation(20);//TODO: popSize
 	printVectorVectorInteger(population);
-	tableManager.geneticAlgorithm(population, p_cross, p_mut, max_stale_gens, max_gens, n_elite);
+	vector<int> response = tableManager.geneticAlgorithm(population, p_cross, p_mut, max_stale_gens, max_gens, n_elite);
+	for(int i = 0; i < response.size(); i++) {
+		printf("O grupo %d está na mesa %d.\n",i,response.at(i));
+	}
 	cerr<<"FIM\n";
 	return 0;
 }

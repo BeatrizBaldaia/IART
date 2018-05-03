@@ -1,0 +1,5 @@
+p1;10;1;Education;Christianity;Fishing,Computer
+p2;10;2;Politics;Atheism;TeamSports,RentingMovies,Walking
+p3;20;1;Education;Christianity;Fishing,Computer
+p4;20;1;Politics;Atheism;TeamSports,RentingMovies,Walking
+p5;10;2;Education;Christianity;Fishing,Computer
