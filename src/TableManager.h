@@ -30,7 +30,10 @@ private:
 public:
 	TableManager(const char * peopleFile, const char * tablesFile);
 	void calcGroupsAffinity();
-	vector<vector<int> > getRandomPopulation(unsigned int popSize) const;
+	vector<int> fillTables(const vector<int> &gene) const;
+	bool invalidGene(const vector<int> &population) const;
+	vector<int> createNeighbour(vector<int> currGene);
+	vector<vector<int> > getRandomPopulation(unsigned int popSize);
 
 	/**
 	 * Elitism turned off by default.

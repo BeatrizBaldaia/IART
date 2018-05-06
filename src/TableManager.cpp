@@ -90,10 +90,14 @@ void TableManager::calcGroupsAffinity() {
 /**
  * Calculates the fitness value of one possible solution
  * Sum of affinities of group pairs sharing the same table minus penalty
- * TODO: Missing maximization of empty tables?
+ * TODO: Missing maximization of empty tables? verificar se uma mesa tem pessoas a mais
  */
 double TableManager::aval_funct(const vector<int> &solution) const {
 	double res = 0, penalty = - DBL_MAX;
+	vector<int> tables = fillTables(solution);
+	if(invalidGene(tables)) {
+		return -1;
+	}
 	for (unsigned int i = 0; i < solution.size(); i++) {
 		for (unsigned int j = i + 1; j < solution.size(); j++) {
 			//			printf("Solution.size() = %d; i = %d; j = %d\n",solution.size(),i,j);
@@ -302,21 +306,42 @@ void TableManager::selectNextGen(vector<vector<int> > &population, const vector<
 	return;
 }
 
-bool invalidPopulation(const vector<int> &population) {
+vector<int> TableManager::fillTables(const vector<int> &gene) const {
+	vector<int> tables(this->tables.size());
+	for(int i = 0; i < gene.size(); i++) {
+		tables[gene[i]] += this->groups[i].getMembers().size();
+	}
+	return tables;
+}
+
+bool TableManager::invalidGene(const vector<int> &tables) const{
+
+	for(int i = 0; i < tables.size(); i++) {
+		if(this->tables[i].getNumberOfSeats() < tables[i]) {
+			return true;
+		}
+	}
 	return false;
 }
 
-vector<vector<int> > TableManager::getRandomPopulation(unsigned int popSize) const{
+
+vector<vector<int> > TableManager::getRandomPopulation(unsigned int popSize) {
 	vector<vector <int> > res;
+
 	srand (time(NULL));
 	for(unsigned int i = 0; i < popSize; i++) {
 		vector<int> gene;
+		vector<int> auxTables(this->tables.size());
+
 		do {
+
 			for(unsigned int j = 0; j < this->groups.size(); j++) {
+				int nMembers = (this->groups[j].getMembers()).size();
 				int table = rand() % this->tables.size();
+				auxTables[table] += nMembers;
 				gene.push_back(table);
 			}
-		} while(invalidPopulation(gene));
+		} while(invalidGene(auxTables));
 
 		res.push_back(gene);
 	}
@@ -329,8 +354,15 @@ double calculateTemperature(int i, double tempMax) {
 	return temp;
 }
 
-vector<int> createNeighbour(vector<int> currGene) {
-	vector<int> neighbourGene;
+vector<int> TableManager::createNeighbour(vector<int> currGene) {
+	vector<int> neighbourGene = currGene;
+	int nGroups = currGene.size();
+	int nTables = this->tables.size();
+	srand (time(NULL));
+	int randomGroup = rand() % nGroups;
+	int randomTable = rand() % nTables;
+
+	neighbourGene[randomGroup] = randomTable;
 	return neighbourGene;
 }
 
