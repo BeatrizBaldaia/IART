@@ -135,7 +135,7 @@ inline const char* toString(CoolingSchedule v)
 	}
 }
 
-#define NUMBER_RELIGIONS 3
+#define NUMBER_SCHEDULES 3
 
 
 

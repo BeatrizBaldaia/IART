@@ -116,7 +116,7 @@ double Group::eval_age(const Group &other) const {
 		return 0;
 	}
 
-	for(int j = 0; j < diffs.size(); j++) {
+	for(unsigned int j = 0; j < diffs.size(); j++) {
 		res -= diffs[j] / notNullFields;
 	}
 	cout << endl << "eval_age = " << res << endl;
@@ -142,7 +142,7 @@ double Group::eval_jobs(const Group &other) const {
 		return 0;
 	}
 
-	for(int j = 0; j < diffs.size(); j++) {
+	for(unsigned int j = 0; j < diffs.size(); j++) {
 		res -= diffs[j] / notNullFields;
 	}
 	cout << endl << "eval_jobs = " << res << endl;
@@ -169,7 +169,7 @@ double Group::eval_hobbies(const Group &other) const {
 		return 0;
 	}
 
-	for(int j = 0; j < diffs.size(); j++) {
+	for(unsigned int j = 0; j < diffs.size(); j++) {
 		res -= diffs[j] / notNullFields;
 	}
 	cout << endl << "eval_hobbies = " << res << endl;
@@ -197,7 +197,7 @@ double Group::eval_religions(const Group &other) const {
 		return 0;
 	}
 
-	for(int j = 0; j < diffs.size(); j++) {
+	for(unsigned int j = 0; j < diffs.size(); j++) {
 		res -= diffs[j] / notNullFields;
 	}
 

@@ -308,7 +308,7 @@ void TableManager::selectNextGen(vector<vector<int> > &population, const vector<
 
 vector<int> TableManager::fillTables(const vector<int> &gene) const {
 	vector<int> tables(this->tables.size());
-	for(int i = 0; i < gene.size(); i++) {
+	for(unsigned int i = 0; i < gene.size(); i++) {
 		tables[gene[i]] += this->groups[i].getMembers().size();
 	}
 	return tables;
@@ -316,7 +316,7 @@ vector<int> TableManager::fillTables(const vector<int> &gene) const {
 
 bool TableManager::invalidGene(const vector<int> &tables) const{
 
-	for(int i = 0; i < tables.size(); i++) {
+	for(unsigned int i = 0; i < tables.size(); i++) {
 		if(this->tables[i].getNumberOfSeats() < tables[i]) {
 			return true;
 		}
@@ -368,6 +368,8 @@ double calculateTemperature(int i, double initialTemp, CoolingSchedule schedule)
 		return calcGeomTemp(i, initialTemp);
 	case Exponential:
 		return calcExpTemp(i, initialTemp);
+	default:
+		return 0;
 	}
 }
 
