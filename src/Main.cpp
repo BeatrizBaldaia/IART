@@ -10,10 +10,19 @@
 #include <string>
 #include <time.h>
 #include <algorithm>
+#include <thread>
+#include <future>
+
 #include "TableManager.h"
 using namespace std;
 
 void printVectorVectorInteger(vector<vector<int> > v);
+
+void product(std::promise<vector<int>>&& promise, TableManager tableManager, int iterationsMax, double tempMax, int triesMax, const vector<int> &gene, CoolingSchedule schedule){
+	vector<int> optimalGene = tableManager.simulatedAnnealingAlgorithm(iterationsMax, tempMax, triesMax, gene, schedule);
+	promise.set_value(optimalGene);
+}
+
 /**
  * argv[1] = nome do ficheiro de pessoas
  * argv[2] = nome do ficheiro de de mesas
@@ -44,7 +53,10 @@ int main(int argc, const char * argv[]) {
 	int n_elite = atoi(argv[5]);
 	int max_iters = atoi(argv[8]);
 	int max_temp = atoi(argv[9]);
-	CoolingSchedule schedule = argv[10];
+
+	CoolingScheduleMap CoolingScheduleMap;
+	CoolingSchedule schedule = CoolingScheduleMap[argv[10]];
+
 	int max_tries = atoi(argv[11]);
 	vector<vector<int> > population = tableManager.getRandomPopulation(20);//TODO: popSize
 	//printVectorVectorInteger(population);

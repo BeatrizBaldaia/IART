@@ -116,6 +116,27 @@ inline const char* toString(Religion v)
 #define NUMBER_RELIGIONS 7
 
 enum CoolingSchedule {Logarithmic, Geometric, Exponential};
+struct CoolingScheduleMap : public map<const char*, CoolingSchedule>
+{
+	CoolingScheduleMap() {
+		this->operator[]((const char*)"Logarithmic") =  Logarithmic;
+		this->operator[]((const char*)"Geometric") = Geometric;
+		this->operator[]((const char*)"Exponential") = Exponential;
+	};
+	~CoolingScheduleMap(){}
+};
+inline const char* toString(CoolingSchedule v)
+{
+	switch (v) {
+	case Logarithmic:	return "Logarithmic";
+	case Geometric:	return "Geometric";
+	case Exponential:	return "Exponential";
+		default:	return "[Unknown Cooling Schedule]";
+	}
+}
+
+#define NUMBER_RELIGIONS 3
+
 
 
 
