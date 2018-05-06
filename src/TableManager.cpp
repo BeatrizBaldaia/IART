@@ -328,7 +328,6 @@ bool TableManager::invalidGene(const vector<int> &tables) const{
 vector<vector<int> > TableManager::getRandomPopulation(unsigned int popSize) {
 	vector<vector <int> > res;
 
-	srand (time(NULL));
 	for(unsigned int i = 0; i < popSize; i++) {
 		vector<int> gene;
 		vector<int> auxTables(this->tables.size());
@@ -376,7 +375,6 @@ vector<int> TableManager::createNeighbour(vector<int> currGene) {
 	vector<int> neighbourGene = currGene;
 	int nGroups = currGene.size();
 	int nTables = this->tables.size();
-	srand (time(NULL));
 	int randomGroup = rand() % nGroups;
 	int randomTable = rand() % nTables;
 
@@ -384,20 +382,30 @@ vector<int> TableManager::createNeighbour(vector<int> currGene) {
 	return neighbourGene;
 }
 
-vector<int> TableManager::simulatedAnnealingAlgorithm(int iterationsMax, double tempMax, const vector<int> &gene, CoolingSchedule schedule) {
+vector<int> TableManager::simulatedAnnealingAlgorithm(int iterationsMax, double tempMax, int triesMax, const vector<int> &gene, CoolingSchedule schedule) {
 	vector<int> bestGene = gene;
 	vector<int> currGene = gene;
+	int nTries = 0;
 
-	for(int i = 0; i < iterationsMax; i++) {
+	for(int i = 0; i < iterationsMax && nTries < triesMax; i++) {
+		nTries++;
 		vector<int> neighbourGene = createNeighbour(currGene);
 		double currTemp = calculateTemperature(i, tempMax, schedule);
+
+		if(currTemp <= 0) {
+			break;
+		}
+
 		double neighbourCost = aval_funct(neighbourGene);
 		double currCost = aval_funct(currGene);
-		srand (time(NULL));
+
+
+
 		if(neighbourCost <= currCost) {
 			currGene = neighbourGene;
 			if(neighbourCost <= aval_funct(bestGene)) {
 				bestGene = neighbourGene;
+				nTries = 0;
 			}
 		} else if(exp((currCost - neighbourCost) / currTemp) > ((double)rand() / RAND_MAX) ) {
 			currGene = neighbourGene;

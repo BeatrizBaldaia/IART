@@ -59,7 +59,7 @@ public:
 	 */
 	vector<int> getNeighbor(vector<int> currState);
 
-	vector<int> simulatedAnnealingAlgorithm(int iterationsMax, double tempMax, const vector<int> &gene, CoolingSchedule schedule);
+	vector<int> simulatedAnnealingAlgorithm(int iterationsMax, double tempMax, int triesMax, const vector<int> &gene, CoolingSchedule schedule);
 };
 
 
