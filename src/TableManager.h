@@ -20,7 +20,7 @@ private:
 	vector<vector<double> > groupsAffinity;//(groups.size(), vector<double>(groups.size()));//matriz de afinidades
 	void getPeopleFromFile(const char* filename);
 	void getTablesFromFile(const char* filename);
-	void creatGroups();
+	void createGroups();
 
 	vector<int> elitismSelection(const vector<vector<int> > &population, vector<double> aval, int n_elite = -1) const;
 	vector<int> selectParents(const vector<vector<int> > &population, vector<double> aval, int n_elite) const;
@@ -37,7 +37,7 @@ public:
 	 */
 	vector<int> geneticAlgorithm(vector<vector<int> > &population, double p_cross, double p_mut, int max_stale_gens, int max_gens, int n_elite = -1) const;
 
-	double aval_fuct(const vector<int> &solution) const;
+	double aval_funct(const vector<int> &solution) const;
 	Group * getGroup(int id);
 	vector<vector<unsigned int> > vizinho_func(vector<unsigned int> &solution);
 	vector<double> evaluatePopulation(vector<vector<int> > &pop) const;
@@ -55,6 +55,8 @@ public:
 	 * se esse numero for menor que a probabilidade calculada, ficar nesse novo estado.
 	 */
 	vector<int> getNeighbor(vector<int> currState);
+
+	vector<int> simulatedAnnealingAlgorithm(int iterationsMax, double tempMax, const vector<int> &gene, CoolingSchedule schedule);
 };
 
 

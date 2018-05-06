@@ -115,5 +115,8 @@ inline const char* toString(Religion v)
 }
 #define NUMBER_RELIGIONS 7
 
+enum CoolingSchedule {Logarithmic, Geometric, Exponential};
+
+
 
 #endif /* SRC_ENUMCREATION_H_ */
