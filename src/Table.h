@@ -11,11 +11,16 @@
 class Table {
 private:
 	int numberOfSeats;
+	int occupiedSeats = 0;
 public:
 	Table();
 	virtual ~Table();
 	int getNumberOfSeats() const;
 	void setNumberOfSeats(int numberOfSeats);
+	int getOccupiedSeats();
+	void incOccupiedSeats(int n);
+	bool isFull();
+	void resetOccupiedSeats();
 };
 
 #endif /* SRC_TABLE_H_ */

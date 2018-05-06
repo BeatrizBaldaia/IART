@@ -22,3 +22,18 @@ void Table::setNumberOfSeats(int numberOfSeats) {
 Table::~Table() {
 }
 
+int Table::getOccupiedSeats() {
+	return this->occupiedSeats;
+}
+
+void Table::incOccupiedSeats(int n) {
+	this->occupiedSeats += n;
+}
+bool Table::isFull() {
+	return this->occupiedSeats > this->numberOfSeats;
+}
+
+void Table::resetOccupiedSeats() {
+	this->occupiedSeats = 0;
+}
+

@@ -9,6 +9,7 @@
 #include <string>
 #include <time.h>
 #include <algorithm>
+#include <math.h>
 
 JobAreaMap JobAreaMap;
 ReligionMap ReligionMap;
@@ -17,7 +18,7 @@ HobbyMap HobbyMap;
 TableManager::TableManager(const char * peopleFile, const char * tablesFile) {
 	this->getPeopleFromFile(peopleFile);
 	this->getTablesFromFile(tablesFile);
-	this->creatGroups();
+	this->createGroups();
 	for (unsigned int i=0; i <this->groups.size(); i++){
 		cout<<"Group: "<<this->groups[i].getId()<<"\n";
 		cout<<"	p: "<<this->groups[i].getMembers()[0]->getName()<<"\n";
@@ -67,7 +68,7 @@ vector<int> TableManager::geneticAlgorithm(vector<vector<int> > &population, dou
 vector<double> TableManager::evaluatePopulation(vector<vector<int> > &pop) const {
 	vector<double> res;
 	for(unsigned int i = 0; i < pop.size(); i++) {
-		res.push_back(this->aval_fuct(pop[i]));
+		res.push_back(this->aval_funct(pop[i]));
 	}
 	return res;
 }
@@ -91,11 +92,11 @@ void TableManager::calcGroupsAffinity() {
  * Sum of affinities of group pairs sharing the same table minus penalty
  * TODO: Missing maximization of empty tables?
  */
-double TableManager::aval_fuct(const vector<int> &solution) const {
-	double res = 0, penalty = -DBL_MAX;
+double TableManager::aval_funct(const vector<int> &solution) const {
+	double res = 0, penalty = - DBL_MAX;
 	for (unsigned int i = 0; i < solution.size(); i++) {
 		for (unsigned int j = i + 1; j < solution.size(); j++) {
-//			printf("Solution.size() = %d; i = %d; j = %d\n",solution.size(),i,j);
+			//			printf("Solution.size() = %d; i = %d; j = %d\n",solution.size(),i,j);
 			double affinity = this->groupsAffinity.at(i).at(j);
 			if (solution.at(i) == solution.at(j)) { // same table
 				res += affinity;
@@ -179,7 +180,7 @@ void TableManager::getTablesFromFile(const char* filename){
 	}
 	return;
 }
-void TableManager::creatGroups(){
+void TableManager::createGroups(){
 	for (unsigned int i = 0; i < this->people.size(); i++) {
 		this->getGroup(this->people[i].getGroup())->addMember(&(this->people[i]));
 	}
@@ -238,9 +239,9 @@ vector<int> TableManager::selectParents(const vector<vector<int> > &population, 
 		}
 		res.push_back(j);
 	}
-//	for(unsigned int i = 0; i < randomNumber.size(); i++) {
-//		cout << i << " - "<<res.at(i)<<"- "<<randomNumber.at(i)<<"- "<<aval.at(i)/scale_F<<"\n";
-//	}
+	//	for(unsigned int i = 0; i < randomNumber.size(); i++) {
+	//		cout << i << " - "<<res.at(i)<<"- "<<randomNumber.at(i)<<"- "<<aval.at(i)/scale_F<<"\n";
+	//	}
 	return res;
 }
 vector<vector<int> > TableManager::crossParents(const vector<vector<int> > &population, const vector<int> &parentIndexes, double p_cross) const{
@@ -301,16 +302,58 @@ void TableManager::selectNextGen(vector<vector<int> > &population, const vector<
 	return;
 }
 
+bool invalidPopulation(const vector<int> &population) {
+	return false;
+}
+
 vector<vector<int> > TableManager::getRandomPopulation(unsigned int popSize) const{
 	vector<vector <int> > res;
 	srand (time(NULL));
 	for(unsigned int i = 0; i < popSize; i++) {
 		vector<int> gene;
-		for(unsigned int j = 0; j < this->groups.size(); j++) {
-			int table = rand() % this->tables.size();
-			gene.push_back(table);
-		}
+		do {
+			for(unsigned int j = 0; j < this->groups.size(); j++) {
+				int table = rand() % this->tables.size();
+				gene.push_back(table);
+			}
+		} while(invalidPopulation(gene));
+
 		res.push_back(gene);
 	}
+
 	return res;
 }
+
+double calculateTemperature(int i, double tempMax) {
+	double temp;
+	return temp;
+}
+
+vector<int> createNeighbour(vector<int> currGene) {
+	vector<int> neighbourGene;
+	return neighbourGene;
+}
+
+vector<int> TableManager::simulatedAnnealingAlgorithm(int iterationsMax, double tempMax, const vector<int> &gene, CoolingSchedule schedule) {
+	vector<int> bestGene = gene;
+	vector<int> currGene = gene;
+
+	for(int i = 0; i < iterationsMax; i++) {
+		vector<int> neighbourGene = createNeighbour(currGene);
+		double currTemp = calculateTemperature(i, tempMax);
+		double neighbourCost = aval_funct(neighbourGene);
+		double currCost = aval_funct(currGene);
+		srand (time(NULL));
+		if(neighbourCost <= currCost) {
+			currGene = neighbourGene;
+			if(neighbourCost <= aval_funct(bestGene)) {
+				bestGene = neighbourGene;
+			}
+		} else if(exp((currCost - neighbourCost) / currTemp) > ((double)rand() / RAND_MAX) ) {
+			currGene = neighbourGene;
+		}
+	}
+	return bestGene;
+}
+
+
