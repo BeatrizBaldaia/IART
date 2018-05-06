@@ -18,7 +18,9 @@ using namespace std;
 
 void printVectorVectorInteger(vector<vector<int>> v);
 
-void getOptimalGene(std::promise<vector<int>> &&promise, TableManager tableManager, int iterationsMax, double tempMax, int triesMax, const vector<int> &gene, CoolingSchedule schedule);
+void getOptimalGene(TableManager tableManager, int iterationsMax, double tempMax, int triesMax, vector<int> gene, CoolingSchedule schedule);
+
+vector<vector<int>>optimalGenes;
 
 /**
  * argv[1] = nome do ficheiro de pessoas
@@ -31,7 +33,7 @@ int main(int argc, const char *argv[])
 	if (argc != 12)
 	{
 		cout << "Invalid arguments: <people_file> <tables_file>"
-			 << "<p_cross> <p_mut> <n_elite> <max_stale_gens> <max_gens> <max_iters> <max_temp> <schedule>\n\n";
+			 << " <p_cross> <p_mut> <n_elite> <max_stale_gens> <max_gens> <max_iters> <max_temp> <schedule> <max_tries>\n\n";
 
 		cout << "\t"
 			 << "n_elite: Number of most fit individuals chosen directly to the next generation.\n";
@@ -52,6 +54,7 @@ int main(int argc, const char *argv[])
 	srand(time(NULL));
 
 	TableManager tableManager(argv[1], argv[2]);
+	
 	double p_cross = atof(argv[3]);
 	double p_mut = atof(argv[4]);
 	int max_stale_gens = atoi(argv[6]);
@@ -64,32 +67,23 @@ int main(int argc, const char *argv[])
 	CoolingSchedule schedule = CoolingScheduleMap[argv[10]];
 
 	int max_tries = atoi(argv[11]);
+	
 	vector<vector<int>> population = tableManager.getRandomPopulation(20); //TODO: popSize
 																		   //printVectorVectorInteger(population);
+	
 
 	vector<thread> threads;
-	vector<future<vector<int>>> results;
-	vector<promise<vector<int>>> promises;
 	for (int i = 0; i < 20; i++)
 	{
-		// define the promises
-		promise<vector<int>> promise;
-		promises.push_back(move(promise));
-		// get the futures
-		future<vector<int>> promiseResult = promises[i].get_future();
-		results.push_back(move(promiseResult));
-
-		// calculate the result in a separat thread
-		threads.push_back(thread(getOptimalGene, move(promises[i]), tableManager, max_iters, max_temp, max_tries, population[i], schedule));
-	}
-
-	for (int i = 0; i < 20; i++) {
-		population[i] = results[i].get();
+		printf("aqui %d!\n", i);
+		threads.push_back(thread(getOptimalGene, tableManager, max_iters, max_temp, max_tries, population[i], schedule));
 	}
 
 	for(thread& th: threads) {
 		th.join();
 	}
+
+	printVectorVectorInteger(optimalGenes);
 
 	vector<int> response = tableManager.geneticAlgorithm(population, p_cross, p_mut, max_stale_gens, max_gens, n_elite);
 	for (unsigned int i = 0; i < response.size(); i++)
@@ -112,8 +106,10 @@ void printVectorVectorInteger(vector<vector<int>> v)
 	}
 }
 
-void getOptimalGene(std::promise<vector<int>> &&promise, TableManager tableManager, int iterationsMax, double tempMax, int triesMax, const vector<int> &gene, CoolingSchedule schedule)
+void getOptimalGene(TableManager tableManager, int iterationsMax, double tempMax, int triesMax, vector<int> gene, CoolingSchedule schedule)
 {
+	printf("jeez...");
 	vector<int> optimalGene = tableManager.simulatedAnnealingAlgorithm(iterationsMax, tempMax, triesMax, gene, schedule);
-	promise.set_value(optimalGene);
+	
+	optimalGenes.push_back(optimalGene);
 }
