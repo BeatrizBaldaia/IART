@@ -324,9 +324,27 @@ vector<vector<int> > TableManager::getRandomPopulation(unsigned int popSize) con
 	return res;
 }
 
-double calculateTemperature(int i, double tempMax) {
-	double temp;
-	return temp;
+double calcLogTemp(int iteration, double initialTemp, double alpha = 1.0) {
+	return alpha * initialTemp / log(1 + iteration);
+}
+
+double calcGeomTemp(int iteration, double initialTemp, double alpha = 0.85) {
+	return pow(alpha, iteration) * initialTemp;
+}
+
+double calcExpTemp(int iteration, double initialTemp, double alpha = 1.0) {
+	return initialTemp * pow(alpha, iteration);
+}
+
+double calculateTemperature(int i, double initialTemp, CoolingSchedule schedule) {
+	switch (schedule) {
+	case Logarithmic:
+		return calcLogTemp(i, initialTemp);
+	case Geometric:
+		return calcGeomTemp(i, initialTemp);
+	case Exponential:
+		return calcExpTemp(i, initialTemp);
+	}
 }
 
 vector<int> createNeighbour(vector<int> currGene) {
@@ -340,7 +358,7 @@ vector<int> TableManager::simulatedAnnealingAlgorithm(int iterationsMax, double 
 
 	for(int i = 0; i < iterationsMax; i++) {
 		vector<int> neighbourGene = createNeighbour(currGene);
-		double currTemp = calculateTemperature(i, tempMax);
+		double currTemp = calculateTemperature(i, tempMax, schedule);
 		double neighbourCost = aval_funct(neighbourGene);
 		double currCost = aval_funct(currGene);
 		srand (time(NULL));
