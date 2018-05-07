@@ -39,7 +39,7 @@ TableManager::TableManager(const char *peopleFile, const char *tablesFile)
 /**
  *
  */
-vector<int> TableManager::geneticAlgorithm(vector<vector<int>> &population, double p_cross, double p_mut, int max_stale_gens, int max_gens, int n_elite) const
+vector<int> TableManager::geneticAlgorithm(vector<vector<int> > &population, double p_cross, double p_mut, int max_stale_gens, int max_gens, int n_elite) const
 {
 	printf("I am the genetic algorithm\n");
 	int currentGen = 0;
@@ -53,7 +53,7 @@ vector<int> TableManager::geneticAlgorithm(vector<vector<int>> &population, doub
 		printf("%d Cycle\n", currentGen);
 		vector<int> elitedParentsIndexes = elitismSelection(population, aval, n_elite);
 		vector<int> parentIndexes = selectParents(population, aval, n_elite);
-		vector<vector<int>> children = crossParents(population, parentIndexes, p_cross);
+		vector<vector<int> > children = crossParents(population, parentIndexes, p_cross);
 		mutateChildren(children, p_mut);
 		selectNextGen(population, elitedParentsIndexes, children);
 		if (max_aval >= *max_element(aval.begin(), aval.end()))
@@ -72,7 +72,7 @@ vector<int> TableManager::geneticAlgorithm(vector<vector<int>> &population, doub
 	}
 	return res;
 }
-vector<double> TableManager::evaluatePopulation(vector<vector<int>> &pop) const
+vector<double> TableManager::evaluatePopulation(vector<vector<int> > &pop) const
 {
 	vector<double> res;
 	for (unsigned int i = 0; i < pop.size(); i++)
@@ -234,9 +234,9 @@ Group *TableManager::getGroup(int id)
 	return &(this->groups.back());
 }
 
-vector<vector<unsigned int>> TableManager::vizinho_func(vector<unsigned int> &solution)
+vector<vector<unsigned int> > TableManager::vizinho_func(vector<unsigned int> &solution)
 { //indice group value table number
-	vector<vector<unsigned int>> res;
+	vector<vector<unsigned int> > res;
 	for (unsigned int i = 0; i < solution.size(); i++)
 	{
 		for (unsigned int j = 0; j < this->tables.size(); j++)
@@ -251,7 +251,7 @@ vector<vector<unsigned int>> TableManager::vizinho_func(vector<unsigned int> &so
 	}
 	return res;
 }
-vector<int> TableManager::elitismSelection(const vector<vector<int>> &population, vector<double> aval, int n_elite /*=-1*/) const
+vector<int> TableManager::elitismSelection(const vector<vector<int> > &population, vector<double> aval, int n_elite /*=-1*/) const
 {
 	vector<int> res;
 	if (n_elite > 0)
@@ -260,7 +260,7 @@ vector<int> TableManager::elitismSelection(const vector<vector<int>> &population
 	}
 	return res;
 }
-vector<int> TableManager::selectParents(const vector<vector<int>> &population, vector<double> aval, int n_elite) const
+vector<int> TableManager::selectParents(const vector<vector<int> > &population, vector<double> aval, int n_elite) const
 {
 	vector<int> res;
 	double scale_F = 0;
@@ -292,9 +292,9 @@ vector<int> TableManager::selectParents(const vector<vector<int>> &population, v
 	//	}
 	return res;
 }
-vector<vector<int>> TableManager::crossParents(const vector<vector<int>> &population, const vector<int> &parentIndexes, double p_cross) const
+vector<vector<int> > TableManager::crossParents(const vector<vector<int> > &population, const vector<int> &parentIndexes, double p_cross) const
 {
-	vector<vector<int>> res;
+	vector<vector<int> > res;
 	vector<int> isCrossing;
 	for (unsigned int i = 0; i < parentIndexes.size(); i++)
 	{
@@ -333,7 +333,7 @@ vector<vector<int>> TableManager::crossParents(const vector<vector<int>> &popula
 	}
 	return res;
 }
-void TableManager::mutateChildren(vector<vector<int>> &children, double p_mut) const
+void TableManager::mutateChildren(vector<vector<int> > &children, double p_mut) const
 {
 	for (unsigned int i = 0; i < children.size(); i++)
 	{
@@ -348,9 +348,9 @@ void TableManager::mutateChildren(vector<vector<int>> &children, double p_mut) c
 	}
 	return;
 }
-void TableManager::selectNextGen(vector<vector<int>> &population, const vector<int> &elitedParentsIndexes, const vector<vector<int>> &children) const
+void TableManager::selectNextGen(vector<vector<int> > &population, const vector<int> &elitedParentsIndexes, const vector<vector<int> > &children) const
 {
-	vector<vector<int>> elited;
+	vector<vector<int> > elited;
 	for (unsigned int i = 0; i < elitedParentsIndexes.size(); i++)
 	{
 		elited.push_back(population[elitedParentsIndexes[i]]);
@@ -386,9 +386,9 @@ bool TableManager::invalidGene(const vector<int> &tables) const
 	return false;
 }
 
-vector<vector<int>> TableManager::getRandomPopulation(unsigned int popSize)
+vector<vector<int> > TableManager::getRandomPopulation(unsigned int popSize)
 {
-	vector<vector<int>> res;
+	vector<vector<int> > res;
 
 	for (unsigned int i = 0; i < popSize; i++)
 	{

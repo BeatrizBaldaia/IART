@@ -1,7 +1,4 @@
-#include "Group.h"
 #include <cmath>
-#include "Person.h"
-#include "TableManager.h"
 #include <map>
 #include <stdio.h>
 #include <float.h>
@@ -10,9 +7,12 @@
 #include <sstream>
 #include <stdlib.h>
 #include <string>
-
 #include <iostream>
 #include <stdlib.h>
+
+
+
+#include "Group.h"
 
 void Group::addMember(const Person * newMember){
 	this->members.push_back(newMember);
