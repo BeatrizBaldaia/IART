@@ -110,7 +110,7 @@ double TableManager::aval_funct(const vector<int> &solution) const
 	vector<int> tables = fillTables(solution);
 	if (invalidGene(tables))
 	{
-		return -1;
+		return penalty;
 	}
 	for (unsigned int i = 0; i < solution.size(); i++)
 	{
@@ -379,7 +379,8 @@ bool TableManager::invalidGene(const vector<int> &tables) const
 	for (unsigned int i = 0; i < tables.size(); i++)
 	{
 		if (this->tables[i].getNumberOfSeats() < tables[i])
-		{
+		{	
+			printf(">>pessoas na mesa %d: %d\n", i, tables[i]);
 			return true;
 		}
 	}
@@ -403,6 +404,7 @@ vector<vector<int>> TableManager::getRandomPopulation(unsigned int popSize)
 		vector<int> auxTables(this->tables.size());
 		do
 		{
+			gene.clear();
 			fill(auxTables.begin(), auxTables.end(), 0);
 			for (unsigned int j = 0; j < this->groups.size(); j++)
 			{

@@ -1,0 +1,3 @@
+p0;20;1;Science;Judaism;Fishing
+p1;20;2;Science;Judaism;Walking
+p2;20;3;Science;Judaism;Fishing
