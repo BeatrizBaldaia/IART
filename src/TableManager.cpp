@@ -386,6 +386,13 @@ bool TableManager::invalidGene(const vector<int> &tables) const
 	return false;
 }
 
+void printRow(const vector<int> &v) {
+	for(int i = 0; i < v.size(); i++) {
+		printf("%d| ", v[i]);
+	}
+	printf("\n");
+}
+
 vector<vector<int>> TableManager::getRandomPopulation(unsigned int popSize)
 {
 	vector<vector<int>> res;
@@ -394,7 +401,6 @@ vector<vector<int>> TableManager::getRandomPopulation(unsigned int popSize)
 	{
 		vector<int> gene;
 		vector<int> auxTables(this->tables.size());
-
 		do
 		{
 			fill(auxTables.begin(), auxTables.end(), 0);
@@ -408,12 +414,12 @@ vector<vector<int>> TableManager::getRandomPopulation(unsigned int popSize)
 			}
 
 		} while (invalidGene(auxTables));
-
 		res.push_back(gene);
 	}
 
 	return res;
 }
+
 
 double calcLogTemp(int iteration, double initialTemp, double alpha = 1.0)
 {
@@ -466,28 +472,36 @@ vector<int> TableManager::simulatedAnnealingAlgorithm(int iterationsMax, double 
 	for (int i = 0; i < iterationsMax && nTries < triesMax; i++)
 	{
 		nTries++;
+		printf("Vai calcular vizinho\n");
 		vector<int> neighbourGene = createNeighbour(currGene);
+		printf("Criou vizinho\n");
 		double currTemp = calculateTemperature(i, tempMax, schedule);
+		printf("Calculou temperatura\n");
 
 		if (currTemp <= 0)
 		{
+			printf("temperatura a zero. parar!\n");
 			break;
 		}
 
 		double neighbourCost = aval_funct(neighbourGene);
+		printf("Avaliou o vizinho: %f\n", neighbourCost);
 		double currCost = aval_funct(currGene);
+		printf("Avaliou o gene atual: %f\n", currCost);
 
 		if (neighbourCost <= currCost)
 		{
 			currGene = neighbourGene;
 			if (neighbourCost <= aval_funct(bestGene))
 			{
+				printf("Atualizar o melhor gene\n");
 				bestGene = neighbourGene;
 				nTries = 0;
 			}
 		}
 		else if (exp((currCost - neighbourCost) / currTemp) > ((double)rand() / RAND_MAX))
 		{
+			printf("Atualizar o gene atual\n");
 			currGene = neighbourGene;
 		}
 	}
