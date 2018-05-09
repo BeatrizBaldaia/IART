@@ -15,12 +15,16 @@
 #include "TableManager.h"
 using namespace std;
 
+<<<<<<< HEAD
+=======
+void printVectorVectorInteger(vector<vector<int> > v);
+>>>>>>> ad5b349a441a968b9fdbe6baaecfbeee39a73ded
 
 void printVectorVectorInteger(const vector<vector<int> > &v);
 
 void getOptimalGene(TableManager tableManager, int iterationsMax, double tempMax, int triesMax, const vector<int> & gene, CoolingSchedule schedule);
 
-vector<vector<int>>optimalGenes;
+vector<vector<int> >optimalGenes;
 
 /**
  * argv[1] = nome do ficheiro de pessoas
@@ -68,9 +72,15 @@ int main(int argc, const char *argv[])
 
 	int max_tries = atoi(argv[11]);
 	
+<<<<<<< HEAD
 	vector<vector<int>> population = tableManager.getRandomPopulation(20); //TODO: popSize
 	printVectorVectorInteger(population);
 
+=======
+	vector<vector<int> > population = tableManager.getRandomPopulation(20); //TODO: popSize
+																		   //printVectorVectorInteger(population);
+	
+>>>>>>> ad5b349a441a968b9fdbe6baaecfbeee39a73ded
 	vector<thread> threads;
 	for (int i = 0; i < 20; i++)
 	{
