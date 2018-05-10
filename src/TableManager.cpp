@@ -501,6 +501,7 @@ vector<int> TableManager::simulatedAnnealingAlgorithm(int iterationsMax, double 
 				nTries = 0;
 			}
 		}
+		//TODO: check if
 		else if (exp((currCost - neighbourCost) / currTemp) > ((double)rand() / RAND_MAX))
 		{
 			printf("Atualizar o gene atual\n");

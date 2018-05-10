@@ -15,11 +15,6 @@
 #include "TableManager.h"
 using namespace std;
 
-<<<<<<< HEAD
-=======
-void printVectorVectorInteger(vector<vector<int> > v);
->>>>>>> ad5b349a441a968b9fdbe6baaecfbeee39a73ded
-
 void printVectorVectorInteger(const vector<vector<int> > &v);
 
 void getOptimalGene(TableManager tableManager, int iterationsMax, double tempMax, int triesMax, const vector<int> & gene, CoolingSchedule schedule);
@@ -72,28 +67,25 @@ int main(int argc, const char *argv[])
 
 	int max_tries = atoi(argv[11]);
 	
-<<<<<<< HEAD
 	vector<vector<int>> population = tableManager.getRandomPopulation(20); //TODO: popSize
 	printVectorVectorInteger(population);
 
-=======
-	vector<vector<int> > population = tableManager.getRandomPopulation(20); //TODO: popSize
-																		   //printVectorVectorInteger(population);
-	
->>>>>>> ad5b349a441a968b9fdbe6baaecfbeee39a73ded
-	vector<thread> threads;
-	for (int i = 0; i < 20; i++)
-	{
-		printf("criou thread %d!\n", i);
+//	vector<thread> threads;
+	vector<thread *> threads;
+	for (int i = 0; i < 20; i++) {
+		printf("\t\t\tcriou thread %d!\n", i);
 		thread th (getOptimalGene, tableManager, max_iters, max_temp, max_tries, population[i], schedule);
-		
 		printf("thread\n");
 		
-		threads.push_back(move(th));
+//		threads.push_back(move(th));
+		threads.push_back(&th);
 	}
 
-	for(thread& th: threads) {
-		th.join();
+//	for(thread& th: threads) {
+//		th.join();
+//	}
+	for (int i = 0; i < 20; i++) {
+		threads[i]->join();
 	}
 
 	printVectorVectorInteger(optimalGenes);
