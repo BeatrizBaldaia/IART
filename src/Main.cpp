@@ -70,16 +70,22 @@ int main(int argc, const char *argv[])
 	vector<vector<int>> population = tableManager.getRandomPopulation(20); //TODO: popSize
 	printVectorVectorInteger(population);
 
-	vector<thread> threads;
-	for (int i = 0; i < 20; i++)
-	{
+	vector<thread *> threads;
+	for (int i = 0; i < 20; i++) {
 		printf("criou thread %d!\n", i);
-		thread th (getOptimalGene, tableManager, max_iters, max_temp, max_tries, population[i], schedule);
+		thread* t = new thread(getOptimalGene, tableManager, max_iters, max_temp, max_tries, population[i], schedule);
 		printf("thread\n");
-		
-//		threads.push_back(move(th));
-		threads.push_back(&th);
+		threads.push_back(t);
 	}
+//	thread th;
+//	for (int i = 0; i < 20; i++) {
+//		printf("criou thread %d!\n", i);
+//		th = thread(getOptimalGene, tableManager, max_iters, max_temp, max_tries, population[i], schedule);
+//		printf("thread\n");
+//
+////		threads.push_back(move(th));
+//		threads.push_back(&th);
+//	}
 
 //	for(thread& th: threads) {
 //		th.join();
