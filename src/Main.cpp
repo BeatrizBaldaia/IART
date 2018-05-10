@@ -15,10 +15,6 @@
 #include "TableManager.h"
 using namespace std;
 
-<<<<<<< HEAD
-=======
-void printVectorVectorInteger(vector<vector<int> > v);
->>>>>>> ad5b349a441a968b9fdbe6baaecfbeee39a73ded
 
 void printVectorVectorInteger(const vector<vector<int> > &v);
 
@@ -72,15 +68,9 @@ int main(int argc, const char *argv[])
 
 	int max_tries = atoi(argv[11]);
 	
-<<<<<<< HEAD
 	vector<vector<int>> population = tableManager.getRandomPopulation(20); //TODO: popSize
 	printVectorVectorInteger(population);
 
-=======
-	vector<vector<int> > population = tableManager.getRandomPopulation(20); //TODO: popSize
-																		   //printVectorVectorInteger(population);
-	
->>>>>>> ad5b349a441a968b9fdbe6baaecfbeee39a73ded
 	vector<thread> threads;
 	for (int i = 0; i < 20; i++)
 	{
