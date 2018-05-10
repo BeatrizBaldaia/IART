@@ -93,7 +93,6 @@ int main(int argc, const char *argv[])
 	for (int i = 0; i < 20; i++) {
 		threads[i]->join();
 	}
-
 	printVectorVectorInteger(optimalGenes);
 
 	vector<int> response = tableManager.geneticAlgorithm(population, p_cross, p_mut, max_stale_gens, max_gens, n_elite);

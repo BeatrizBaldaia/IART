@@ -487,14 +487,19 @@ vector<int> TableManager::simulatedAnnealingAlgorithm(int iterationsMax, double 
 		}
 
 		double neighbourCost = aval_funct(neighbourGene);
+		neighbourCost = -DBL_MAX ? DBL_MAX : DBL_MAX - neighbourCost;
 		printf("Avaliou o vizinho: %f\n", neighbourCost);
-		double currCost = aval_funct(currGene);
+		double currCost = DBL_MAX - aval_funct(currGene);
+		currCost = -DBL_MAX ? DBL_MAX : DBL_MAX - currCost;
+
 		printf("Avaliou o gene atual: %f\n", currCost);
 
 		if (neighbourCost <= currCost)
 		{
 			currGene = neighbourGene;
-			if (neighbourCost <= aval_funct(bestGene))
+			double bestCost = DBL_MAX - aval_funct(bestGene);
+			bestCost = -DBL_MAX ? DBL_MAX : DBL_MAX - bestCost;
+			if (neighbourCost <= bestCost)
 			{
 				printf("Atualizar o melhor gene\n");
 				bestGene = neighbourGene;
