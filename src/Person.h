@@ -33,7 +33,7 @@ private:
 public:
 	Person();
 	virtual ~Person();
-	double aval_func(Person person); //afinidade entre duas pessoas
+	double eval_func(Person person); //afinidade entre duas pessoas
 
 	int getAge() const {
 		return age;

@@ -36,43 +36,7 @@ TableManager::TableManager(const char *peopleFile, const char *tablesFile)
 	printf("I created a Table Manager!\n");
 }
 
-/**
- *
- */
-vector<int> TableManager::geneticAlgorithm(vector<vector<int>> &population, double p_cross, double p_mut, int max_stale_gens, int max_gens, int n_gene, int n_elite) const
-{
-	printf("I am the genetic algorithm\n");
-	int currentGen = 0;
-	int numStaleGens = 0;
-	double max_aval = -DBL_MAX;
-	vector<int> res;
-	while (currentGen < max_gens && numStaleGens < max_stale_gens)
-	{
 
-		vector<double> aval = evaluatePopulation(population);
-		printf("%d Cycle\n", currentGen);
-		vector<int> elitedParentsIndexes = elitismSelection(aval, n_elite);
-		int nRadomSelection = n_gene - n_elite;
-		vector<int> parentIndexes = selectParents(population, aval, nRadomSelection);
-		vector<vector<int>> children = crossParents(population, parentIndexes, p_cross);
-		mutateChildren(children, p_mut);
-		selectNextGen(population, elitedParentsIndexes, children);
-		if (max_aval >= *max_element(aval.begin(), aval.end()))
-		{
-			numStaleGens++;
-		}
-		else
-		{
-			max_aval = *max_element(aval.begin(), aval.end());
-			numStaleGens = 0;
-
-			res = population.at(distance(aval.begin(), max_element(aval.begin(), aval.end())));
-		}
-		printf("\t%f\n", max_aval);
-		currentGen++;
-	}
-	return res;
-}
 vector<double> TableManager::evaluatePopulation(vector<vector<int>> &pop) const
 {
 	vector<double> res;
@@ -252,10 +216,10 @@ vector<vector<unsigned int>> TableManager::vizinho_func(vector<unsigned int> &so
 	}
 	return res;
 }
-vector<int> TableManager::elitismSelection(vector<double> aval, int n_elite) const
+vector<int> TableManager::elitismSelection(vector<double> eval, int n_elite) const
 {
 	vector<int> res;
-	vector<double> aux = aval;
+	vector<double> aux = eval;
 
 	while (n_elite > 0)
 	{
@@ -267,78 +231,94 @@ vector<int> TableManager::elitismSelection(vector<double> aval, int n_elite) con
 	}
 	return res;
 }
-vector<int> TableManager::selectParents(const vector<vector<int>> &population, vector<double> aval, int nSelection) const
-{
-	vector<int> res;
-	double scale_F = 0;
-	//TODO: incorporate n_elite
-	vector<double> randomNumber;
-	for (unsigned int i = 0; i < aval.size(); i++)
-	{
-		scale_F += aval.at(i);
-		double random = (double)rand() / RAND_MAX; //double between 0 and 1
-		randomNumber.push_back(random);
+
+vector<vector<int>> getElitedParents(const vector<vector<int>> &population, vector<int> indexes) {
+	vector<vector<int>> result;
+	for(int i = 0; i < indexes.size(); i++) {
+		result.push_back(population[indexes[i]]);
 	}
-	aval.at(0) = aval.at(0) / scale_F;
-	for (unsigned int i = 1; i < randomNumber.size(); i++)
-	{
-		aval.at(i) = aval.at(i) / scale_F;
-		aval.at(i) = aval.at(i) + aval.at(i - 1);
-	}
-	for (unsigned int i = 0; i < randomNumber.size(); i++)
-	{
-		unsigned int j = 0;
-		while (j < (aval.size() - 1) && randomNumber.at(i) > aval.at(j))
-		{
-			j++;
-		}
-		res.push_back(j);
-	}
-	//	for(unsigned int i = 0; i < randomNumber.size(); i++) {
-	//		cout << i << " - "<<res.at(i)<<"- "<<randomNumber.at(i)<<"- "<<aval.at(i)/scale_F<<"\n";
-	//	}
-	return res;
+
+	return result;
 }
+
+vector<double> scaleFunction(vector<double> eval) {
+	double scale_F = accumulate(eval.begin(), eval.end(), 0);
+	for(double &e: eval) {
+		e /= scale_F;
+	}
+	
+	vector<double> range;
+	range.push_back(eval[0]);
+	for(int i = 1; i < eval.size(); i++) {
+		range.push_back(range[i - 1] + eval[i]);
+	}
+
+	return range;
+}
+
+int getGeneFromRange(const vector<double> &range, double n) {
+	for(int i = 0; i < range.size(); i++) {
+		if(range[i] >= n) {
+			return i;
+		}
+	}
+
+	cerr << "Error in getGeneFromRange(): Number out of range.\n";
+	return -1;
+}
+
+vector<int> TableManager::selectParents(const vector<vector<int>> &population, vector<double> eval, int nSelection) const
+{
+	vector<double> scale = scaleFunction(eval);
+	vector<int> selectedGenes;
+
+	for (unsigned int i = 0; i < nSelection; i++)
+	{
+		double random = (double)(rand() % 2); //double between 0 and 1
+		int index = getGeneFromRange(scale, random);
+		selectedGenes.push_back(index);
+	}
+	
+	return selectedGenes;
+}
+
+vector<int> getGenesForCrossover(int nGenes, double p_cross) {
+	vector<int> result;
+	int index = 0;
+	while(nGenes > 0) {
+		double random = (double)(rand() % 2);
+		if(random <= p_cross) {
+			result.push_back(index);
+		}
+		index++;
+		nGenes--;
+	}
+	return result;
+}
+
+void crossGenes(vector<int> &gene1, vector<int> &gene2) {
+	int max = gene1.size() - 2, min = 1;
+	int randNum = rand()%(max - min + 1) + min;
+
+	for(int i = randNum; i < gene1.size(); i++) {
+		int seatA = gene1[i], seatB = gene2[i];
+		gene1[i] = seatB;
+		gene2[i] = seatA;
+	}
+}
+
 vector<vector<int>> TableManager::crossParents(const vector<vector<int>> &population, const vector<int> &parentIndexes, double p_cross) const
 {
-	vector<vector<int>> res;
-	vector<int> isCrossing;
-	for (unsigned int i = 0; i < parentIndexes.size(); i++)
-	{
-		res.push_back(population.at(parentIndexes.at(i)));
-		if (((double)rand() / RAND_MAX) < p_cross)
-		{
-			isCrossing.push_back(i);
-		}
+	vector<vector<int>> result = population;
+	vector<int> crossCandidates = getGenesForCrossover(population.size(), p_cross);
+	int nCross = (crossCandidates.size() % 2 == 0)? crossCandidates.size() : crossCandidates.size() - 1;
+	
+	for(int i = 0; i < nCross; i++, i++) {
+		int parent1 = parentIndexes[i], parent2 = parentIndexes[i + 1];
+		crossGenes(result[parent1], result[parent2]);
 	}
-	for (unsigned int i = 0; i < isCrossing.size() - 1; i++)
-	{
-		int j = i;
-		i++;
-
-		unsigned int cross_point = rand() % population[0].size();
-
-		vector<int> aux_i;
-		vector<int> aux_j;
-
-		unsigned int k = 0;
-		while (k < cross_point)
-		{
-			aux_i.push_back(res[i][k]);
-			aux_j.push_back(res[j][k]);
-			k++;
-		}
-		while (k < res[0].size())
-		{
-			aux_i.push_back(res[j][k]);
-			aux_j.push_back(res[i][k]);
-			k++;
-		}
-
-		res.at(i) = aux_i;
-		res.at(j) = aux_j;
-	}
-	return res;
+	
+	return result;
 }
 void TableManager::mutateChildren(vector<vector<int>> &children, double p_mut) const
 {
@@ -368,6 +348,46 @@ void TableManager::selectNextGen(vector<vector<int>> &population, const vector<i
 		population.push_back(elited[i]);
 	}
 	return;
+}
+
+/**
+ *
+ */
+vector<int> TableManager::geneticAlgorithm(vector<vector<int>> &population, double p_cross, double p_mut, int max_stale_gens, int max_gens, int n_gene, int n_elite) const
+{
+	printf("I am the genetic algorithm\n");
+	int currentGen = 0;
+	int numStaleGens = 0;
+	double max_eval = -DBL_MAX;
+	vector<int> res;
+	while (currentGen < max_gens && numStaleGens < max_stale_gens)
+	{
+
+		vector<double> eval = evaluatePopulation(population);
+		printf("%d Cycle\n", currentGen);
+		vector<int> elitedParentsIndexes = elitismSelection(eval, n_elite);
+		vector<vector<int>> elitedParents = getElitedParents(population, elitedParentsIndexes);
+		int nRadomSelection = n_gene - n_elite;
+		vector<int> parentIndexes = selectParents(population, eval, nRadomSelection);
+		vector<vector<int>> children = crossParents(population, parentIndexes, p_cross);
+		mutateChildren(children, p_mut);
+		//children.insert( children.end(), elitedParents.begin(), elitedParents.end() ); //next generation
+		selectNextGen(population, elitedParentsIndexes, children);
+		if (max_eval >= *max_element(eval.begin(), eval.end()))
+		{
+			numStaleGens++;
+		}
+		else
+		{
+			max_eval = *max_element(eval.begin(), eval.end());
+			numStaleGens = 0;
+
+			res = population.at(distance(eval.begin(), max_element(eval.begin(), eval.end())));
+		}
+		printf("\t%f\n", max_eval);
+		currentGen++;
+	}
+	return res;
 }
 
 vector<int> TableManager::fillTables(const vector<int> &gene) const

@@ -9,6 +9,7 @@
 #define SRC_TABLEMANAGER_H_
 
 #include <vector>
+#include <numeric>      // std::accumulate
 #include "Group.h"
 #include "Table.h"
 
@@ -22,8 +23,8 @@ private:
 	void getTablesFromFile(const char* filename);
 	void createGroups();
 
-	vector<int> elitismSelection(vector<double> aval, int n_elite = -1) const;
-	vector<int> selectParents(const vector<vector<int> > &population, vector<double> aval, int nSelection) const;
+	vector<int> elitismSelection(vector<double> eval, int n_elite = -1) const;
+	vector<int> selectParents(const vector<vector<int> > &population, vector<double> eval, int nSelection) const;
 	vector<vector<int> > crossParents(const vector<vector<int> > &population, const vector<int> &parentIndexes, double p_cross) const;
 	void mutateChildren(vector<vector<int> > &children, double p_mut) const;
 	void selectNextGen(vector<vector<int> > &population, const vector<int> &elitedParentsIndexes, const vector<vector<int> > &children) const;
