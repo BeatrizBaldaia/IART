@@ -82,12 +82,20 @@ int main(int argc, const char *argv[])
 
 		threads.push_back(move(th));
 	}
+//	thread th;
+//	for (int i = 0; i < 20; i++) {
+//		printf("criou thread %d!\n", i);
+//		th = thread(getOptimalGene, tableManager, max_iters, max_temp, max_tries, population[i], schedule);
+//		printf("thread\n");
+//
+////		threads.push_back(move(th));
+//		threads.push_back(&th);
+//	}
 
 	for (thread &th : threads)
 	{
 		th.join();
 	}
-
 	printVectorVectorInteger(optimalGenes);
 
 	vector<int> response = tableManager.geneticAlgorithm(population, p_cross, p_mut, max_stale_gens, max_gens, n_gene, n_elite);
