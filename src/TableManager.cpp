@@ -52,7 +52,8 @@ vector<int> TableManager::geneticAlgorithm(vector<vector<int>> &population, doub
 		vector<double> aval = evaluatePopulation(population);
 		printf("%d Cycle\n", currentGen);
 		vector<int> elitedParentsIndexes = elitismSelection(aval, n_elite);
-		vector<int> parentIndexes = selectParents(population, aval, n_elite);
+		int nRadomSelection = n_gene - n_elite;
+		vector<int> parentIndexes = selectParents(population, aval, nRadomSelection);
 		vector<vector<int>> children = crossParents(population, parentIndexes, p_cross);
 		mutateChildren(children, p_mut);
 		selectNextGen(population, elitedParentsIndexes, children);
@@ -266,7 +267,7 @@ vector<int> TableManager::elitismSelection(vector<double> aval, int n_elite) con
 	}
 	return res;
 }
-vector<int> TableManager::selectParents(const vector<vector<int>> &population, vector<double> aval, int n_elite) const
+vector<int> TableManager::selectParents(const vector<vector<int>> &population, vector<double> aval, int nSelection) const
 {
 	vector<int> res;
 	double scale_F = 0;
