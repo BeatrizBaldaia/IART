@@ -77,15 +77,11 @@ int main(int argc, const char *argv[])
 		thread th (getOptimalGene, tableManager, max_iters, max_temp, max_tries, population[i], schedule);
 		printf("thread\n");
 		
-//		threads.push_back(move(th));
-		threads.push_back(&th);
+		threads.push_back(move(th));
 	}
 
-//	for(thread& th: threads) {
-//		th.join();
-//	}
-	for (int i = 0; i < 20; i++) {
-		threads[i]->join();
+	for(thread& th: threads) {
+		th.join();
 	}
 
 	printVectorVectorInteger(optimalGenes);
