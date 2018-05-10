@@ -3,6 +3,7 @@
         "future": "cpp",
         "array": "cpp",
         "initializer_list": "cpp",
-        "utility": "cpp"
+        "utility": "cpp",
+        "thread": "cpp"
     }
 }
