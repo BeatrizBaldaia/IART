@@ -24,28 +24,39 @@ TableManager::TableManager(const char *peopleFile, const char *tablesFile)
 	this->createGroups();
 	for (unsigned int i = 0; i < this->groups.size(); i++)
 	{
-		cout << "Group: " << this->groups[i].getId() << "\n";
-		cout << "	p: " << this->groups[i].getMembers()[0]->getName() << "\n";
+		// cout << "Group: " << this->groups[i].getId() << "\n";
+		// cout << "	p: " << this->groups[i].getMembers()[0]->getName() << "\n";
 
 		this->groups[i].calculate_attributes();
 	}
-	printf("Calling: calcGroupsAffinity\n");
+	// printf("Calling: calcGroupsAffinity\n");
 	for (unsigned int i = 0; i < this->groups.size(); i++)
 	{
 		this->groupsAffinity.push_back(vector<double>(this->groups.size()));
 	}
 	this->calcGroupsAffinity();
-	printf("I created a Table Manager!\n");
+	printf("Created a Table Manager\n");
 }
 
 
-vector<double> TableManager::evaluatePopulation(vector<vector<int>> &pop) const
+vector<double> TableManager::evaluatePopulation(const vector<vector<int>> &pop) const
 {
 	vector<double> res;
+	double minFitness = DBL_MAX;
 	for (unsigned int i = 0; i < pop.size(); i++)
 	{
-		res.push_back(fitnessFunction (pop[i]));
+		double fitness = fitnessFunction(pop[i]);
+		if (fitness < minFitness) {
+			minFitness = fitness;
+		}
+		res.push_back(fitness);
 	}
+	if (minFitness < 0) {
+		for (double &elem : res) {
+			elem += -minFitness + FITNESS_COMPENSATION; // summed so the worst element won't have 0 chance of being picked
+		}
+	}
+
 	return res;
 }
 /**
@@ -55,13 +66,13 @@ void TableManager::calcGroupsAffinity()
 {
 	for (unsigned int row = 0; row < groups.size(); row++)
 	{
-		printf("ROW\n");
+		// printf("ROW\n");
 		for (unsigned int col = row + 1; col < groups.size(); col++)
 		{
-			printf("\tCOL\n");
-			cout << "Affinity between groups " << groups.at(row).getId() << " and " << groups.at(col).getId() << endl;
+			// printf("\tCOL\n");
+			// cout << "Affinity between groups " << groups.at(row).getId() << " and " << groups.at(col).getId() << endl;
 			groupsAffinity[row][col] = groups.at(row).func_afinity(groups.at(col));
-			cout << "A afinidade entre este dois e " << groupsAffinity[row][col] << endl;
+			// cout << "A afinidade entre este dois e " << groupsAffinity[row][col] << endl;
 		}
 	}
 }
@@ -69,6 +80,7 @@ void TableManager::calcGroupsAffinity()
 /**
  * Calculates the fitness value of one possible solution
  * Sum of affinities of group pairs sharing the same table minus penalty
+ * Incomplete result for genetic algorithm: Can be negative, must be summed afterwards
  * TODO: Missing maximization of empty tables? verificar se uma mesa tem pessoas a mais
  */
 double TableManager::fitnessFunction (const vector<int> &solution) const
@@ -102,7 +114,7 @@ double TableManager::fitnessFunction (const vector<int> &solution) const
 
 void TableManager::getPeopleFromFile(const char *filename)
 {
-	cout << "getPeopleFromFile\n";
+	// cout << "getPeopleFromFile\n";
 	fstream myfile;
 	string line;
 	myfile.open(filename);
@@ -116,25 +128,25 @@ void TableManager::getPeopleFromFile(const char *filename)
 			string value;
 			getline(person, value, ';');
 			p.setName(value);
-			cout << "Name: " << p.getName() << '\n';
+			// cout << "Name: " << p.getName() << '\n';
 			getline(person, value, ';');
 			p.setAge(atoi(value.c_str()));
-			cout << "Age: " << p.getAge() << '\n';
+			// cout << "Age: " << p.getAge() << '\n';
 			getline(person, value, ';');
 			p.setGroup(atoi(value.c_str()));
-			cout << "Group: " << p.getGroup() << '\n';
+			// cout << "Group: " << p.getGroup() << '\n';
 			getline(person, value, ';');
 			p.setJob(JobAreaMap[value]);
-			cout << "Job: " << toString(p.getJob()) << '\n';
+			// cout << "Job: " << toString(p.getJob()) << '\n';
 			getline(person, value, ';');
 			p.setReligion(ReligionMap[value]);
-			cout << "Religion: " << toString(p.getReligion()) << '\n';
+			// cout << "Religion: " << toString(p.getReligion()) << '\n';
 			vector<Hobby> hobbies;
-			cout << "Hobbies:\n";
+			// cout << "Hobbies:\n";
 			while (getline(person, value, ','))
 			{
 				hobbies.push_back(HobbyMap[value]);
-				cout << "	" << toString(hobbies.back()) << '\n';
+				// cout << "	" << toString(hobbies.back()) << '\n';
 			}
 			p.setHobbies(hobbies);
 			this->people.push_back(p);
@@ -146,7 +158,7 @@ void TableManager::getPeopleFromFile(const char *filename)
 }
 void TableManager::getTablesFromFile(const char *filename)
 {
-	cout << "getTablesFromFile\n";
+	// cout << "getTablesFromFile\n";
 	fstream myfile;
 	string line;
 	myfile.open(filename);
@@ -173,10 +185,10 @@ void TableManager::getTablesFromFile(const char *filename)
 		myfile.close();
 	}
 	myfile.close();
-	for (unsigned int i = 0; i < this->tables.size(); i++)
-	{
-		cout << "Table " << i << ": " << this->tables[i].getNumberOfSeats() << "\n";
-	}
+	// for (unsigned int i = 0; i < this->tables.size(); i++)
+	// {
+	// 	cout << "Table " << i << ": " << this->tables[i].getNumberOfSeats() << "\n";
+	// }
 	return;
 }
 void TableManager::createGroups()
@@ -196,7 +208,7 @@ Group *TableManager::getGroup(int id)
 		}
 	}
 	Group g(id);
-	cout << "Creating group!\n";
+	// cout << "Creating group!\n";
 	this->groups.push_back(g);
 	return &(this->groups.back());
 }
@@ -315,7 +327,7 @@ vector<vector<int>> TableManager::crossParents(const vector<vector<int>> &popula
 	vector<int> crossCandidates = getGenesForCrossover(population.size(), p_cross);
 	int nCross = (crossCandidates.size() % 2 == 0)? crossCandidates.size() : crossCandidates.size() - 1;
 	
-	for(int i = 0; i < nCross; i++, i++) {
+	for(int i = 0; i < nCross; i+=2) {
 		int parent1 = parentIndexes[i], parent2 = parentIndexes[i + 1];
 		crossGenes(result[parent1], result[parent2]);
 	}
@@ -357,7 +369,6 @@ void TableManager::selectNextGen(vector<vector<int>> &population, const vector<i
  */
 vector<int> TableManager::geneticAlgorithm(vector<vector<int>> &population, double p_cross, double p_mut, int max_stale_gens, int max_gens, int n_gene, int n_elite) const
 {
-	printf("I am the genetic algorithm\n");
 	int currentGen = 0;
 	int numStaleGens = 0;
 	double max_eval = -DBL_MAX;
@@ -369,8 +380,8 @@ vector<int> TableManager::geneticAlgorithm(vector<vector<int>> &population, doub
 		printf("%d Cycle\n", currentGen);
 		vector<int> elitedParentsIndexes = elitismSelection(eval, n_elite);
 		vector<vector<int>> elitedParents = getElitedParents(population, elitedParentsIndexes);
-		int nRadomSelection = n_gene - n_elite;
-		vector<int> parentIndexes = selectParents(population, eval, nRadomSelection);
+		int nRandomSelection = n_gene - n_elite;
+		vector<int> parentIndexes = selectParents(population, eval, nRandomSelection);
 		vector<vector<int>> children = crossParents(population, parentIndexes, p_cross);
 		mutateChildren(children, p_mut);
 		//children.insert( children.end(), elitedParents.begin(), elitedParents.end() ); //next generation
@@ -409,7 +420,7 @@ bool TableManager::invalidGene(const vector<int> &tables) const
 	{
 		if (this->tables[i].getNumberOfSeats() < tables[i])
 		{
-			printf(">>pessoas na mesa %d: %d\n", i, tables[i]);
+			//printf(">>pessoas na mesa %d: %d\n", i, tables[i]);
 			return true;
 		}
 	}
@@ -504,11 +515,11 @@ vector<int> TableManager::simulatedAnnealingAlgorithm(int iterationsMax, double 
 	for (int i = 0; i < iterationsMax && nTries < triesMax; i++)
 	{
 		nTries++;
-		printf("Vai calcular vizinho\n");
+		//printf("Vai calcular vizinho\n");
 		vector<int> neighbourGene = createNeighbour(currGene);
-		printf("Criou vizinho\n");
+		//printf("Criou vizinho\n");
 		double currTemp = calculateTemperature(i, tempMax, schedule);
-		printf("Calculou temperatura\n");
+		//printf("Calculou temperatura\n");
 
 		if (currTemp <= 0)
 		{
@@ -525,14 +536,14 @@ vector<int> TableManager::simulatedAnnealingAlgorithm(int iterationsMax, double 
 			double bestCost = fitnessFunction (bestGene);
 			if (neighbourCost >= bestCost)
 			{
-				printf("Atualizar o melhor gene\n");
+				//printf("Atualizar o melhor gene\n");
 				bestGene = neighbourGene;
 				nTries = 0;
 			}
 		}
 		else if (probable(exp((neighbourCost - currCost) / currTemp)))
 		{
-			printf("Atualizar o gene atual\n");
+			//printf("Atualizar o gene atual\n");
 			currGene = neighbourGene;
 		}
 	}

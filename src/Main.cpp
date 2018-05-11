@@ -71,14 +71,14 @@ int main(int argc, const char *argv[])
 	int max_tries = atoi(argv[12]);
 
 	vector<vector<int>> population = tableManager.getRandomPopulation(n_gene); //TODO: popSize
+	cout << "Initial population:\n";
 	printVectorVectorInteger(population);
 
 	vector<thread> threads;
 	for (int i = 0; i < n_gene; i++)
 	{
-		printf("criou thread %d!\n", i);
+		//printf("criou thread %d!\n", i);
 		thread th(getOptimalGene, tableManager, max_iters, max_temp, max_tries, population[i], schedule);
-		printf("thread\n");
 
 		threads.push_back(move(th));
 	}
@@ -96,8 +96,11 @@ int main(int argc, const char *argv[])
 	{
 		th.join();
 	}
+	cout << "Simulated annealing result:\n";
 	printVectorVectorInteger(optimalGenes);
+	cout << "\n";
 
+	cout << "Starting Genetic Algorithm.\n";
 	vector<int> response = tableManager.geneticAlgorithm(population, p_cross, p_mut, max_stale_gens, max_gens, n_gene, n_elite);
 	for (unsigned int i = 0; i < response.size(); i++)
 	{
@@ -109,7 +112,6 @@ int main(int argc, const char *argv[])
 
 void printVectorVectorInteger(const vector<vector<int>> &v)
 {
-	printf("Mostrar Matriz:\n\n");
 	for (unsigned int i = 0; i < v.size(); i++)
 	{
 		for (unsigned int j = 0; j < v[i].size(); j++)

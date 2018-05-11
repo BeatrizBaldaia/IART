@@ -15,6 +15,7 @@
 
 class TableManager {
 private:
+	const double FITNESS_COMPENSATION = 0.1;
 	vector<Person> people;
 	vector<Group> groups;
 	vector<Table> tables;
@@ -44,7 +45,7 @@ public:
 	double fitnessFunction (const vector<int> &solution) const;
 	Group * getGroup(int id);
 	vector<vector<unsigned int> > vizinho_func(vector<unsigned int> &solution);
-	vector<double> evaluatePopulation(vector<vector<int> > &pop) const;
+	vector<double> evaluatePopulation(const vector<vector<int> > &pop) const;
 
 	/**
 	 * calcula o valor de uma distribuicao de grupos por mesas,

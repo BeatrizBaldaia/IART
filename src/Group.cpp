@@ -54,22 +54,22 @@ const double* Group::getHobbiesDistribution() const{
 }
 
 void Group::calculate_attributes() {
-	cout << "calculate_attributes\n";
+	// cout << "calculate_attributes\n";
 	for (unsigned int i = 0; i < members.size(); i++) {
-		cout << "for "<<members[i]->getName()<<"\n";
+		// cout << "for "<<members[i]->getName()<<"\n";
 		//age
 		ageDistribution[getAgeStage(members[i]->getAge())]++;
-		cout << " age\n";
+		// cout << " age\n";
 		//job
 		jobDistribution[members[i]->getJob()]++;
-		cout << " job\n";
+		// cout << " job\n";
 		//religion
 		religionDistribution[members[i]->getReligion()]++;
-		cout << " religion\n";
+		// cout << " religion\n";
 		//hobbies
 		for (unsigned int j = 0; j < members[i]->getHobbies().size(); j++) {
 			hobbiesDistribution[members[i]->getHobbies()[j]]++;
-			cout << "  hobby\n";
+			// cout << "  hobby\n";
 		}
 	}
 
@@ -90,7 +90,7 @@ void Group::calculate_attributes() {
 }
 
 double Group::func_afinity(const Group &other) const {
-	printf("\t\t Function: Group::func_afinity\n");
+	// printf("\t\t Function: Group::func_afinity\n");
 	return this->eval_age(other)
 			+ this->eval_jobs(other)
 			+ this->eval_hobbies(other)
@@ -119,7 +119,7 @@ double Group::eval_age(const Group &other) const {
 	for(unsigned int j = 0; j < diffs.size(); j++) {
 		res -= diffs[j] / notNullFields;
 	}
-	cout << endl << "eval_age = " << res << endl;
+	// cout << endl << "eval_age = " << res << endl;
 	return res;
 }
 
@@ -145,7 +145,7 @@ double Group::eval_jobs(const Group &other) const {
 	for(unsigned int j = 0; j < diffs.size(); j++) {
 		res -= diffs[j] / notNullFields;
 	}
-	cout << endl << "eval_jobs = " << res << endl;
+	// cout << endl << "eval_jobs = " << res << endl;
 	return res;
 }
 
@@ -162,7 +162,7 @@ double Group::eval_hobbies(const Group &other) const {
 		}
 		if(!common && (this->hobbiesDistribution[i] != 0 && other.getHobbiesDistribution()[i] != 0)) {
 			common = true;
-			cout << "pelo menos um hobby em comum: " << this->hobbiesDistribution[i] << " ; " << other.getHobbiesDistribution()[i] << endl;
+			// cout << "pelo menos um hobby em comum: " << this->hobbiesDistribution[i] << " ; " << other.getHobbiesDistribution()[i] << endl;
 		}
 	}
 	if(!common) {
@@ -172,7 +172,7 @@ double Group::eval_hobbies(const Group &other) const {
 	for(unsigned int j = 0; j < diffs.size(); j++) {
 		res -= diffs[j] / notNullFields;
 	}
-	cout << endl << "eval_hobbies = " << res << endl;
+	// cout << endl << "eval_hobbies = " << res << endl;
 	return res;
 
 }
@@ -189,7 +189,7 @@ double Group::eval_religions(const Group &other) const {
 			diffs.push_back(abs(this->religionDistribution[i] - other.getReligionDistribution()[i]));
 		}
 		if(!common && (this->religionDistribution[i] != 0 && other.getReligionDistribution()[i] != 0)) {
-			cout << "pelo menos uma relegiao em comum: " << this->religionDistribution[i] << " ; " << other.getReligionDistribution()[i] << endl;
+			// cout << "pelo menos uma religiao em comum: " << this->religionDistribution[i] << " ; " << other.getReligionDistribution()[i] << endl;
 			common = true;
 		}
 	}
@@ -201,7 +201,7 @@ double Group::eval_religions(const Group &other) const {
 		res -= diffs[j] / notNullFields;
 	}
 
-	cout << endl << "eval_religions = " << res << endl;
+	// cout << endl << "eval_religions = " << res << endl;
 	return res;
 }
 
