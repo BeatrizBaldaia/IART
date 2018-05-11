@@ -533,11 +533,8 @@ vector<int> TableManager::simulatedAnnealingAlgorithm(int iterationsMax, double 
 	for (int i = 0; i < iterationsMax && nTries < triesMax; i++)
 	{
 		nTries++;
-		//printf("Vai calcular vizinho\n");
 		vector<int> neighbourGene = createNeighbour(currGene);
-		//printf("Criou vizinho\n");
 		double currTemp = calculateTemperature(i, tempMax, schedule);
-		//printf("Calculou temperatura\n");
 
 		if (currTemp <= 0)
 		{
@@ -554,14 +551,12 @@ vector<int> TableManager::simulatedAnnealingAlgorithm(int iterationsMax, double 
 			double bestCost = fitnessFunction (bestGene);
 			if (neighbourCost >= bestCost)
 			{
-				//printf("Atualizar o melhor gene\n");
 				bestGene = neighbourGene;
 				nTries = 0;
 			}
 		}
 		else if (probable(exp((neighbourCost - currCost) / currTemp)))
 		{
-			//printf("Atualizar o gene atual\n");
 			currGene = neighbourGene;
 		}
 	}
