@@ -11,6 +11,8 @@
 #include <algorithm>
 #include <math.h>
 
+#include "Utils/utils.h"
+
 JobAreaMap JobAreaMap;
 ReligionMap ReligionMap;
 HobbyMap HobbyMap;
@@ -286,8 +288,8 @@ vector<int> getGenesForCrossover(int nGenes, double p_cross) {
 	vector<int> result;
 	int index = 0;
 	while(nGenes > 0) {
-		double random = (double)(rand() % 2);
-		if(random <= p_cross) {
+		//double random = (double)(rand() % 2);
+		if(probable(p_cross)) {
 			result.push_back(index);
 		}
 		index++;
@@ -298,7 +300,7 @@ vector<int> getGenesForCrossover(int nGenes, double p_cross) {
 
 void crossGenes(vector<int> &gene1, vector<int> &gene2) {
 	int max = gene1.size() - 2, min = 1;
-	int randNum = rand()%(max - min + 1) + min;
+	int randNum = getRandomBetween(min, max);
 
 	for(int i = randNum; i < gene1.size(); i++) {
 		int seatA = gene1[i], seatB = gene2[i];
@@ -326,7 +328,7 @@ void TableManager::mutateChildren(vector<vector<int>> &children, double p_mut) c
 	{
 		for (unsigned int j = 0; j < children[i].size(); j++)
 		{
-			if (((double)rand() / RAND_MAX) < p_mut)
+			if (probable(p_mut))
 			{
 				cerr << "Devia ter mutado!! HOW??\n"; //TODO: mutação
 													  //MESA ALEATORIA
@@ -528,7 +530,7 @@ vector<int> TableManager::simulatedAnnealingAlgorithm(int iterationsMax, double 
 				nTries = 0;
 			}
 		}
-		else if (exp((neighbourCost - currCost) / currTemp) > ((double)rand() / RAND_MAX))
+		else if (probable(exp((neighbourCost - currCost) / currTemp)))
 		{
 			printf("Atualizar o gene atual\n");
 			currGene = neighbourGene;
