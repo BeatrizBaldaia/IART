@@ -50,7 +50,9 @@ vector<double> TableManager::evaluatePopulation(const vector<vector<int>> &pop) 
 			minFitness = fitness;
 		}
 		res.push_back(fitness);
+		cout << fitness << " | ";
 	}
+	cout << "\n";
 	if (minFitness < 0) {
 		for (double &elem : res) {
 			elem += -minFitness + FITNESS_COMPENSATION; // summed so the worst element won't have 0 chance of being picked
@@ -85,7 +87,7 @@ void TableManager::calcGroupsAffinity()
  */
 double TableManager::fitnessFunction (const vector<int> &solution) const
 {
-	double res = 0, penalty = -DBL_MAX;
+	double res = 0, penalty = -pow(10, 4);
 	vector<int> tables = fillTables(solution);
 	if (invalidGene(tables))
 	{
@@ -258,10 +260,8 @@ vector<vector<int>> getElitedParents(const vector<vector<int>> &population, vect
 vector<double> scaleFunction(vector<double> eval) {
 	double scale_F = accumulate(eval.begin(), eval.end(), 0.0);
 	for(double &e: eval) {
-		cerr << e << " | ";
 		e /= scale_F;
 	}
-	cerr << "\n" << scale_F << "\n\n";
 	
 	vector<double> range;
 	range.push_back(eval[0]);
@@ -394,9 +394,8 @@ vector<int> TableManager::geneticAlgorithm(vector<vector<int>> &population, doub
 	vector<int> res;
 	while (currentGen < max_gens && numStaleGens < max_stale_gens)
 	{
-
-		vector<double> eval = evaluatePopulation(population);
 		printf("%d Cycle\n", currentGen);
+		vector<double> eval = evaluatePopulation(population);
 		vector<int> elitedParentsIndexes = elitismSelection(eval, n_elite);
 		vector<vector<int>> elitedParents = getElitedParents(population, elitedParentsIndexes);
 		int nRandomSelection = n_gene - n_elite;
