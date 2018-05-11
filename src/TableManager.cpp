@@ -296,43 +296,54 @@ vector<int> TableManager::selectParents(const vector<vector<int>> &population, v
 	return selectedGenes;
 }
 
-vector<int> getGenesForCrossover(int nGenes, double p_cross) {
+/**
+ * @param uncrossedParentInds Indexes of parents who by probability do not cross, mapped in a vector of parent indexes calculated elsewhere.
+ */
+vector<int> getGenesForCrossover(vector<int> &uncrossedParentInds, int nGenes, double p_cross) {
 	vector<int> result;
 	int index = 0;
 	while(nGenes > 0) {
 		//double random = (double)(rand() % 2);
 		if(probable(p_cross)) {
 			result.push_back(index);
+		} else {
+			uncrossedParentInds.push_back(index);
 		}
 		index++;
 		nGenes--;
 	}
+	if (result.size() % 2 != 0) {
+		result.pop_back();
+	}
 	return result;
 }
 
-void crossGenes(vector<int> &gene1, vector<int> &gene2) {
+void crossGenes(const vector<int> &gene1, const vector<int> &gene2, vector<int> &child1, vector<int> &child2) {
 	int max = gene1.size() - 2, min = 1;
 	int randNum = getRandomBetween(min, max);
 
 	for(int i = randNum; i < gene1.size(); i++) {
 		int seatA = gene1[i], seatB = gene2[i];
-		gene1[i] = seatB;
-		gene2[i] = seatA;
+		child1[i] = seatB;
+		child2[i] = seatA;
 	}
 }
 
 vector<vector<int>> TableManager::crossParents(const vector<vector<int>> &population, const vector<int> &parentIndexes, double p_cross) const
 {
-	vector<vector<int>> result = population;
-	vector<int> crossCandidates = getGenesForCrossover(population.size(), p_cross);
-	int nCross = (crossCandidates.size() % 2 == 0)? crossCandidates.size() : crossCandidates.size() - 1;
+	vector<vector<int>> children;
+	vector<int> crossCandidates = getGenesForCrossover(population, children, parentIndexes.size(), p_cross);
 	
-	for(int i = 0; i < nCross; i+=2) {
-		int parent1 = parentIndexes[i], parent2 = parentIndexes[i + 1];
-		crossGenes(result[parent1], result[parent2]);
+	for(int i = 0; i < crossCandidates.size(); i+=2) {
+		int parent1n = crossCandidates[i], parent2n = crossCandidates[i + 1];
+		vector<int> parent1 = population[parentIndexes[parent1n]], parent2 = population[parentIndexes[parent2n]];
+		vector<int> child1 = parent1, child2 = parent2;
+		crossGenes(parent1, parent2, child1, child2);
+		children.push_back(child1);
+		children.push_back(child2);
 	}
 	
-	return result;
+	return children;
 }
 void TableManager::mutateChildren(vector<vector<int>> &children, double p_mut) const
 {
