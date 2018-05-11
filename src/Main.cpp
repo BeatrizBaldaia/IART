@@ -22,8 +22,8 @@ void getOptimalGene(TableManager tableManager, int iterationsMax, double tempMax
 vector<vector<int>> optimalGenes;
 
 /**
- * argv[1] = nome do ficheiro de pessoas
- * argv[2] = nome do ficheiro de de mesas
+ * argv[1] = people filename
+ * argv[2] = tables filename
  *
  * @return 1 if arguments are wrong
  */
@@ -65,8 +65,8 @@ int main(int argc, const char *argv[])
 	int max_iters = atoi(argv[9]);
 	int max_temp = atoi(argv[10]);
 
-	CoolingScheduleMap CoolingScheduleMap;
-	CoolingSchedule schedule = CoolingScheduleMap[argv[11]];
+	CoolingScheduleMap coolingScheduleMap;
+	CoolingSchedule schedule = coolingScheduleMap[argv[11]];
 
 	int max_tries = atoi(argv[12]);
 
