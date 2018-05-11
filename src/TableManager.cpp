@@ -256,10 +256,12 @@ vector<vector<int>> getElitedParents(const vector<vector<int>> &population, vect
 }
 
 vector<double> scaleFunction(vector<double> eval) {
-	double scale_F = accumulate(eval.begin(), eval.end(), 0);
+	double scale_F = accumulate(eval.begin(), eval.end(), 0.0);
 	for(double &e: eval) {
+		cerr << e << " | ";
 		e /= scale_F;
 	}
+	cerr << "\n" << scale_F << "\n\n";
 	
 	vector<double> range;
 	range.push_back(eval[0]);
@@ -288,7 +290,7 @@ vector<int> TableManager::selectParents(const vector<vector<int>> &population, v
 
 	for (unsigned int i = 0; i < nSelection; i++)
 	{
-		double random = (double)(rand() % 2); //double between 0 and 1
+		double random = getRandomBetween(0, 1);
 		int index = getGeneFromRange(scale, random);
 		selectedGenes.push_back(index);
 	}
@@ -313,6 +315,7 @@ vector<int> getGenesForCrossover(vector<int> &uncrossedParentInds, int nGenes, d
 		nGenes--;
 	}
 	if (result.size() % 2 != 0) {
+		uncrossedParentInds.push_back(result.back());
 		result.pop_back();
 	}
 	return result;
@@ -332,7 +335,8 @@ void crossGenes(const vector<int> &gene1, const vector<int> &gene2, vector<int> 
 vector<vector<int>> TableManager::crossParents(const vector<vector<int>> &population, const vector<int> &parentIndexes, double p_cross) const
 {
 	vector<vector<int>> children;
-	vector<int> crossCandidates = getGenesForCrossover(population, children, parentIndexes.size(), p_cross);
+	vector<int> uncrossedParentInds;
+	vector<int> crossCandidates = getGenesForCrossover(uncrossedParentInds, parentIndexes.size(), p_cross);
 	
 	for(int i = 0; i < crossCandidates.size(); i+=2) {
 		int parent1n = crossCandidates[i], parent2n = crossCandidates[i + 1];
@@ -341,6 +345,10 @@ vector<vector<int>> TableManager::crossParents(const vector<vector<int>> &popula
 		crossGenes(parent1, parent2, child1, child2);
 		children.push_back(child1);
 		children.push_back(child2);
+	}
+	// add parents who don't cross by probability
+	for (int &parentInd : uncrossedParentInds) {
+		children.push_back(population[parentIndexes[parentInd]]);
 	}
 	
 	return children;

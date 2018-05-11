@@ -4,6 +4,8 @@
         "array": "cpp",
         "initializer_list": "cpp",
         "utility": "cpp",
-        "thread": "cpp"
+        "thread": "cpp",
+        "istream": "cpp",
+        "string_view": "cpp"
     }
 }
