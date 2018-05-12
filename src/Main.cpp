@@ -17,7 +17,7 @@ using namespace std;
 
 void printVectorVectorInteger(const vector<vector<int>> &v);
 
-void getOptimalGene(TableManager tableManager, int iterationsMax, double tempMax, int triesMax, const vector<int> &gene, CoolingSchedule schedule);
+void getOptimalGene(int threadId, TableManager tableManager, int iterationsMax, double tempMax, int triesMax, const vector<int> &gene, CoolingSchedule schedule);
 
 vector<vector<int>> optimalGenes;
 
@@ -77,20 +77,9 @@ int main(int argc, const char *argv[])
 	vector<thread> threads;
 	for (int i = 0; i < n_gene; i++)
 	{
-		//printf("criou thread %d!\n", i);
-		thread th(getOptimalGene, tableManager, max_iters, max_temp, max_tries, population[i], schedule);
-
-		threads.push_back(move(th));
+		optimalGenes.resize(n_gene);
+		threads.emplace_back(getOptimalGene, i, tableManager, max_iters, max_temp, max_tries, population[i], schedule);
 	}
-//	thread th;
-//	for (int i = 0; i < 20; i++) {
-//		printf("criou thread %d!\n", i);
-//		th = thread(getOptimalGene, tableManager, max_iters, max_temp, max_tries, population[i], schedule);
-//		printf("thread\n");
-//
-////		threads.push_back(move(th));
-//		threads.push_back(&th);
-//	}
 
 	for (thread &th : threads)
 	{
@@ -122,10 +111,9 @@ void printVectorVectorInteger(const vector<vector<int>> &v)
 	}
 }
 
-void getOptimalGene(TableManager tableManager, int iterationsMax, double tempMax, int triesMax, const vector<int> &gene, CoolingSchedule schedule)
+void getOptimalGene(int threadId, TableManager tableManager, int iterationsMax, double tempMax, int triesMax, const vector<int> &gene, CoolingSchedule schedule)
 {
 	printf("No corpo da thread\n");
 	vector<int> optimalGene = tableManager.simulatedAnnealingAlgorithm(iterationsMax, tempMax, triesMax, gene, schedule);
-
-	optimalGenes.push_back(optimalGene);
+	optimalGenes[threadId] = optimalGene;
 }
