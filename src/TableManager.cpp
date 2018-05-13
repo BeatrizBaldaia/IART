@@ -232,7 +232,7 @@ vector<vector<unsigned int>> TableManager::vizinho_func(vector<unsigned int> &so
 	}
 	return res;
 }
-vector<int> TableManager::elitismSelection(vector<double> eval, int n_elite) const
+vector<int> TableManager::elitismSelection(const vector<double> &eval, int n_elite) const
 {
 	vector<int> res;
 	vector<double> aux = eval;
@@ -353,40 +353,68 @@ vector<vector<int>> TableManager::crossParents(const vector<vector<int>> &popula
 	
 	return children;
 }
-void TableManager::mutateChildren(vector<vector<int>> &children, double p_mut) const
-{
-	for (unsigned int i = 0; i < children.size(); i++)
-	{
-		for (unsigned int j = 0; j < children[i].size(); j++)
-		{
-			if (probable(p_mut))
-			{
-				cerr << "Devia ter mutado!! HOW??\n"; //TODO: mutação
-													  //MESA ALEATORIA
-			}
-		}
+
+void TableManager::singleMutation(vector<vector<int>> &children) const {
+	if (children.empty()) {
+		return;
 	}
-	return;
+	int mutTable = getRandomBetween(0, children.size() * children[0].size() - 1);
+	int mutTableRow = mutTable / children.size();
+	int mutTableCol = mutTable % children[0].size();
+	
+	children[mutTableRow][mutTableCol] = getRandomBetween(0, tables.size() - 1);
 }
-void TableManager::selectNextGen(vector<vector<int>> &population, const vector<int> &elitedParentsIndexes, const vector<vector<int>> &children) const
+
+void TableManager::swapMutGene(vector<int> &gene) const {
+	if (gene.size() < 2) {
+		return;
+	}
+
+	int mutTable1 = getRandomBetween(0, gene.size() - 1);
+	int mutTable2 = getRandomBetween(0, gene.size() - 1);
+	swap(gene[mutTable1], gene[mutTable2]);
+}
+
+void TableManager::swapMutation(vector<vector<int>> &children) const {
+	if (children.empty()) {
+		return;
+	}
+
+	int mutGene = getRandomBetween(0, children.size() - 1);
+	swapMutGene(children[mutGene]);
+
+	int mutTable1 = getRandomBetween(0, children.size() * children[0].size() - 1);
+	int mutTable2 = getRandomBetween(0, children.size() * children[0].size() - 1);
+}
+
+void TableManager::mutateChildren(vector<vector<int>> &children, double p_mut, MutationType mutType) const
 {
-	vector<vector<int>> elited;
-	for (unsigned int i = 0; i < elitedParentsIndexes.size(); i++)
-	{
-		elited.push_back(population[elitedParentsIndexes[i]]);
+	if (!probable(p_mut)) {
+		return;
 	}
+	
+	switch (mutType) {
+		case Single:
+			singleMutation(children);
+			break;
+		case Swap:
+			swapMutation(children);
+			break;
+		default:
+			cerr << "Invalid mutation type " << mutType << ".\n";
+			break;
+	}
+}
+void TableManager::selectNextGen(vector<vector<int>> &population, const vector<vector<int>> &elitedParents, const vector<vector<int>> &children) const
+{
 	population = children;
-	for (unsigned int i = 0; i < elited.size(); i++)
-	{
-		population.push_back(elited[i]);
-	}
-	return;
+	population.insert(population.end(), elitedParents.begin(), elitedParents.end());
 }
 
 /**
  *
  */
-vector<int> TableManager::geneticAlgorithm(vector<vector<int>> &population, double p_cross, double p_mut, int max_stale_gens, int max_gens, int n_gene, int n_elite) const
+vector<int> TableManager::geneticAlgorithm(vector<vector<int>> &population, double p_cross, double p_mut, MutationType mutType, int max_stale_gens, int max_gens, int n_gene, int n_elite) const
 {
 	int currentGen = 0;
 	int numStaleGens = 0;
@@ -401,9 +429,8 @@ vector<int> TableManager::geneticAlgorithm(vector<vector<int>> &population, doub
 		int nRandomSelection = n_gene - n_elite;
 		vector<int> parentIndexes = selectParents(population, eval, nRandomSelection);
 		vector<vector<int>> children = crossParents(population, parentIndexes, p_cross);
-		mutateChildren(children, p_mut);
-		//children.insert( children.end(), elitedParents.begin(), elitedParents.end() ); //next generation
-		selectNextGen(population, elitedParentsIndexes, children);
+		mutateChildren(children, p_mut, mutType);
+		selectNextGen(population, elitedParents, children);
 		if (max_eval >= *max_element(eval.begin(), eval.end()))
 		{
 			numStaleGens++;

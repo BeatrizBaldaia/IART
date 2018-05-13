@@ -137,7 +137,22 @@ inline const char* toString(CoolingSchedule v)
 
 #define NUMBER_SCHEDULES 3
 
-
-
+enum MutationType {Single, Swap};
+struct MutationTypeMap : public map<string, MutationType>
+{
+	MutationTypeMap() {
+		this->operator[]("Single") =  Single;
+		this->operator[]("Swap") = Swap;
+	};
+	~MutationTypeMap(){}
+};
+inline const char* toString(MutationType v)
+{
+	switch (v) {
+	case Single:	return "Single";
+	case Swap:	return "Swap";
+		default:	return "[Unknown MutationType]";
+	}
+}
 
 #endif /* SRC_ENUMCREATION_H_ */

@@ -24,11 +24,15 @@ private:
 	void getTablesFromFile(const char* filename);
 	void createGroups();
 
-	vector<int> elitismSelection(vector<double> eval, int n_elite = -1) const;
+	vector<int> elitismSelection(const vector<double> &eval, int n_elite = -1) const;
 	vector<int> selectParents(const vector<vector<int> > &population, vector<double> eval, int nSelection) const;
 	vector<vector<int> > crossParents(const vector<vector<int> > &population, const vector<int> &parentIndexes, double p_cross) const;
-	void mutateChildren(vector<vector<int> > &children, double p_mut) const;
-	void selectNextGen(vector<vector<int> > &population, const vector<int> &elitedParentsIndexes, const vector<vector<int> > &children) const;
+	void mutateChildren(vector<vector<int> > &children, double p_mut, MutationType mutType) const;
+	void selectNextGen(vector<vector<int> > &population, const vector<vector<int>> &elitedParents, const vector<vector<int> > &children) const;
+
+	void singleMutation(vector<vector<int>> &children) const;
+	void swapMutGene(vector<int> &gene) const;
+	void swapMutation(vector<vector<int>> &children) const;
 public:
 	TableManager(const char * peopleFile, const char * tablesFile);
 	void calcGroupsAffinity();
@@ -40,7 +44,7 @@ public:
 	/**
 	 * Elitism turned off by default.
 	 */
-	vector<int> geneticAlgorithm(vector<vector<int> > &population, double p_cross, double p_mut, int max_stale_gens, int max_gens, int n_gene, int n_elite = 0) const;
+	vector<int> geneticAlgorithm(vector<vector<int> > &population, double p_cross, double p_mut, MutationType mutType, int max_stale_gens, int max_gens, int n_gene, int n_elite = 0) const;
 
 	double fitnessFunction (const vector<int> &solution) const;
 	Group * getGroup(int id);

@@ -29,10 +29,10 @@ vector<vector<int>> optimalGenes;
  */
 int main(int argc, const char *argv[])
 {
-	if (argc != 13)
+	if (argc != 14)
 	{
 		cout << "Invalid arguments: <people_file> <tables_file>"
-			 << " <p_cross> <p_mut> <n_elite> <max_stale_gens> <max_generations> <n_gene> <max_iters> <max_temp> <schedule> <max_tries>\n\n";
+			 << " <p_cross> <p_mut> <n_elite> <max_stale_gens> <max_generations> <n_gene> <max_iters> <max_temp> <schedule> <max_tries> <mut_type>\n\n";
 
 		cout << "\t"
 			 << "n_elite: Number of most fit individuals chosen directly to the next generation.\n";
@@ -50,6 +50,8 @@ int main(int argc, const char *argv[])
 			 << "schedule: Cooling schedule for the Simulated Annealing Algorithm: Logarithmic, Geometric or Exponential\n";
 		cout << "\t"
 			 << "max_tries: Maximum number of tries for the Simulated Annealing Algorithm.\n";
+		cout << "\t"
+			 << "mut_type: Mutation type.\n";
 		return 1;
 	}
 	srand(time(NULL));
@@ -69,6 +71,9 @@ int main(int argc, const char *argv[])
 	CoolingSchedule schedule = coolingScheduleMap[argv[11]];
 
 	int max_tries = atoi(argv[12]);
+
+	MutationTypeMap mutTypeMap;
+	MutationType mutType = mutTypeMap[argv[13]];
 
 	vector<vector<int>> population = tableManager.getRandomPopulation(n_gene); //TODO: popSize
 	cout << "Initial population:\n";
@@ -90,7 +95,7 @@ int main(int argc, const char *argv[])
 	cout << "\n";
 
 	cout << "Starting Genetic Algorithm.\n";
-	vector<int> response = tableManager.geneticAlgorithm(population, p_cross, p_mut, max_stale_gens, max_gens, n_gene, n_elite);
+	vector<int> response = tableManager.geneticAlgorithm(population, p_cross, p_mut, mutType, max_stale_gens, max_gens, n_gene, n_elite);
 	for (unsigned int i = 0; i < response.size(); i++)
 	{
 		printf("O grupo %d está na mesa %d.\n", i, response.at(i));
