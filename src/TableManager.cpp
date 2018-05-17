@@ -451,6 +451,10 @@ void printRow(const vector<int> &v)
 	printf("\n");
 }
 
+bool TableManager::invalidTable(int seatsAtTable, int tableInd) const {
+	return this->tables[tableInd].getNumberOfSeats() < seatsAtTable;
+}
+
 vector<vector<int>> TableManager::getRandomPopulation(unsigned int popSize)
 {
 	vector<vector<int>> res;
@@ -459,8 +463,10 @@ vector<vector<int>> TableManager::getRandomPopulation(unsigned int popSize)
 	{
 		vector<int> gene;
 		vector<int> auxTables(this->tables.size());
+		bool invalidGene = false;
 		do
 		{
+			invalidGene = false;
 			gene.clear();
 			fill(auxTables.begin(), auxTables.end(), 0);
 			for (unsigned int j = 0; j < this->groups.size(); j++)
@@ -469,11 +475,18 @@ vector<vector<int>> TableManager::getRandomPopulation(unsigned int popSize)
 				int table = rand() % this->tables.size();
 
 				auxTables[table] += nMembers;
+
+				if (invalidTable(auxTables[table], table)) {
+					invalidGene = true;
+					break;
+				}
+
 				gene.push_back(table);
 			}
 
-		} while (invalidGene(auxTables));
+		} while (invalidGene);
 		res.push_back(gene);
+		cout << "pushed back gene\n";
 	}
 
 	return res;

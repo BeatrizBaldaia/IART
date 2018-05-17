@@ -85,6 +85,7 @@ public:
 	vector<int> fillTables(const vector<int> &gene) const;
 	Group * getGroup(int id);
 	
+	bool invalidTable(int seatsAtTable, int table) const;
 };
 
 
