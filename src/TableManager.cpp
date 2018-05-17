@@ -17,8 +17,20 @@ JobAreaMap JobAreaMap;
 ReligionMap ReligionMap;
 HobbyMap HobbyMap;
 
-TableManager::TableManager(const char *peopleFile, const char *tablesFile)
+TableManager::TableManager(const char * peopleFile, const char * tablesFile, double p_cross, double p_mut, int max_stale_gens, int max_gens, int n_gene, int n_elite, int max_iters, int max_temp, int max_tries, CoolingSchedule schedule, MutationType mutType)
 {
+	this->p_cross = p_cross;
+	this->p_mut = p_mut;
+	this->max_stale_gens = max_stale_gens;
+	this->max_gens = max_gens;
+	this->n_gene = n_gene;
+	this->n_elite = n_elite;
+	this->max_iters = max_iters;
+	this->max_temp = max_temp;
+	this->max_tries = max_tries;
+	this->schedule = schedule;
+	this->mutType = mutType;
+
 	this->getPeopleFromFile(peopleFile);
 	this->getTablesFromFile(tablesFile);
 	this->createGroups();
@@ -39,7 +51,7 @@ TableManager::TableManager(const char *peopleFile, const char *tablesFile)
 }
 
 
-vector<double> TableManager::evaluatePopulation(const vector<vector<int>> &pop) const
+vector<double> TableManager::evaluatePopulation(const vector<vector<int> > &pop) const
 {
 	vector<double> res;
 	double minFitness = DBL_MAX;
@@ -68,23 +80,13 @@ void TableManager::calcGroupsAffinity()
 {
 	for (unsigned int row = 0; row < groups.size(); row++)
 	{
-		// printf("ROW\n");
 		for (unsigned int col = row + 1; col < groups.size(); col++)
 		{
-			// printf("\tCOL\n");
-			// cout << "Affinity between groups " << groups.at(row).getId() << " and " << groups.at(col).getId() << endl;
 			groupsAffinity[row][col] = groups.at(row).func_afinity(groups.at(col));
-			// cout << "A afinidade entre este dois e " << groupsAffinity[row][col] << endl;
 		}
 	}
 }
 
-/**
- * Calculates the fitness value of one possible solution
- * Sum of affinities of group pairs sharing the same table minus penalty
- * Incomplete result for genetic algorithm: Can be negative, must be summed afterwards
- * TODO: Missing maximization of empty tables? verificar se uma mesa tem pessoas a mais
- */
 double TableManager::fitnessFunction (const vector<int> &solution) const
 {
 	double res = 0, penalty = -pow(10, 4);
@@ -97,7 +99,6 @@ double TableManager::fitnessFunction (const vector<int> &solution) const
 	{
 		for (unsigned int j = i + 1; j < solution.size(); j++)
 		{
-			//			printf("Solution.size() = %d; i = %d; j = %d\n",solution.size(),i,j);
 			double affinity = this->groupsAffinity.at(i).at(j);
 			if (solution.at(i) == solution.at(j))
 			{ // same table
@@ -116,7 +117,6 @@ double TableManager::fitnessFunction (const vector<int> &solution) const
 
 void TableManager::getPeopleFromFile(const char *filename)
 {
-	// cout << "getPeopleFromFile\n";
 	fstream myfile;
 	string line;
 	myfile.open(filename);
@@ -130,25 +130,18 @@ void TableManager::getPeopleFromFile(const char *filename)
 			string value;
 			getline(person, value, ';');
 			p.setName(value);
-			// cout << "Name: " << p.getName() << '\n';
 			getline(person, value, ';');
 			p.setAge(atoi(value.c_str()));
-			// cout << "Age: " << p.getAge() << '\n';
 			getline(person, value, ';');
 			p.setGroup(atoi(value.c_str()));
-			// cout << "Group: " << p.getGroup() << '\n';
 			getline(person, value, ';');
 			p.setJob(JobAreaMap[value]);
-			// cout << "Job: " << toString(p.getJob()) << '\n';
 			getline(person, value, ';');
 			p.setReligion(ReligionMap[value]);
-			// cout << "Religion: " << toString(p.getReligion()) << '\n';
 			vector<Hobby> hobbies;
-			// cout << "Hobbies:\n";
 			while (getline(person, value, ','))
 			{
 				hobbies.push_back(HobbyMap[value]);
-				// cout << "	" << toString(hobbies.back()) << '\n';
 			}
 			p.setHobbies(hobbies);
 			this->people.push_back(p);
@@ -160,7 +153,6 @@ void TableManager::getPeopleFromFile(const char *filename)
 }
 void TableManager::getTablesFromFile(const char *filename)
 {
-	// cout << "getTablesFromFile\n";
 	fstream myfile;
 	string line;
 	myfile.open(filename);
@@ -187,10 +179,6 @@ void TableManager::getTablesFromFile(const char *filename)
 		myfile.close();
 	}
 	myfile.close();
-	// for (unsigned int i = 0; i < this->tables.size(); i++)
-	// {
-	// 	cout << "Table " << i << ": " << this->tables[i].getNumberOfSeats() << "\n";
-	// }
 	return;
 }
 void TableManager::createGroups()
@@ -210,40 +198,23 @@ Group *TableManager::getGroup(int id)
 		}
 	}
 	Group g(id);
-	// cout << "Creating group!\n";
 	this->groups.push_back(g);
 	return &(this->groups.back());
 }
 
-vector<vector<unsigned int>> TableManager::vizinho_func(vector<unsigned int> &solution)
-{ //indice group value table number
-	vector<vector<unsigned int>> res;
-	for (unsigned int i = 0; i < solution.size(); i++)
-	{
-		for (unsigned int j = 0; j < this->tables.size(); j++)
-		{
-			vector<unsigned int> neighbor = solution;
-			if (solution[i] != j)
-			{
-				neighbor[i] = j;
-				res.push_back(neighbor);
-			}
-		}
-	}
-	return res;
-}
-vector<int> TableManager::elitismSelection(const vector<double> &eval, int n_elite) const
+vector<int> TableManager::elitismSelection(const vector<double> &eval) const
 {
 	vector<int> res;
 	vector<double> aux = eval;
+	int n = this->n_elite;
 
-	while (n_elite > 0)
+	while (n > 0)
 	{
 		vector<double>::iterator max_iter = max_element(aux.begin(), aux.end());
 		int index = distance(aux.begin(), max_iter);
 		res.push_back(index);
 		*max_iter = -DBL_MAX;
-		n_elite--;
+		n--;
 	}
 	return res;
 }
@@ -301,12 +272,11 @@ vector<int> TableManager::selectParents(const vector<vector<int>> &population, v
 /**
  * @param uncrossedParentInds Indexes of parents who by probability do not cross, mapped in a vector of parent indexes calculated elsewhere.
  */
-vector<int> getGenesForCrossover(vector<int> &uncrossedParentInds, int nGenes, double p_cross) {
+vector<int> TableManager::getGenesForCrossover(vector<int> &uncrossedParentInds, int nGenes) const {
 	vector<int> result;
 	int index = 0;
 	while(nGenes > 0) {
-		//double random = (double)(rand() % 2);
-		if(probable(p_cross)) {
+		if(probable(this->p_cross)) {
 			result.push_back(index);
 		} else {
 			uncrossedParentInds.push_back(index);
@@ -332,11 +302,11 @@ void crossGenes(const vector<int> &gene1, const vector<int> &gene2, vector<int> 
 	}
 }
 
-vector<vector<int>> TableManager::crossParents(const vector<vector<int>> &population, const vector<int> &parentIndexes, double p_cross) const
+vector<vector<int>> TableManager::crossParents(const vector<vector<int>> &population, const vector<int> &parentIndexes) const
 {
 	vector<vector<int>> children;
 	vector<int> uncrossedParentInds;
-	vector<int> crossCandidates = getGenesForCrossover(uncrossedParentInds, parentIndexes.size(), p_cross);
+	vector<int> crossCandidates = getGenesForCrossover(uncrossedParentInds, parentIndexes.size());
 	
 	for(int i = 0; i < crossCandidates.size(); i+=2) {
 		int parent1n = crossCandidates[i], parent2n = crossCandidates[i + 1];
@@ -387,13 +357,13 @@ void TableManager::swapMutation(vector<vector<int>> &children) const {
 	int mutTable2 = getRandomBetween(0, children.size() * children[0].size() - 1);
 }
 
-void TableManager::mutateChildren(vector<vector<int>> &children, double p_mut, MutationType mutType) const
+void TableManager::mutateChildren(vector<vector<int> > &children) const
 {
-	if (!probable(p_mut)) {
+	if (!probable(this->p_mut)) {
 		return;
 	}
 	
-	switch (mutType) {
+	switch (this->mutType) {
 		case Single:
 			singleMutation(children);
 			break;
@@ -405,44 +375,44 @@ void TableManager::mutateChildren(vector<vector<int>> &children, double p_mut, M
 			break;
 	}
 }
+
 void TableManager::selectNextGen(vector<vector<int>> &population, const vector<vector<int>> &elitedParents, const vector<vector<int>> &children) const
 {
 	population = children;
 	population.insert(population.end(), elitedParents.begin(), elitedParents.end());
 }
 
-/**
- *
- */
-vector<int> TableManager::geneticAlgorithm(vector<vector<int>> &population, double p_cross, double p_mut, MutationType mutType, int max_stale_gens, int max_gens, int n_gene, int n_elite) const
+vector<int> TableManager::geneticAlgorithm(vector<vector<int>> &population) const
 {
 	int currentGen = 0;
 	int numStaleGens = 0;
 	double max_eval = -DBL_MAX;
 	vector<int> res;
-	while (currentGen < max_gens && numStaleGens < max_stale_gens)
+	vector<double> eval = evaluatePopulation(population);
+		
+	while (currentGen < this->max_gens && numStaleGens < this->max_stale_gens)
 	{
 		printf("%d Cycle\n", currentGen);
-		vector<double> eval = evaluatePopulation(population);
-		vector<int> elitedParentsIndexes = elitismSelection(eval, n_elite);
+		vector<int> elitedParentsIndexes = elitismSelection(eval);
 		vector<vector<int>> elitedParents = getElitedParents(population, elitedParentsIndexes);
-		int nRandomSelection = n_gene - n_elite;
+		int nRandomSelection = this->n_gene - this->n_elite;
 		vector<int> parentIndexes = selectParents(population, eval, nRandomSelection);
-		vector<vector<int>> children = crossParents(population, parentIndexes, p_cross);
-		mutateChildren(children, p_mut, mutType);
+		vector<vector<int>> children = crossParents(population, parentIndexes);
+		mutateChildren(children);
 		selectNextGen(population, elitedParents, children);
-		if (max_eval >= *max_element(eval.begin(), eval.end()))
+		eval = evaluatePopulation(population);
+		vector<double>::iterator largest_eval_it = max_element(eval.begin(), eval.end());
+		if (max_eval >= *largest_eval_it)
 		{
 			numStaleGens++;
 		}
 		else
 		{
-			max_eval = *max_element(eval.begin(), eval.end());
+			max_eval = *largest_eval_it;
 			numStaleGens = 0;
 
-			res = population.at(distance(eval.begin(), max_element(eval.begin(), eval.end())));
+			res = population.at(distance(eval.begin(), largest_eval_it));
 		}
-		printf("\t%f\n", max_eval);
 		currentGen++;
 	}
 	return res;
@@ -465,7 +435,8 @@ bool TableManager::invalidGene(const vector<int> &tables) const
 	{
 		if (this->tables[i].getNumberOfSeats() < tables[i])
 		{
-			//printf(">>pessoas na mesa %d: %d\n", i, tables[i]);
+			cerr << "Invalid values: The number of people is higher than the number of seats.\n";
+			cerr << "\tPeople: " << tables[i] << " ; Seats: " << this->tables[i].getNumberOfSeats() << endl;
 			return true;
 		}
 	}
@@ -524,16 +495,16 @@ double calcExpTemp(int iteration, double initialTemp, double alpha = 1.0)
 	return initialTemp * pow(alpha, iteration);
 }
 
-double calculateTemperature(int i, double initialTemp, CoolingSchedule schedule)
+double TableManager::calculateTemperature(int i)
 {
-	switch (schedule)
+	switch (this->schedule)
 	{
 	case Logarithmic:
-		return calcLogTemp(i, initialTemp);
+		return calcLogTemp(i, this->max_temp);
 	case Geometric:
-		return calcGeomTemp(i, initialTemp);
+		return calcGeomTemp(i, this->max_temp);
 	case Exponential:
-		return calcExpTemp(i, initialTemp);
+		return calcExpTemp(i, this->max_temp);
 	default:
 		return 0;
 	}
@@ -551,21 +522,21 @@ vector<int> TableManager::createNeighbour(vector<int> currGene)
 	return neighbourGene;
 }
 
-vector<int> TableManager::simulatedAnnealingAlgorithm(int iterationsMax, double tempMax, int triesMax, const vector<int> &gene, CoolingSchedule schedule)
+vector<int> TableManager::simulatedAnnealingAlgorithm(const vector<int> &gene)
 {
 	vector<int> bestGene = gene;
 	vector<int> currGene = gene;
 	int nTries = 0;
 
-	for (int i = 0; i < iterationsMax && nTries < triesMax; i++)
+	for (int i = 0; i < this->max_iters && nTries < this->max_tries; i++)
 	{
 		nTries++;
 		vector<int> neighbourGene = createNeighbour(currGene);
-		double currTemp = calculateTemperature(i, tempMax, schedule);
+		double currTemp = calculateTemperature(i);
 
 		if (currTemp <= 0)
 		{
-			printf("temperatura a zero. parar!\n");
+			printf("The temperature reached its limit value (zero).\n");
 			break;
 		}
 

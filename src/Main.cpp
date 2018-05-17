@@ -56,8 +56,6 @@ int main(int argc, const char *argv[])
 	}
 	srand(time(NULL));
 
-	TableManager tableManager(argv[1], argv[2]);
-
 	double p_cross = atof(argv[3]);
 	double p_mut = atof(argv[4]);
 	int max_stale_gens = atoi(argv[6]);
@@ -74,6 +72,8 @@ int main(int argc, const char *argv[])
 
 	MutationTypeMap mutTypeMap;
 	MutationType mutType = mutTypeMap[argv[13]];
+
+	TableManager tableManager(argv[1], argv[2], p_cross, p_mut, max_stale_gens, max_gens, n_gene, n_elite, max_iters, max_temp, max_tries, schedule, mutType);
 
 	vector<vector<int>> population = tableManager.getRandomPopulation(n_gene); //TODO: popSize
 	cout << "Initial population:\n";
@@ -95,7 +95,7 @@ int main(int argc, const char *argv[])
 	cout << "\n";
 
 	cout << "Starting Genetic Algorithm.\n";
-	vector<int> response = tableManager.geneticAlgorithm(population, p_cross, p_mut, mutType, max_stale_gens, max_gens, n_gene, n_elite);
+	vector<int> response = tableManager.geneticAlgorithm(population);
 	for (unsigned int i = 0; i < response.size(); i++)
 	{
 		printf("O grupo %d está na mesa %d.\n", i, response.at(i));
@@ -119,6 +119,6 @@ void printVectorVectorInteger(const vector<vector<int>> &v)
 void getOptimalGene(int threadId, TableManager tableManager, int iterationsMax, double tempMax, int triesMax, const vector<int> &gene, CoolingSchedule schedule)
 {
 	printf("No corpo da thread\n");
-	vector<int> optimalGene = tableManager.simulatedAnnealingAlgorithm(iterationsMax, tempMax, triesMax, gene, schedule);
+	vector<int> optimalGene = tableManager.simulatedAnnealingAlgorithm(gene);
 	optimalGenes[threadId] = optimalGene;
 }
