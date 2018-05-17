@@ -30,6 +30,7 @@ TableManager::TableManager(const char * peopleFile, const char * tablesFile, dou
 	this->max_tries = max_tries;
 	this->schedule = schedule;
 	this->mutType = mutType;
+	this->backtrackingInitialGeneration = backtrackingInitialGeneration;
 
 	this->getPeopleFromFile(peopleFile);
 	this->getTablesFromFile(tablesFile);
@@ -328,7 +329,7 @@ void TableManager::singleMutation(vector<vector<int>> &children) const {
 		return;
 	}
 	int mutTable = getRandomBetween(0, children.size() * children[0].size() - 1);
-	int mutTableRow = mutTable / children.size();
+	int mutTableRow = mutTable / children[0].size();
 	int mutTableCol = mutTable % children[0].size();
 	
 	children[mutTableRow][mutTableCol] = getRandomBetween(0, tables.size() - 1);
@@ -482,6 +483,7 @@ void TableManager::getGeneBacktracking(int table, vector<int> gene, vector<int> 
 vector<vector<int> > TableManager::getRandomPopulation(unsigned int popSize)
 {
 	vector<vector<int> > solutions;
+	cout << backtrackingInitialGeneration << "\n";
 	if (backtrackingInitialGeneration) {
 		vector<int> gene;
 		vector<int> usedTables(this->tables.size(), 0);
@@ -491,6 +493,7 @@ vector<vector<int> > TableManager::getRandomPopulation(unsigned int popSize)
 
 		if (solutions.size() < popSize) {
 			cout << "The number of possible solutions, " << solutions.size() << ", is lower than the desired population number, " << popSize << ".\n";
+			this->n_gene = solutions.size();
 		}
 
 		while (solutions.size() > popSize) {
