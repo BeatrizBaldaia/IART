@@ -96,7 +96,7 @@ int main(int argc, const char *argv[]) {
     int lugares = rand() % max_table_slots + 1;
     tables[lugares]++;
     group_id++;
-    if (rand() % 2) {
+    if (rand() / RAND_MAX <= 0.8) { // 80% of tables with group
       createGroup(people, group_id, lugares);
       group_id++;
     }
