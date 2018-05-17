@@ -75,6 +75,7 @@ int main(int argc, const char *argv[])
 
 	TableManager tableManager(argv[1], argv[2], p_cross, p_mut, max_stale_gens, max_gens, n_gene, n_elite, max_iters, max_temp, max_tries, schedule, mutType);
 
+	cout << "Calculating initial random population.\n";
 	vector<vector<int>> population = tableManager.getRandomPopulation(n_gene); //TODO: popSize
 	cout << "Initial population:\n";
 	printVectorVectorInteger(population);

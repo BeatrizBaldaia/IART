@@ -6,6 +6,8 @@
         "utility": "cpp",
         "thread": "cpp",
         "istream": "cpp",
-        "string_view": "cpp"
+        "string_view": "cpp",
+        "iosfwd": "cpp",
+        "iostream": "cpp"
     }
 }
