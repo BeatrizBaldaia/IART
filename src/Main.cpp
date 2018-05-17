@@ -85,9 +85,9 @@ int main(int argc, const char *argv[])
 	printVectorVectorInteger(population);
 
 	vector<thread> threads;
-	for (int i = 0; i < n_gene; i++)
+	for (int i = 0; i < population.size(); i++)
 	{
-		optimalGenes.resize(n_gene);
+		optimalGenes.resize(population.size());
 		threads.emplace_back(getOptimalGene, i, tableManager, max_iters, max_temp, max_tries, population[i], schedule);
 	}
 

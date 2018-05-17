@@ -489,6 +489,10 @@ vector<vector<int> > TableManager::getRandomPopulation(unsigned int popSize)
 			getGeneBacktracking(i, gene, usedTables, solutions);
 		}
 
+		if (solutions.size() < popSize) {
+			cout << "The number of possible solutions, " << solutions.size() << ", is lower than the desired population number, " << popSize << ".\n";
+		}
+
 		while (solutions.size() > popSize) {
 			int ind = rand() % solutions.size();
 			cout << solutions.size() << " | ";
@@ -507,7 +511,7 @@ vector<vector<int> > TableManager::getRandomPopulation(unsigned int popSize)
 	}
 	
 	return solutions;
-	
+
 	// vector<vector<int>> res;
 
 	// for (unsigned int i = 0; i < popSize; i++)
