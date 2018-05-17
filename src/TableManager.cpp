@@ -455,41 +455,84 @@ bool TableManager::invalidTable(int seatsAtTable, int tableInd) const {
 	return this->tables[tableInd].getNumberOfSeats() < seatsAtTable;
 }
 
+void TableManager::getGeneBacktracking(int table, vector<int> gene, vector<int> usedTables, vector<vector<int> > &solutions) const {
+	int currGroup = gene.size();
+	// cout << currGroup << " | " << table << " | ";
+	// for (int i = 0; i < gene.size(); i++) {
+	// 	cout << gene[i] << " ";
+	// }
+	// cout << "\n";
+	int nMembers = this->groups[currGroup].getMembers().size();
+	usedTables[table] += nMembers;
+	if (usedTables[table] > this->tables[table].getNumberOfSeats()) {
+		return;
+	}
+	gene.push_back(table);
+	if (gene.size() == this->groups.size()) {
+		solutions.push_back(gene);
+		cout << "valid gene\n";
+		return;
+	}
+	for (int i = 0; i < this->tables.size(); i++) {
+		getGeneBacktracking(i, gene, usedTables, solutions);
+	}
+}
+
 vector<vector<int>> TableManager::getRandomPopulation(unsigned int popSize)
 {
-	vector<vector<int>> res;
-
-	for (unsigned int i = 0; i < popSize; i++)
-	{
-		vector<int> gene;
-		vector<int> auxTables(this->tables.size());
-		bool invalidGene = false;
-		do
-		{
-			invalidGene = false;
-			gene.clear();
-			fill(auxTables.begin(), auxTables.end(), 0);
-			for (unsigned int j = 0; j < this->groups.size(); j++)
-			{
-				int nMembers = (this->groups[j].getMembers()).size();
-				int table = rand() % this->tables.size();
-
-				auxTables[table] += nMembers;
-
-				if (invalidTable(auxTables[table], table)) {
-					invalidGene = true;
-					break;
-				}
-
-				gene.push_back(table);
-			}
-
-		} while (invalidGene);
-		res.push_back(gene);
-		cout << "pushed back gene\n";
+	cout << "num groups: " << this->groups.size() << "\n";
+	vector<int> gene;
+	vector<int> usedTables(this->tables.size(), 0);
+	vector<vector<int> > solutions;
+	for (int i = 0; i < this->tables.size(); i++) {
+		getGeneBacktracking(i, gene, usedTables, solutions);
 	}
 
-	return res;
+	cout << solutions.size() << "\n";
+	while (solutions.size() > popSize) {
+		int ind = rand() % solutions.size();
+		cout << solutions.size() << " | ";
+		solutions.erase(solutions.begin() + ind);
+		cout << "erased\n";
+	}
+
+	cout << solutions.size() << "\n";
+	return solutions;
+	// vector<vector<int>> res;
+
+	// for (unsigned int i = 0; i < popSize; i++)
+	// {
+	// 	vector<int> gene;
+		
+	// 	getGeneBacktracking(gene);
+	// 	// vector<int> auxTables(this->tables.size());
+	// 	// bool invalidGene = false;
+	// 	// do
+	// 	// {
+	// 	// 	invalidGene = false;
+	// 	// 	gene.clear();
+	// 	// 	fill(auxTables.begin(), auxTables.end(), 0);
+	// 	// 	for (unsigned int j = 0; j < this->groups.size(); j++)
+	// 	// 	{
+	// 	// 		int nMembers = (this->groups[j].getMembers()).size();
+	// 	// 		int table = rand() % this->tables.size();
+
+	// 	// 		auxTables[table] += nMembers;
+
+	// 	// 		if (invalidTable(auxTables[table], table)) {
+	// 	// 			invalidGene = true;
+	// 	// 			break;
+	// 	// 		}
+
+	// 	// 		gene.push_back(table);
+	// 	// 	}
+
+	// 	// } while (invalidGene);
+	// 	res.push_back(gene);
+	// 	cout << "pushed back gene\n";
+	// }
+
+	// return res;
 }
 
 double calcLogTemp(int iteration, double initialTemp, double alpha = 1.0)

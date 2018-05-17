@@ -86,6 +86,8 @@ public:
 	Group * getGroup(int id);
 	
 	bool invalidTable(int seatsAtTable, int table) const;
+
+	void getGeneBacktracking(int table, vector<int> gene, vector<int> usedTables, vector<vector<int> > &solutions) const;
 };
 
 
