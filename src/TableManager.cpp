@@ -47,7 +47,6 @@ TableManager::TableManager(const char * peopleFile, const char * tablesFile, dou
 		this->groupsAffinity.push_back(vector<double>(this->groups.size()));
 	}
 	this->calcGroupsAffinity();
-	printf("Created a Table Manager\n");
 }
 
 
@@ -435,8 +434,8 @@ bool TableManager::invalidGene(const vector<int> &tables) const
 	{
 		if (this->tables[i].getNumberOfSeats() < tables[i])
 		{
-			cerr << "Invalid values: The number of people is higher than the number of seats.\n";
-			cerr << "\tPeople: " << tables[i] << " ; Seats: " << this->tables[i].getNumberOfSeats() << endl;
+			//cerr << "Invalid values: The number of people is higher than the number of seats.\n";
+			//cerr << "\tPeople: " << tables[i] << " ; Seats: " << this->tables[i].getNumberOfSeats() << endl;
 			return true;
 		}
 	}

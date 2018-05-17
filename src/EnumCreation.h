@@ -44,7 +44,7 @@ struct HobbyMap : public map<string, Hobby> {
 	};
 	~HobbyMap(){}
 };
-inline const char* toString(Hobby v) {
+inline string toString(Hobby v) {
 	switch (v) {
 		case Reading:	return "Reading";
 		case WatchingTV:	return "WatchingTV";
@@ -76,7 +76,7 @@ struct JobAreaMap : public map<string, JobArea> {
 	};
 	~JobAreaMap(){}
 };
-inline const char* toString(JobArea v) {
+inline string toString(JobArea v) {
 	switch (v) {
 		case Science:	return "Science";
 		case Education:	return "Education";
@@ -100,7 +100,7 @@ struct ReligionMap : public map<string, Religion>
 	};
 	~ReligionMap(){}
 };
-inline const char* toString(Religion v)
+inline string toString(Religion v)
 {
 	switch (v) {
 	case Christianity:	return "Christianity";
