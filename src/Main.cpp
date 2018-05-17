@@ -29,10 +29,10 @@ vector<vector<int>> optimalGenes;
  */
 int main(int argc, const char *argv[])
 {
-	if (argc != 14)
+	if (argc != 15)
 	{
 		cout << "Invalid arguments: <people_file> <tables_file>"
-			 << " <p_cross> <p_mut> <n_elite> <max_stale_gens> <max_generations> <n_gene> <max_iters> <max_temp> <schedule> <max_tries> <mut_type>\n\n";
+			 << " <p_cross> <p_mut> <n_elite> <max_stale_gens> <max_generations> <n_gene> <max_iters> <max_temp> <schedule> <max_tries> <mut_type> <valid_initial>\n\n";
 
 		cout << "\t"
 			 << "n_elite: Number of most fit individuals chosen directly to the next generation.\n";
@@ -52,6 +52,8 @@ int main(int argc, const char *argv[])
 			 << "max_tries: Maximum number of tries for the Simulated Annealing Algorithm.\n";
 		cout << "\t"
 			 << "mut_type: Mutation type.\n";
+		cout << "\t"
+			 << "valid_initial: 1 if generates valid initial population by backtracking or 0 if random.\n";
 		return 1;
 	}
 	srand(time(NULL));
@@ -73,10 +75,12 @@ int main(int argc, const char *argv[])
 	MutationTypeMap mutTypeMap;
 	MutationType mutType = mutTypeMap[argv[13]];
 
-	TableManager tableManager(argv[1], argv[2], p_cross, p_mut, max_stale_gens, max_gens, n_gene, n_elite, max_iters, max_temp, max_tries, schedule, mutType);
+	bool valid_initial = atoi(argv[14]);
+
+	TableManager tableManager(argv[1], argv[2], p_cross, p_mut, max_stale_gens, max_gens, n_gene, n_elite, max_iters, max_temp, max_tries, schedule, mutType, valid_initial);
 
 	cout << "Calculating initial random population.\n";
-	vector<vector<int>> population = tableManager.getRandomPopulation(n_gene); //TODO: popSize
+	vector<vector<int>> population = tableManager.getRandomPopulation(n_gene);
 	cout << "Initial population:\n";
 	printVectorVectorInteger(population);
 
@@ -96,10 +100,12 @@ int main(int argc, const char *argv[])
 	cout << "\n";
 
 	cout << "Starting Genetic Algorithm.\n";
-	vector<int> response = tableManager.geneticAlgorithm(population);
+	double score;
+	vector<int> response = tableManager.geneticAlgorithm(population, score);
+	cout << "Fitness: " << score << "\n";
 	for (unsigned int i = 0; i < response.size(); i++)
 	{
-		printf("O grupo %d está na mesa %d.\n", i, response.at(i));
+		printf("The group %d is at table %d.\n", i, response.at(i));
 	}
 	cerr << "FIM\n";
 	return 0;

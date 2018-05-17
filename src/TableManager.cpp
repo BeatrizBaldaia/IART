@@ -17,7 +17,7 @@ JobAreaMap JobAreaMap;
 ReligionMap ReligionMap;
 HobbyMap HobbyMap;
 
-TableManager::TableManager(const char * peopleFile, const char * tablesFile, double p_cross, double p_mut, int max_stale_gens, int max_gens, int n_gene, int n_elite, int max_iters, int max_temp, int max_tries, CoolingSchedule schedule, MutationType mutType)
+TableManager::TableManager(const char * peopleFile, const char * tablesFile, double p_cross, double p_mut, int max_stale_gens, int max_gens, int n_gene, int n_elite, int max_iters, int max_temp, int max_tries, CoolingSchedule schedule, MutationType mutType, bool backtrackingInitialGeneration)
 {
 	this->p_cross = p_cross;
 	this->p_mut = p_mut;
@@ -381,7 +381,7 @@ void TableManager::selectNextGen(vector<vector<int>> &population, const vector<v
 	population.insert(population.end(), elitedParents.begin(), elitedParents.end());
 }
 
-vector<int> TableManager::geneticAlgorithm(vector<vector<int>> &population) const
+vector<int> TableManager::geneticAlgorithm(vector<vector<int> > &population, double &maxScore) const
 {
 	int currentGen = 0;
 	int numStaleGens = 0;
@@ -414,6 +414,7 @@ vector<int> TableManager::geneticAlgorithm(vector<vector<int>> &population) cons
 		}
 		currentGen++;
 	}
+	maxScore = max_eval;
 	return res;
 }
 
@@ -457,11 +458,11 @@ bool TableManager::invalidTable(int seatsAtTable, int tableInd) const {
 
 void TableManager::getGeneBacktracking(int table, vector<int> gene, vector<int> usedTables, vector<vector<int> > &solutions) const {
 	int currGroup = gene.size();
-	// cout << currGroup << " | " << table << " | ";
-	// for (int i = 0; i < gene.size(); i++) {
-	// 	cout << gene[i] << " ";
-	// }
-	// cout << "\n";
+	cout << currGroup << " | " << table << " | ";
+	for (int i = 0; i < gene.size(); i++) {
+		cout << gene[i] << " ";
+	}
+	cout << "\n";
 	int nMembers = this->groups[currGroup].getMembers().size();
 	usedTables[table] += nMembers;
 	if (usedTables[table] > this->tables[table].getNumberOfSeats()) {
@@ -478,26 +479,35 @@ void TableManager::getGeneBacktracking(int table, vector<int> gene, vector<int> 
 	}
 }
 
-vector<vector<int>> TableManager::getRandomPopulation(unsigned int popSize)
+vector<vector<int> > TableManager::getRandomPopulation(unsigned int popSize)
 {
-	cout << "num groups: " << this->groups.size() << "\n";
-	vector<int> gene;
-	vector<int> usedTables(this->tables.size(), 0);
 	vector<vector<int> > solutions;
-	for (int i = 0; i < this->tables.size(); i++) {
-		getGeneBacktracking(i, gene, usedTables, solutions);
-	}
+	if (backtrackingInitialGeneration) {
+		vector<int> gene;
+		vector<int> usedTables(this->tables.size(), 0);
+		for (int i = 0; i < this->tables.size(); i++) {
+			getGeneBacktracking(i, gene, usedTables, solutions);
+		}
 
-	cout << solutions.size() << "\n";
-	while (solutions.size() > popSize) {
-		int ind = rand() % solutions.size();
-		cout << solutions.size() << " | ";
-		solutions.erase(solutions.begin() + ind);
-		cout << "erased\n";
+		while (solutions.size() > popSize) {
+			int ind = rand() % solutions.size();
+			cout << solutions.size() << " | ";
+			solutions.erase(solutions.begin() + ind);
+			cout << "erased\n";
+		}
+	} else {
+		for (int i = 0; i < popSize; i++) {
+			vector<int> gene;
+			for (int i = 0; i < this->groups.size(); i++) {
+				int table = rand() % this->tables.size();
+				gene.push_back(table);
+			}
+			solutions.push_back(gene);
+		}
 	}
-
-	cout << solutions.size() << "\n";
+	
 	return solutions;
+	
 	// vector<vector<int>> res;
 
 	// for (unsigned int i = 0; i < popSize; i++)

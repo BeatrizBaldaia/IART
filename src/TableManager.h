@@ -31,11 +31,13 @@ private:
 	int max_temp;
 	int max_tries;
 
+	bool backtrackingInitialGeneration;
+
 	CoolingSchedule schedule;
 	MutationType mutType;
 
 public:
-	TableManager(const char * peopleFile, const char * tablesFile, double p_cross, double p_mut, int max_stale_gens, int max_gens, int n_gene, int n_elite, int max_iters, int max_temp, int max_tries, CoolingSchedule schedule, MutationType mutType);	
+	TableManager(const char * peopleFile, const char * tablesFile, double p_cross, double p_mut, int max_stale_gens, int max_gens, int n_gene, int n_elite, int max_iters, int max_temp, int max_tries, CoolingSchedule schedule, MutationType mutType, bool backtrackingInitialGeneration);	
 	void getPeopleFromFile(const char* filename);
 	void getTablesFromFile(const char* filename);
 	void createGroups();
@@ -61,7 +63,7 @@ public:
 	/**
 	 * Elitism turned off by default.
 	 */
-	vector<int> geneticAlgorithm(vector<vector<int> > &population) const;
+	vector<int> geneticAlgorithm(vector<vector<int> > &population, double &maxScore) const;
 
 	/**
 	 * retorna um novo estado (melhor ou pior que o atual).
