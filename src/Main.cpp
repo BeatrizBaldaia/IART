@@ -32,28 +32,30 @@ int main(int argc, const char *argv[])
 	if (argc != 15)
 	{
 		cout << "Invalid arguments: <people_file> <tables_file>"
-			 << " <p_cross> <p_mut> <n_elite> <max_stale_gens> <max_generations> <n_gene> <max_iters> <max_temp> <schedule> <max_tries> <mut_type> <valid_initial>\n\n";
+				<< " <p_cross> <p_mut> <n_elite> <max_stale_gens> <max_generations>\n"
+				<< " <n_gene> <max_iters> <max_temp> <schedule> <max_tries> \n"
+				<< "<mut_type> <valid_initial>\n\n";
 
 		cout << "\t"
-			 << "n_elite: Number of most fit individuals chosen directly to the next generation.\n";
+				<< "n_elite: Number of most fit individuals chosen directly to the next generation.\n";
 		cout << "\t"
-			 << "max_stale_gens: Maximum number of successive generations with no improvement.\n";
+				<< "max_stale_gens: Maximum number of successive generations with no improvement.\n";
 		cout << "\t"
-			 << "max_generations: Maximum number of generations.\n";
-			 cout << "\t"
-			 << "n_gene: Number of genes in each generation.\n";
+				<< "max_generations: Maximum number of generations.\n";
 		cout << "\t"
-			 << "max_iters: Maximum number of iterations for the Simulated Annealing Algorithm.\n";
+				<< "n_gene: Number of genes in each generation.\n";
 		cout << "\t"
-			 << "max_temp: Maximum temperature for the Simulated Annealing Algorithm.\n";
+				<< "max_iters: Maximum number of iterations for the Simulated Annealing Algorithm.\n";
 		cout << "\t"
-			 << "schedule: Cooling schedule for the Simulated Annealing Algorithm: Logarithmic, Geometric or Exponential\n";
+				<< "max_temp: Maximum temperature for the Simulated Annealing Algorithm.\n";
 		cout << "\t"
-			 << "max_tries: Maximum number of tries for the Simulated Annealing Algorithm.\n";
+				<< "schedule: Cooling schedule for the Simulated Annealing Algorithm: Logarithmic, Geometric or Exponential\n";
 		cout << "\t"
-			 << "mut_type: Mutation type.\n";
+				<< "max_tries: Maximum number of tries for the Simulated Annealing Algorithm.\n";
 		cout << "\t"
-			 << "valid_initial: 1 if generates valid initial population by backtracking or 0 if random.\n";
+				<< "mut_type: Mutation type.\n";
+		cout << "\t"
+				<< "valid_initial: 1 if generates valid initial population by backtracking or 0 if random.\n";
 		return 1;
 	}
 	srand(time(NULL));

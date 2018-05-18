@@ -41,7 +41,7 @@ public:
 	void getPeopleFromFile(const char* filename);
 	void getTablesFromFile(const char* filename);
 	void createGroups();
-	
+
 	/**
 	 * Calculates the fitness value of one possible solution
 	 * Sum of affinities of group pairs sharing the same table minus penalty
@@ -59,7 +59,7 @@ public:
 	void swapMutGene(vector<int> &gene) const;
 	void swapMutation(vector<vector<int>> &children) const;
 	double calculateTemperature(int i);
-	
+
 	/**
 	 * Elitism turned off by default.
 	 */
@@ -86,7 +86,7 @@ public:
 	bool invalidGene(const vector<int> &population) const;
 	vector<int> fillTables(const vector<int> &gene) const;
 	Group * getGroup(int id);
-	
+
 	bool invalidTable(int seatsAtTable, int table) const;
 
 	void getGeneBacktracking(int table, vector<int> gene, vector<int> usedTables, vector<vector<int> > &solutions) const;

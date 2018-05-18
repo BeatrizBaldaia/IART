@@ -2,6 +2,7 @@
 
 using namespace std;
 
-int main() {
-  //cout << 0.5 % 2 << "\n";
+int main_() {
+	//cout << 0.5 % 2 << "\n";
+	return 1;
 }

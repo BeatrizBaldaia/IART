@@ -233,7 +233,7 @@ vector<double> scaleFunction(vector<double> eval) {
 	for(double &e: eval) {
 		e /= scale_F;
 	}
-	
+
 	vector<double> range;
 	range.push_back(eval[0]);
 	for(int i = 1; i < eval.size(); i++) {
@@ -265,7 +265,7 @@ vector<int> TableManager::selectParents(const vector<vector<int>> &population, v
 		int index = getGeneFromRange(scale, random);
 		selectedGenes.push_back(index);
 	}
-	
+
 	return selectedGenes;
 }
 
@@ -307,7 +307,7 @@ vector<vector<int>> TableManager::crossParents(const vector<vector<int>> &popula
 	vector<vector<int>> children;
 	vector<int> uncrossedParentInds;
 	vector<int> crossCandidates = getGenesForCrossover(uncrossedParentInds, parentIndexes.size());
-	
+
 	for(int i = 0; i < crossCandidates.size(); i+=2) {
 		int parent1n = crossCandidates[i], parent2n = crossCandidates[i + 1];
 		vector<int> parent1 = population[parentIndexes[parent1n]], parent2 = population[parentIndexes[parent2n]];
@@ -320,7 +320,7 @@ vector<vector<int>> TableManager::crossParents(const vector<vector<int>> &popula
 	for (int &parentInd : uncrossedParentInds) {
 		children.push_back(population[parentIndexes[parentInd]]);
 	}
-	
+
 	return children;
 }
 
@@ -331,7 +331,7 @@ void TableManager::singleMutation(vector<vector<int>> &children) const {
 	int mutTable = getRandomBetween(0, children.size() * children[0].size() - 1);
 	int mutTableRow = mutTable / children[0].size();
 	int mutTableCol = mutTable % children[0].size();
-	
+
 	children[mutTableRow][mutTableCol] = getRandomBetween(0, tables.size() - 1);
 }
 
@@ -362,17 +362,17 @@ void TableManager::mutateChildren(vector<vector<int> > &children) const
 	if (!probable(this->p_mut)) {
 		return;
 	}
-	
+
 	switch (this->mutType) {
-		case Single:
-			singleMutation(children);
-			break;
-		case Swap:
-			swapMutation(children);
-			break;
-		default:
-			cerr << "Invalid mutation type " << mutType << ".\n";
-			break;
+	case Single:
+		singleMutation(children);
+		break;
+	case Swap:
+		swapMutation(children);
+		break;
+	default:
+		cerr << "Invalid mutation type " << mutType << ".\n";
+		break;
 	}
 }
 
@@ -389,7 +389,7 @@ vector<int> TableManager::geneticAlgorithm(vector<vector<int> > &population, dou
 	double max_eval = -DBL_MAX;
 	vector<int> res;
 	vector<double> eval = evaluatePopulation(population);
-		
+
 	while (currentGen < this->max_gens && numStaleGens < this->max_stale_gens)
 	{
 		printf("%d Cycle\n", currentGen);
@@ -512,7 +512,7 @@ vector<vector<int> > TableManager::getRandomPopulation(unsigned int popSize)
 			solutions.push_back(gene);
 		}
 	}
-	
+
 	return solutions;
 
 	// vector<vector<int>> res;
@@ -520,7 +520,7 @@ vector<vector<int> > TableManager::getRandomPopulation(unsigned int popSize)
 	// for (unsigned int i = 0; i < popSize; i++)
 	// {
 	// 	vector<int> gene;
-		
+
 	// 	getGeneBacktracking(gene);
 	// 	// vector<int> auxTables(this->tables.size());
 	// 	// bool invalidGene = false;

@@ -46,23 +46,23 @@ struct HobbyMap : public map<string, Hobby> {
 };
 inline string toString(Hobby v) {
 	switch (v) {
-		case Reading:	return "Reading";
-		case WatchingTV:	return "WatchingTV";
-		case FamilyTime:	return "FamilyTime";
-		case GoingToMovies:	return "GoingToMovies";
-		case Fishing:	return "Fishing";
-		case Computer:	return "Computer";
-		case Gardening:	return "Gardening";
-		case RentingMovies:	return "RentingMovies";
-		case Walking:	return "Walking";
-		case Exercise:	return "Exercise";
-		case ListeningToMusic:	return "ListeningToMusic";
-		case Entertaining:	return "Entertaining";
-		case Hunting:	return "Hunting";
-		case TeamSports:	return "TeamSports";
-		case Shopping:	return "Shopping";
-		case Traveling:	return "Traveling";
-		default:	return "[Unknown Hobby]";
+	case Reading:	return "Reading";
+	case WatchingTV:	return "WatchingTV";
+	case FamilyTime:	return "FamilyTime";
+	case GoingToMovies:	return "GoingToMovies";
+	case Fishing:	return "Fishing";
+	case Computer:	return "Computer";
+	case Gardening:	return "Gardening";
+	case RentingMovies:	return "RentingMovies";
+	case Walking:	return "Walking";
+	case Exercise:	return "Exercise";
+	case ListeningToMusic:	return "ListeningToMusic";
+	case Entertaining:	return "Entertaining";
+	case Hunting:	return "Hunting";
+	case TeamSports:	return "TeamSports";
+	case Shopping:	return "Shopping";
+	case Traveling:	return "Traveling";
+	default:	return "[Unknown Hobby]";
 	}
 }
 #define NUMBER_HOBBIES 16
@@ -78,10 +78,10 @@ struct JobAreaMap : public map<string, JobArea> {
 };
 inline string toString(JobArea v) {
 	switch (v) {
-		case Science:	return "Science";
-		case Education:	return "Education";
-		case Politics:	return "Politics";
-		default:	return "[Unknown JobArea]";
+	case Science:	return "Science";
+	case Education:	return "Education";
+	case Politics:	return "Politics";
+	default:	return "[Unknown JobArea]";
 	}
 }
 #define NUMBER_JOBS 3
@@ -110,7 +110,7 @@ inline string toString(Religion v)
 	case Buddhism:	return "Buddhism";
 	case Hinduism:	return "Hinduism";
 	case Atheism:	return "Atheism";
-		default:	return "[Unknown Religion]";
+	default:	return "[Unknown Religion]";
 	}
 }
 #define NUMBER_RELIGIONS 7
@@ -131,7 +131,7 @@ inline const char* toString(CoolingSchedule v)
 	case Logarithmic:	return "Logarithmic";
 	case Geometric:	return "Geometric";
 	case Exponential:	return "Exponential";
-		default:	return "[Unknown Cooling Schedule]";
+	default:	return "[Unknown Cooling Schedule]";
 	}
 }
 
@@ -151,7 +151,7 @@ inline const char* toString(MutationType v)
 	switch (v) {
 	case Single:	return "Single";
 	case Swap:	return "Swap";
-		default:	return "[Unknown MutationType]";
+	default:	return "[Unknown MutationType]";
 	}
 }
 
