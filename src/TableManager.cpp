@@ -1,21 +1,14 @@
 #include "TableManager.h"
-#include <map>
-#include <stdio.h>
-#include <float.h>
-#include <iostream>
-#include <fstream>
-#include <sstream>
-#include <stdlib.h>
-#include <string>
-#include <time.h>
-#include <algorithm>
-#include <math.h>
-
+#include <unistd.h>
+#include <signal.h>
 #include "Utils/utils.h"
 
 JobAreaMap JobAreaMap;
 ReligionMap ReligionMap;
 HobbyMap HobbyMap;
+
+int FLAG = 0;
+
 
 TableManager::TableManager(const char * peopleFile, const char * tablesFile, double p_cross, double p_mut, int max_stale_gens, int max_gens, int n_gene, int n_elite, int max_iters, int max_temp, int max_tries, CoolingSchedule schedule, MutationType mutType, bool backtrackingInitialGeneration)
 {
@@ -37,12 +30,8 @@ TableManager::TableManager(const char * peopleFile, const char * tablesFile, dou
 	this->createGroups();
 	for (unsigned int i = 0; i < this->groups.size(); i++)
 	{
-		// cout << "Group: " << this->groups[i].getId() << "\n";
-		// cout << "	p: " << this->groups[i].getMembers()[0]->getName() << "\n";
-
 		this->groups[i].calculate_attributes();
 	}
-	// printf("Calling: calcGroupsAffinity\n");
 	for (unsigned int i = 0; i < this->groups.size(); i++)
 	{
 		this->groupsAffinity.push_back(vector<double>(this->groups.size()));
@@ -463,6 +452,9 @@ bool TableManager::invalidTable(int seatsAtTable, int tableInd) const {
 }
 
 void TableManager::getGeneBacktracking(int table, vector<int> gene, vector<int> usedTables, vector<vector<int> > &solutions) const {
+	if(FLAG) {
+		return;
+	}
 	int currGroup = gene.size();
 	cout << currGroup << " | " << table << " | ";
 	for (unsigned int i = 0; i < gene.size(); i++) {
@@ -477,25 +469,44 @@ void TableManager::getGeneBacktracking(int table, vector<int> gene, vector<int> 
 	gene.push_back(table);
 	if (gene.size() == this->groups.size()) {
 		solutions.push_back(gene);
-		cout << "valid gene\n";
+		//		cout << "valid gene\n";
 		return;
 	}
 	for (unsigned int i = 0; i < this->tables.size(); i++) {
 		getGeneBacktracking(i, gene, usedTables, solutions);
 	}
 }
-
+static void handler_alarm(int signo)
+{
+	printf("SignalHandler");
+	FLAG = 1;
+	return;
+}
 vector<vector<int> > TableManager::getRandomPopulation(unsigned int popSize)
 {
 	vector<vector<int> > solutions;
 	cout << backtrackingInitialGeneration << "\n";
+
+	signal( SIGALRM, handler_alarm );
+	alarm(5);
 	if (backtrackingInitialGeneration) {
 		vector<int> gene;
 		vector<int> usedTables(this->tables.size(), 0);
 		for (unsigned int i = 0; i < this->tables.size(); i++) {
 			getGeneBacktracking(i, gene, usedTables, solutions);
 		}
+		if(FLAG) {
 
+			solutions.clear();
+			for (unsigned int i = 0; i < popSize; i++) {
+				vector<int> gene;
+				for (unsigned int i = 0; i < this->groups.size(); i++) {
+					int table = rand() % this->tables.size();
+					gene.push_back(table);
+				}
+				solutions.push_back(gene);
+			}
+		}
 		if (solutions.size() < popSize) {
 			cout << "The number of possible solutions, " << solutions.size() << ", is lower than the desired population number, " << popSize << ".\n";
 			this->n_gene = solutions.size();
@@ -520,41 +531,7 @@ vector<vector<int> > TableManager::getRandomPopulation(unsigned int popSize)
 
 	return solutions;
 
-	// vector<vector<int>> res;
 
-	// for (unsigned int i = 0; i < popSize; i++)
-	// {
-	// 	vector<int> gene;
-
-	// 	getGeneBacktracking(gene);
-	// 	// vector<int> auxTables(this->tables.size());
-	// 	// bool invalidGene = false;
-	// 	// do
-	// 	// {
-	// 	// 	invalidGene = false;
-	// 	// 	gene.clear();
-	// 	// 	fill(auxTables.begin(), auxTables.end(), 0);
-	// 	// 	for (unsigned int j = 0; j < this->groups.size(); j++)
-	// 	// 	{
-	// 	// 		int nMembers = (this->groups[j].getMembers()).size();
-	// 	// 		int table = rand() % this->tables.size();
-
-	// 	// 		auxTables[table] += nMembers;
-
-	// 	// 		if (invalidTable(auxTables[table], table)) {
-	// 	// 			invalidGene = true;
-	// 	// 			break;
-	// 	// 		}
-
-	// 	// 		gene.push_back(table);
-	// 	// 	}
-
-	// 	// } while (invalidGene);
-	// 	res.push_back(gene);
-	// 	cout << "pushed back gene\n";
-	// }
-
-	// return res;
 }
 
 double calcLogTemp(int iteration, double initialTemp, double alpha = 1.0)

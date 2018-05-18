@@ -1,0 +1,86 @@
+Time for Random Population = 5101631478ns
+Time for Simulated Annealing = 47741063093ns
+Fitness: 3566.87
+Time for Simulated Annealing = 48429912213ns
+Fitness: 3352.36
+Time for Simulated Annealing = 48655225165ns
+Fitness: 3434.95
+Time for Simulated Annealing = 48681294239ns
+Fitness: 3436.6
+Time for Simulated Annealing = 49408851598ns
+Fitness: 3504.88
+Time for Simulated Annealing = 50064215216ns
+Fitness: 3368.16
+Time for Simulated Annealing = 50214211049ns
+Fitness: 3415.34
+Time for Simulated Annealing = 50526905118ns
+Fitness: 3482.69
+Time for Simulated Annealing = 50828105564ns
+Fitness: 3430.55
+Time for Simulated Annealing = 51066281036ns
+Fitness: 3455.82
+Time for Simulated Annealing = 50942312919ns
+Fitness: 3552.16
+Time for Simulated Annealing = 50942664987ns
+Fitness: 3507.45
+Time for Simulated Annealing = 51238883458ns
+Fitness: 3460.03
+Time for Simulated Annealing = 51568514515ns
+Fitness: 3441.55
+Time for Simulated Annealing = 51688393622ns
+Fitness: 3473.73
+Time for Simulated Annealing = 51734995347ns
+Fitness: 3405.36
+Time for Simulated Annealing = 51886874393ns
+Fitness: 3521.79
+Time for Simulated Annealing = 51657302352ns
+Fitness: 3565.94
+Time for Simulated Annealing = 51758963828ns
+Fitness: 3461.11
+Time for Simulated Annealing = 52305070505ns
+Fitness: 3561.72
+Time for Genetic Algoritm = 7377590453ns
+Fitness: 3527.84
+Time for Random Population = 5381613258ns
+Time for Simulated Annealing = 48134690637ns
+Fitness: 3506.43
+Time for Simulated Annealing = 48521726224ns
+Fitness: 3473.62
+Time for Simulated Annealing = 48864270989ns
+Fitness: 3472.96
+Time for Simulated Annealing = 48779704100ns
+Fitness: 3374.55
+Time for Simulated Annealing = 49275758614ns
+Fitness: 3465.61
+Time for Simulated Annealing = 49235896793ns
+Fitness: 3441.51
+Time for Simulated Annealing = 49267483009ns
+Fitness: 3569.94
+Time for Simulated Annealing = 49450340453ns
+Fitness: 3528.18
+Time for Simulated Annealing = 49195362393ns
+Fitness: 3527.69
+Time for Simulated Annealing = 49550805951ns
+Fitness: 3433.58
+Time for Simulated Annealing = 49557388458ns
+Fitness: 3367.26
+Time for Simulated Annealing = 49551921666ns
+Fitness: 3471.61
+Time for Simulated Annealing = 49536854559ns
+Fitness: 3515.09
+Time for Simulated Annealing = 49943944141ns
+Fitness: 3420.66
+Time for Simulated Annealing = 49882835797ns
+Fitness: 3541.47
+Time for Simulated Annealing = 49794059162ns
+Fitness: 3516.82
+Time for Simulated Annealing = 50100309044ns
+Fitness: 3620.18
+Time for Simulated Annealing = 49954873101ns
+Fitness: 3357.71
+Time for Simulated Annealing = 49798455300ns
+Fitness: 3493.46
+Time for Simulated Annealing = 50258963440ns
+Fitness: 3392.55
+Time for Genetic Algoritm = 4426747655ns
+Fitness: 3492.13

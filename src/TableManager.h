@@ -10,6 +10,19 @@
 
 #include <vector>
 #include <numeric>      // std::accumulate
+#include <map>
+#include <stdio.h>
+#include <float.h>
+#include <iostream>
+#include <fstream>
+#include <sstream>
+#include <stdlib.h>
+#include <string>
+#include <time.h>
+#include <algorithm>
+#include <math.h>
+
+
 #include "Group.h"
 #include "Table.h"
 
