@@ -51,7 +51,7 @@ TableManager::TableManager(const char * peopleFile, const char * tablesFile, dou
 }
 
 
-vector<double> TableManager::evaluatePopulation(const vector<vector<int> > &pop) const
+vector<double> TableManager::evaluatePopulation(const vector<vector<int> > &pop, double& shift) const
 {
 	vector<double> res;
 	double minFitness = DBL_MAX;
@@ -65,10 +65,13 @@ vector<double> TableManager::evaluatePopulation(const vector<vector<int> > &pop)
 		cout << fitness << " | ";
 	}
 	cout << "\n";
-	if (minFitness < 0) {
+	if (minFitness <= 0) {
+		shift = -minFitness + FITNESS_COMPENSATION; // summed so the worst element won't have 0 chance of being picked
 		for (double &elem : res) {
-			elem += -minFitness + FITNESS_COMPENSATION; // summed so the worst element won't have 0 chance of being picked
+			elem += shift;
 		}
+	} else {
+		shift = 0;
 	}
 
 	return res;
@@ -221,7 +224,7 @@ vector<int> TableManager::elitismSelection(const vector<double> &eval) const
 
 vector<vector<int>> getElitedParents(const vector<vector<int>> &population, vector<int> indexes) {
 	vector<vector<int>> result;
-	for(int i = 0; i < indexes.size(); i++) {
+	for(unsigned int i = 0; i < indexes.size(); i++) {
 		result.push_back(population[indexes[i]]);
 	}
 
@@ -236,7 +239,7 @@ vector<double> scaleFunction(vector<double> eval) {
 
 	vector<double> range;
 	range.push_back(eval[0]);
-	for(int i = 1; i < eval.size(); i++) {
+	for(unsigned int i = 1; i < eval.size(); i++) {
 		range.push_back(range[i - 1] + eval[i]);
 	}
 
@@ -244,7 +247,7 @@ vector<double> scaleFunction(vector<double> eval) {
 }
 
 int getGeneFromRange(const vector<double> &range, double n) {
-	for(int i = 0; i < range.size(); i++) {
+	for(unsigned int i = 0; i < range.size(); i++) {
 		if(range[i] >= n) {
 			return i;
 		}
@@ -259,7 +262,7 @@ vector<int> TableManager::selectParents(const vector<vector<int>> &population, v
 	vector<double> scale = scaleFunction(eval);
 	vector<int> selectedGenes;
 
-	for (unsigned int i = 0; i < nSelection; i++)
+	for (int i = 0; i < nSelection; i++)
 	{
 		double random = getRandomBetween(0, 1);
 		int index = getGeneFromRange(scale, random);
@@ -295,7 +298,7 @@ void crossGenes(const vector<int> &gene1, const vector<int> &gene2, vector<int> 
 	int max = gene1.size() - 2, min = 1;
 	int randNum = getRandomBetween(min, max);
 
-	for(int i = randNum; i < gene1.size(); i++) {
+	for(unsigned int i = randNum; i < gene1.size(); i++) {
 		int seatA = gene1[i], seatB = gene2[i];
 		child1[i] = seatB;
 		child2[i] = seatA;
@@ -308,7 +311,7 @@ vector<vector<int>> TableManager::crossParents(const vector<vector<int>> &popula
 	vector<int> uncrossedParentInds;
 	vector<int> crossCandidates = getGenesForCrossover(uncrossedParentInds, parentIndexes.size());
 
-	for(int i = 0; i < crossCandidates.size(); i+=2) {
+	for(unsigned int i = 0; i < crossCandidates.size(); i+=2) {
 		int parent1n = crossCandidates[i], parent2n = crossCandidates[i + 1];
 		vector<int> parent1 = population[parentIndexes[parent1n]], parent2 = population[parentIndexes[parent2n]];
 		vector<int> child1 = parent1, child2 = parent2;
@@ -388,7 +391,8 @@ vector<int> TableManager::geneticAlgorithm(vector<vector<int> > &population, dou
 	int numStaleGens = 0;
 	double max_eval = -DBL_MAX;
 	vector<int> res;
-	vector<double> eval = evaluatePopulation(population);
+	double shift;
+	vector<double> eval = evaluatePopulation(population, shift);
 
 	while (currentGen < this->max_gens && numStaleGens < this->max_stale_gens)
 	{
@@ -400,22 +404,23 @@ vector<int> TableManager::geneticAlgorithm(vector<vector<int> > &population, dou
 		vector<vector<int>> children = crossParents(population, parentIndexes);
 		mutateChildren(children);
 		selectNextGen(population, elitedParents, children);
-		eval = evaluatePopulation(population);
+		eval = evaluatePopulation(population,shift);
 		vector<double>::iterator largest_eval_it = max_element(eval.begin(), eval.end());
-		if (max_eval >= *largest_eval_it)
+		double largest_eval = *largest_eval_it - shift;
+		if (max_eval >= largest_eval)
 		{
 			numStaleGens++;
 		}
 		else
 		{
-			max_eval = *largest_eval_it;
+			max_eval = largest_eval;
 			numStaleGens = 0;
-
-			res = population.at(distance(eval.begin(), largest_eval_it));
 		}
 		currentGen++;
 	}
-	maxScore = max_eval;
+	vector<double>::iterator largest_eval_it = max_element(eval.begin(), eval.end());
+	res = population.at(distance(eval.begin(), largest_eval_it));
+	maxScore = *largest_eval_it - shift;
 	return res;
 }
 
@@ -446,7 +451,7 @@ bool TableManager::invalidGene(const vector<int> &tables) const
 
 void printRow(const vector<int> &v)
 {
-	for (int i = 0; i < v.size(); i++)
+	for (unsigned int i = 0; i < v.size(); i++)
 	{
 		printf("%d| ", v[i]);
 	}
@@ -460,7 +465,7 @@ bool TableManager::invalidTable(int seatsAtTable, int tableInd) const {
 void TableManager::getGeneBacktracking(int table, vector<int> gene, vector<int> usedTables, vector<vector<int> > &solutions) const {
 	int currGroup = gene.size();
 	cout << currGroup << " | " << table << " | ";
-	for (int i = 0; i < gene.size(); i++) {
+	for (unsigned int i = 0; i < gene.size(); i++) {
 		cout << gene[i] << " ";
 	}
 	cout << "\n";
@@ -475,7 +480,7 @@ void TableManager::getGeneBacktracking(int table, vector<int> gene, vector<int> 
 		cout << "valid gene\n";
 		return;
 	}
-	for (int i = 0; i < this->tables.size(); i++) {
+	for (unsigned int i = 0; i < this->tables.size(); i++) {
 		getGeneBacktracking(i, gene, usedTables, solutions);
 	}
 }
@@ -487,7 +492,7 @@ vector<vector<int> > TableManager::getRandomPopulation(unsigned int popSize)
 	if (backtrackingInitialGeneration) {
 		vector<int> gene;
 		vector<int> usedTables(this->tables.size(), 0);
-		for (int i = 0; i < this->tables.size(); i++) {
+		for (unsigned int i = 0; i < this->tables.size(); i++) {
 			getGeneBacktracking(i, gene, usedTables, solutions);
 		}
 
@@ -503,9 +508,9 @@ vector<vector<int> > TableManager::getRandomPopulation(unsigned int popSize)
 			cout << "erased\n";
 		}
 	} else {
-		for (int i = 0; i < popSize; i++) {
+		for (unsigned int i = 0; i < popSize; i++) {
 			vector<int> gene;
-			for (int i = 0; i < this->groups.size(); i++) {
+			for (unsigned int i = 0; i < this->groups.size(); i++) {
 				int table = rand() % this->tables.size();
 				gene.push_back(table);
 			}

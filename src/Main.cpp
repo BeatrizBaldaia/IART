@@ -11,6 +11,7 @@
 #include <time.h>
 #include <algorithm>
 #include <thread>
+#include <chrono>
 
 #include "TableManager.h"
 using namespace std;
@@ -31,7 +32,7 @@ int main(int argc, const char *argv[])
 {
 	if (argc != 15)
 	{
-		cout << "Invalid arguments: <people_file> <tables_file>"
+		cout << "Invalid arguments: <people_file> <tables_file>\n"
 				<< " <p_cross> <p_mut> <n_elite> <max_stale_gens> <max_generations>\n"
 				<< " <n_gene> <max_iters> <max_temp> <schedule> <max_tries> \n"
 				<< "<mut_type> <valid_initial>\n\n";
@@ -82,13 +83,16 @@ int main(int argc, const char *argv[])
 	TableManager tableManager(argv[1], argv[2], p_cross, p_mut, max_stale_gens, max_gens, n_gene, n_elite, max_iters, max_temp, max_tries, schedule, mutType, valid_initial);
 
 	cout << "Calculating initial random population.\n";
+	auto start = chrono::high_resolution_clock::now();
 	vector<vector<int>> population = tableManager.getRandomPopulation(n_gene);
+	auto finish = chrono::high_resolution_clock::now();
+	cout << "Time for Random Population = " << chrono::duration_cast<chrono::nanoseconds>(finish-start).count() << "ns\n";
+
 	cout << "Initial population:\n";
 	printVectorVectorInteger(population);
 
 	vector<thread> threads;
-	for (int i = 0; i < population.size(); i++)
-	{
+	for (unsigned int i = 0; i < population.size(); i++) {
 		optimalGenes.resize(population.size());
 		threads.emplace_back(getOptimalGene, i, tableManager, max_iters, max_temp, max_tries, population[i], schedule);
 	}
@@ -102,8 +106,12 @@ int main(int argc, const char *argv[])
 	cout << "\n";
 
 	cout << "Starting Genetic Algorithm.\n";
-	double score;
+	double score = -DBL_MAX;
+	start = chrono::high_resolution_clock::now();
 	vector<int> response = tableManager.geneticAlgorithm(population, score);
+	finish = chrono::high_resolution_clock::now();
+	cout << "Time for Genetic Algoritm = " << chrono::duration_cast<chrono::nanoseconds>(finish-start).count() << "ns\n";
+
 	cout << "Fitness: " << score << "\n";
 	for (unsigned int i = 0; i < response.size(); i++)
 	{
@@ -128,6 +136,13 @@ void printVectorVectorInteger(const vector<vector<int>> &v)
 void getOptimalGene(int threadId, TableManager tableManager, int iterationsMax, double tempMax, int triesMax, const vector<int> &gene, CoolingSchedule schedule)
 {
 	printf("No corpo da thread\n");
+
+	auto start = chrono::high_resolution_clock::now();
 	vector<int> optimalGene = tableManager.simulatedAnnealingAlgorithm(gene);
+	auto finish = chrono::high_resolution_clock::now();
+	double fitness = tableManager.fitnessFunction(optimalGene);
+	cout << "Time for Simulated Annealing = " << chrono::duration_cast<chrono::nanoseconds>(finish-start).count() << "ns\n"
+			<< "Fitness: " <<fitness << "\n";
+
 	optimalGenes[threadId] = optimalGene;
 }

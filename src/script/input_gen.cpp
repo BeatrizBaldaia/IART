@@ -103,4 +103,5 @@ int main_(int argc, const char *argv[]) {
 	}
 	writeTables(argv[1], tables);
 	writePeople(argv[1], people);
+	return 0;
 }

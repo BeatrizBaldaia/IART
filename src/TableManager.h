@@ -74,7 +74,7 @@ public:
 	vector<int> simulatedAnnealingAlgorithm(const vector<int> &gene);
 
 	void calcGroupsAffinity();
-	vector<double> evaluatePopulation(const vector<vector<int> > &pop) const;
+	vector<double> evaluatePopulation(const vector<vector<int> > &pop, double &min) const;
 	/**
 	 * calcula o valor de uma distribuicao de grupos por mesas,
 	 * tendo em conta a afinidade entre os grupos que partilham uma mesa

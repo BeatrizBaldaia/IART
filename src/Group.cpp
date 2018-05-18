@@ -18,13 +18,12 @@ void Group::addMember(const Person * newMember){
 	this->members.push_back(newMember);
 }
 
-//TODO: Correct ages.
 AgeGroup getAgeStage(int age) {
 	if (age < 10) {
 		return Child;
 	} else if (age < 20) {
 		return Teen;
-	} else if (age < 50) {
+	} else if (age < 65) {
 		return Adult;
 	} else {
 		return Elder;
