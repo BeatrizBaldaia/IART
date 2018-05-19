@@ -531,7 +531,7 @@ double calcGeomTemp(int iteration, double initialTemp, double alpha = 0.85)
 
 double calcExpTemp(int iteration, double initialTemp, double alpha = 1.0)
 {
-	return initialTemp * pow(alpha, iteration);
+	return initialTemp * exp(-alpha * iteration);
 }
 
 double TableManager::calculateTemperature(int i)

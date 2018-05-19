@@ -22,16 +22,8 @@ vector<int> getSimAnnealResponse(const TableManager &tm, const vector<vector<int
 
 vector<vector<int>> optimalGenes;
 ofstream myfile;
-/**
- * argv[1] = people filename
- * argv[2] = tables filename
- *
- * @return 1 if arguments are wrong
- */
-int main(int argc, const char *argv[])
-{
-	if (argc != 15)
-	{
+
+void printUsage() {
 		cout << "Invalid arguments: <people_file> <tables_file>\n"
 				<< " <p_cross> <p_mut> <n_elite> <max_stale_gens> <max_generations>\n"
 				<< " <n_gene> <max_iters> <max_temp> <schedule> <max_tries> \n"
@@ -58,7 +50,25 @@ int main(int argc, const char *argv[])
 		cout << "\t"
 				<< "prog_config: Algorithms to run. 'SimAnneal' for only simulated annealing,"
 				<< "'Genetic' for only genetic, 'All' for simulated annealing followed by genetic.\n";
+}
 
+bool validInputs(string coolSchedule, string mutType, string progConfig) {
+	return (coolSchedule == "Logarithmic" || coolSchedule == "Geometric" || coolSchedule == "Exponential")
+			&& (mutType == "Single" || mutType == "Swap")
+			&& (progConfig == "SimAnneal" || progConfig == "Genetic" || progConfig == "All");
+}
+
+/**
+ * argv[1] = people filename
+ * argv[2] = tables filename
+ *
+ * @return 1 if arguments are wrong
+ */
+int main(int argc, const char *argv[])
+{
+	if (argc != 15)
+	{
+		printUsage();
 		return 1;
 	}
 	srand(time(NULL));
@@ -85,6 +95,11 @@ int main(int argc, const char *argv[])
 
 	ProgramConfigMap progConfigMap;
 	ProgramConfig progConfig = progConfigMap[argv[14]];
+
+	if (!validInputs(argv[11], argv[13], argv[14])) {
+		printUsage();
+		exit(1);
+	}
 
 	TableManager tableManager(argv[1], argv[2], p_cross, p_mut, max_stale_gens, max_gens, n_gene, n_elite, max_iters, max_temp, max_tries, schedule, mutType);
 

@@ -23,7 +23,6 @@ private:
 
 public:
 	Group(int id);
-	virtual ~Group();
 	const double * getAgeDistribution() const;
 	const double * getJobDistribution() const;
 	const double * getReligionDistribution() const;
