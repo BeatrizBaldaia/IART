@@ -110,7 +110,7 @@ int main(int argc, const char *argv[])
 	cout << "Starting Genetic Algorithm.\n";
 	double score = -DBL_MAX;
 	auto geneticStart = chrono::high_resolution_clock::now();
-	vector<int> response = tableManager.geneticAlgorithm(population, score);
+	vector<int> response = tableManager.geneticAlgorithm(optimalGenes, score);
 	auto geneticFinish = chrono::high_resolution_clock::now();
 	cout << "\n";
 	
@@ -122,7 +122,9 @@ int main(int argc, const char *argv[])
 		printf("The group %d is at table %d.\n", i, response.at(i));
 	}
 	cout << "\n";
-
+	cout << "Fitness: " << score << "\n";
+	myfile << "Fitness: " << score << "\n";
+	
 	cout << "Time Statistics\n";
 	myfile << "Time spent for Random Population = " << chrono::duration_cast<chrono::nanoseconds>(initialFinish-initialStart).count() << "ns\n";
 	cout << "Time spent for Random Population = " << chrono::duration_cast<chrono::nanoseconds>(initialFinish-initialStart).count() << "ns\n";
