@@ -191,5 +191,6 @@ vector<int> getSimAnnealResponse(const TableManager &tm, const vector<vector<int
 	double shift;
 	vector<double> eval = tm.evaluatePopulation(optimalGenes, shift);
 	vector<double>::iterator largest_eval_it = max_element(eval.begin(), eval.end());
+	score = *largest_eval_it - shift;
 	return optimalGenes.at(distance(eval.begin(), largest_eval_it));
 }
