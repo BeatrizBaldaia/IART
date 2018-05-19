@@ -7,7 +7,7 @@ JobAreaMap JobAreaMap;
 ReligionMap ReligionMap;
 HobbyMap HobbyMap;
 
-int FLAG = 0;
+bool popGenTimedOut = false;
 
 
 TableManager::TableManager(const char * peopleFile, const char * tablesFile, double p_cross, double p_mut, int max_stale_gens, int max_gens, int n_gene, int n_elite, int max_iters, int max_temp, int max_tries, CoolingSchedule schedule, MutationType mutType, bool backtrackingInitialGeneration)
@@ -452,7 +452,7 @@ bool TableManager::invalidTable(int seatsAtTable, int tableInd) const {
 }
 
 void TableManager::getGeneBacktracking(int table, vector<int> gene, vector<int> usedTables, vector<vector<int> > &solutions) const {
-	if(FLAG) {
+	if (popGenTimedOut) {
 		return;
 	}
 	int currGroup = gene.size();
@@ -479,7 +479,7 @@ void TableManager::getGeneBacktracking(int table, vector<int> gene, vector<int> 
 static void handler_alarm(int signo)
 {
 	printf("SignalHandler");
-	FLAG = 1;
+	popGenTimedOut = true;
 	return;
 }
 vector<vector<int> > TableManager::getRandomPopulation(unsigned int popSize)
@@ -487,7 +487,7 @@ vector<vector<int> > TableManager::getRandomPopulation(unsigned int popSize)
 	vector<vector<int> > solutions;
 	cout << backtrackingInitialGeneration << "\n";
 
-	signal( SIGALRM, handler_alarm );
+	signal(SIGALRM, handler_alarm);
 	alarm(5);
 	if (backtrackingInitialGeneration) {
 		vector<int> gene;
@@ -495,8 +495,10 @@ vector<vector<int> > TableManager::getRandomPopulation(unsigned int popSize)
 		for (unsigned int i = 0; i < this->tables.size(); i++) {
 			getGeneBacktracking(i, gene, usedTables, solutions);
 		}
-		if(FLAG) {
-
+		
+		if (!popGenTimedOut) {
+			alarm(0); // cancel alarm if backtracking finished successfully
+		} else {
 			solutions.clear();
 			for (unsigned int i = 0; i < popSize; i++) {
 				vector<int> gene;
