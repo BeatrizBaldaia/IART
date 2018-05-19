@@ -343,9 +343,6 @@ void TableManager::swapMutation(vector<vector<int>> &children) const {
 
 	int mutGene = getRandomBetween(0, children.size() - 1);
 	swapMutGene(children[mutGene]);
-
-	int mutTable1 = getRandomBetween(0, children.size() * children[0].size() - 1);
-	int mutTable2 = getRandomBetween(0, children.size() * children[0].size() - 1);
 }
 
 void TableManager::mutateChildren(vector<vector<int> > &children) const
