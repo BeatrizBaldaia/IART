@@ -7,6 +7,29 @@
 
 using namespace std;
 
+enum ProgramConfig {
+	SimAnneal,
+	Genetic,
+	All
+};
+
+struct ProgramConfigMap : public map<string, ProgramConfig> {
+	ProgramConfigMap() {
+		this->operator[]("SimAnneal") = SimAnneal;
+		this->operator[]("Genetic") = Genetic;
+		this->operator[]("All") = All;
+	}
+};
+
+inline string toString(ProgramConfig c) {
+	switch (c) {
+		case SimAnneal: return "SimAnneal";
+		case Genetic: return "Genetic";
+		case All: return "All";
+		default: return "[Unknown ProgramConfig]";
+	}
+}
+
 enum Hobby {Reading,
 	WatchingTV,
 	FamilyTime,
