@@ -389,7 +389,7 @@ vector<int> TableManager::geneticAlgorithm(vector<vector<int> > &population, dou
 		vector<vector<int>> children = crossParents(population, parentIndexes);
 		mutateChildren(children);
 		selectNextGen(population, elitedParents, children);
-		eval = evaluatePopulation(population,shift);
+		eval = evaluatePopulation(population, shift);
 		vector<double>::iterator largest_eval_it = max_element(eval.begin(), eval.end());
 		double largest_eval = *largest_eval_it - shift;
 		if (max_eval >= largest_eval)

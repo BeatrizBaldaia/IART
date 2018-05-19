@@ -17,8 +17,8 @@
 using namespace std;
 
 void printVectorVectorInteger(const vector<vector<int>> &v);
-
 void getOptimalGene(int threadId, TableManager tableManager, int iterationsMax, double tempMax, int triesMax, const vector<int> &gene, CoolingSchedule schedule);
+vector<int> getSimAnnealResponse(const TableManager &tm, const vector<vector<int> > &optimalGenes, double &score);
 
 vector<vector<int>> optimalGenes;
 ofstream myfile;
@@ -96,6 +96,9 @@ int main(int argc, const char *argv[])
 	cout << "Initial population:\n";
 	printVectorVectorInteger(population);
 
+	vector<int> response;
+	double score;
+
 	// declared outside if block so they can be used in the end results
 	auto simAnnealStart = chrono::high_resolution_clock::now();
 	auto simAnnealFinish = chrono::high_resolution_clock::now();
@@ -115,6 +118,9 @@ int main(int argc, const char *argv[])
 		cout << "Simulated annealing result:\n";
 		printVectorVectorInteger(optimalGenes);
 		cout << "\n";
+
+		response = getSimAnnealResponse(tableManager, optimalGenes, score);
+		population = optimalGenes;
 	}
 	
 
@@ -123,9 +129,9 @@ int main(int argc, const char *argv[])
 	auto geneticFinish = chrono::high_resolution_clock::now();
 	if (progConfig == Genetic || progConfig == All) {
 		cout << "Starting Genetic Algorithm.\n";
-		double score = -DBL_MAX;
+		score = -DBL_MAX;
 		geneticStart = chrono::high_resolution_clock::now();
-		vector<int> response = tableManager.geneticAlgorithm(population, score);
+		response = tableManager.geneticAlgorithm(population, score);
 		geneticFinish = chrono::high_resolution_clock::now();
 		cout << "\n";
 	}
@@ -138,7 +144,9 @@ int main(int argc, const char *argv[])
 		printf("The group %d is at table %d.\n", i, response.at(i));
 	}
 	cout << "\n";
-
+	cout << "Fitness: " << score << "\n";
+	myfile << "Fitness: " << score << "\n";
+	
 	cout << "Time Statistics\n";
 	myfile << "Time spent for Random Population = " << chrono::duration_cast<chrono::nanoseconds>(initialFinish-initialStart).count() << "ns\n";
 	cout << "Time spent for Random Population = " << chrono::duration_cast<chrono::nanoseconds>(initialFinish-initialStart).count() << "ns\n";
@@ -177,4 +185,11 @@ void getOptimalGene(int threadId, TableManager tableManager, int iterationsMax, 
 			<< "Fitness: " << fitness << "\n";
 
 	optimalGenes[threadId] = optimalGene;
+}
+
+vector<int> getSimAnnealResponse(const TableManager &tm, const vector<vector<int> > &optimalGenes, double &score) {
+	double shift;
+	vector<double> eval = tm.evaluatePopulation(optimalGenes, shift);
+	vector<double>::iterator largest_eval_it = max_element(eval.begin(), eval.end());
+	return optimalGenes.at(distance(eval.begin(), largest_eval_it));
 }
