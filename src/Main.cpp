@@ -30,12 +30,12 @@ ofstream myfile;
  */
 int main(int argc, const char *argv[])
 {
-	if (argc != 14)
+	if (argc != 15)
 	{
 		cout << "Invalid arguments: <people_file> <tables_file>\n"
 				<< " <p_cross> <p_mut> <n_elite> <max_stale_gens> <max_generations>\n"
 				<< " <n_gene> <max_iters> <max_temp> <schedule> <max_tries> \n"
-				<< " <mut_type>\n\n";
+				<< " <mut_type> <prog_config>\n\n";
 
 		cout << "\t"
 				<< "n_elite: Number of most fit individuals chosen directly to the next generation.\n";
@@ -55,6 +55,9 @@ int main(int argc, const char *argv[])
 				<< "max_tries: Maximum number of tries for the Simulated Annealing Algorithm.\n";
 		cout << "\t"
 				<< "mut_type: Mutation type.\n";
+		cout << "\t"
+				<< "prog_config: Algorithms to run. 'SimAnneal' for only simulated annealing,"
+				<< "'Genetic' for only genetic, 'All' for simulated annealing followed by genetic.\n";
 
 		return 1;
 	}
@@ -80,6 +83,9 @@ int main(int argc, const char *argv[])
 	MutationTypeMap mutTypeMap;
 	MutationType mutType = mutTypeMap[argv[13]];
 
+	ProgramConfigMap progConfigMap;
+	ProgramConfig progConfig = progConfigMap[argv[14]];
+
 	TableManager tableManager(argv[1], argv[2], p_cross, p_mut, max_stale_gens, max_gens, n_gene, n_elite, max_iters, max_temp, max_tries, schedule, mutType);
 
 	cout << "Calculating initial random population.\n";
@@ -90,29 +96,39 @@ int main(int argc, const char *argv[])
 	cout << "Initial population:\n";
 	printVectorVectorInteger(population);
 
-
-	vector<thread> threads;
+	// declared outside if block so they can be used in the end results
 	auto simAnnealStart = chrono::high_resolution_clock::now();
-	for (unsigned int i = 0; i < population.size(); i++) {
-		optimalGenes.resize(population.size());
-		threads.emplace_back(getOptimalGene, i, tableManager, max_iters, max_temp, max_tries, population[i], schedule);
-	}
-	for (thread &th : threads)
-	{
-		th.join();
-	}
 	auto simAnnealFinish = chrono::high_resolution_clock::now();
+	if (progConfig == SimAnneal || progConfig == All) {
+		vector<thread> threads;
+		simAnnealStart = chrono::high_resolution_clock::now();
+		for (unsigned int i = 0; i < population.size(); i++) {
+			optimalGenes.resize(population.size());
+			threads.emplace_back(getOptimalGene, i, tableManager, max_iters, max_temp, max_tries, population[i], schedule);
+		}
+		for (thread &th : threads)
+		{
+			th.join();
+		}
+		simAnnealFinish = chrono::high_resolution_clock::now();
 
-	cout << "Simulated annealing result:\n";
-	printVectorVectorInteger(optimalGenes);
-	cout << "\n";
+		cout << "Simulated annealing result:\n";
+		printVectorVectorInteger(optimalGenes);
+		cout << "\n";
+	}
+	
 
-	cout << "Starting Genetic Algorithm.\n";
-	double score = -DBL_MAX;
+	// declared outside if block so they can be used in the end results
 	auto geneticStart = chrono::high_resolution_clock::now();
-	vector<int> response = tableManager.geneticAlgorithm(population, score);
 	auto geneticFinish = chrono::high_resolution_clock::now();
-	cout << "\n";
+	if (progConfig == Genetic || progConfig == All) {
+		cout << "Starting Genetic Algorithm.\n";
+		double score = -DBL_MAX;
+		geneticStart = chrono::high_resolution_clock::now();
+		vector<int> response = tableManager.geneticAlgorithm(population, score);
+		geneticFinish = chrono::high_resolution_clock::now();
+		cout << "\n";
+	}
 	
 	cout << "Results\n";
 	cout << "Fitness: " << score << "\n";
@@ -126,11 +142,15 @@ int main(int argc, const char *argv[])
 	cout << "Time Statistics\n";
 	myfile << "Time spent for Random Population = " << chrono::duration_cast<chrono::nanoseconds>(initialFinish-initialStart).count() << "ns\n";
 	cout << "Time spent for Random Population = " << chrono::duration_cast<chrono::nanoseconds>(initialFinish-initialStart).count() << "ns\n";
-	myfile << "Time spent for simmulated anealing algorithm = " << chrono::duration_cast<chrono::nanoseconds>(simAnnealFinish-simAnnealStart).count() << "ns\n";
-	cout << "Time spent for simmulated anealing algorithm = " << chrono::duration_cast<chrono::nanoseconds>(simAnnealFinish-simAnnealStart).count() << "ns\n";
-	myfile << "Time spent for genetic algoritm = " << chrono::duration_cast<chrono::nanoseconds>(geneticFinish-geneticStart).count() << "ns\n";
-	cout << "Time spent for genetic algoritm = " << chrono::duration_cast<chrono::nanoseconds>(geneticFinish-geneticStart).count() << "ns\n";
-
+	if (progConfig == SimAnneal || progConfig == All) {
+		myfile << "Time spent for simmulated anealing algorithm = " << chrono::duration_cast<chrono::nanoseconds>(simAnnealFinish-simAnnealStart).count() << "ns\n";
+		cout << "Time spent for simmulated anealing algorithm = " << chrono::duration_cast<chrono::nanoseconds>(simAnnealFinish-simAnnealStart).count() << "ns\n";
+	}
+	if (progConfig == Genetic || progConfig == All) {
+		myfile << "Time spent for genetic algoritm = " << chrono::duration_cast<chrono::nanoseconds>(geneticFinish-geneticStart).count() << "ns\n";
+		cout << "Time spent for genetic algoritm = " << chrono::duration_cast<chrono::nanoseconds>(geneticFinish-geneticStart).count() << "ns\n";
+	}
+	
 	myfile.close();
 	return 0;
 }
