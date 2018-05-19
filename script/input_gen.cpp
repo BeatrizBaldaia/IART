@@ -6,7 +6,7 @@
 #include <map>
 #include <vector>
 #include <fstream>
-#include "../EnumCreation.h"
+#include "../src/EnumCreation.h"
 
 using namespace std;
 

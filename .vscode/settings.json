@@ -8,6 +8,7 @@
         "istream": "cpp",
         "string_view": "cpp",
         "iosfwd": "cpp",
-        "iostream": "cpp"
+        "iostream": "cpp",
+        "chrono": "cpp"
     }
 }
