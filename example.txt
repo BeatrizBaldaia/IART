@@ -1,3 +1,0 @@
-Time for Random Population = 5044527764ns
-Time for Genetic Algoritm = 7144294931ns
-Fitness: 3257.3

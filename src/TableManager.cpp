@@ -7,10 +7,10 @@ JobAreaMap JobAreaMap;
 ReligionMap ReligionMap;
 HobbyMap HobbyMap;
 
-int FLAG = 0;
+bool popGenTimedOut = false;
 
 
-TableManager::TableManager(const char * peopleFile, const char * tablesFile, double p_cross, double p_mut, int max_stale_gens, int max_gens, int n_gene, int n_elite, int max_iters, int max_temp, int max_tries, CoolingSchedule schedule, MutationType mutType, bool backtrackingInitialGeneration)
+TableManager::TableManager(const char * peopleFile, const char * tablesFile, double p_cross, double p_mut, int max_stale_gens, int max_gens, int n_gene, int n_elite, int max_iters, int max_temp, int max_tries, CoolingSchedule schedule, MutationType mutType)
 {
 	this->p_cross = p_cross;
 	this->p_mut = p_mut;
@@ -23,7 +23,6 @@ TableManager::TableManager(const char * peopleFile, const char * tablesFile, dou
 	this->max_tries = max_tries;
 	this->schedule = schedule;
 	this->mutType = mutType;
-	this->backtrackingInitialGeneration = backtrackingInitialGeneration;
 
 	this->getPeopleFromFile(peopleFile);
 	this->getTablesFromFile(tablesFile);
@@ -344,9 +343,6 @@ void TableManager::swapMutation(vector<vector<int>> &children) const {
 
 	int mutGene = getRandomBetween(0, children.size() - 1);
 	swapMutGene(children[mutGene]);
-
-	int mutTable1 = getRandomBetween(0, children.size() * children[0].size() - 1);
-	int mutTable2 = getRandomBetween(0, children.size() * children[0].size() - 1);
 }
 
 void TableManager::mutateChildren(vector<vector<int> > &children) const
@@ -452,7 +448,7 @@ bool TableManager::invalidTable(int seatsAtTable, int tableInd) const {
 }
 
 void TableManager::getGeneBacktracking(int table, vector<int> gene, vector<int> usedTables, vector<vector<int> > &solutions) const {
-	if(FLAG) {
+	if (popGenTimedOut) {
 		return;
 	}
 	int currGroup = gene.size();
@@ -476,49 +472,29 @@ void TableManager::getGeneBacktracking(int table, vector<int> gene, vector<int> 
 		getGeneBacktracking(i, gene, usedTables, solutions);
 	}
 }
+
 static void handler_alarm(int signo)
 {
-	printf("SignalHandler");
-	FLAG = 1;
-	return;
+	printf("alarm detected\n");
+	popGenTimedOut = true;
 }
+
 vector<vector<int> > TableManager::getRandomPopulation(unsigned int popSize)
 {
 	vector<vector<int> > solutions;
-	cout << backtrackingInitialGeneration << "\n";
 
-	signal( SIGALRM, handler_alarm );
+	signal(SIGALRM, handler_alarm);
 	alarm(5);
-	if (backtrackingInitialGeneration) {
-		vector<int> gene;
-		vector<int> usedTables(this->tables.size(), 0);
-		for (unsigned int i = 0; i < this->tables.size(); i++) {
-			getGeneBacktracking(i, gene, usedTables, solutions);
-		}
-		if(FLAG) {
+	vector<int> gene;
+	vector<int> usedTables(this->tables.size(), 0);
+	for (unsigned int i = 0; i < this->tables.size(); i++) {
+		getGeneBacktracking(i, gene, usedTables, solutions);
+	}
 
-			solutions.clear();
-			for (unsigned int i = 0; i < popSize; i++) {
-				vector<int> gene;
-				for (unsigned int i = 0; i < this->groups.size(); i++) {
-					int table = rand() % this->tables.size();
-					gene.push_back(table);
-				}
-				solutions.push_back(gene);
-			}
-		}
-		if (solutions.size() < popSize) {
-			cout << "The number of possible solutions, " << solutions.size() << ", is lower than the desired population number, " << popSize << ".\n";
-			this->n_gene = solutions.size();
-		}
-
-		while (solutions.size() > popSize) {
-			int ind = rand() % solutions.size();
-			cout << solutions.size() << " | ";
-			solutions.erase(solutions.begin() + ind);
-			cout << "erased\n";
-		}
+	if (!popGenTimedOut) {
+		alarm(0); // cancel alarm if backtracking finished successfully
 	} else {
+		solutions.clear();
 		for (unsigned int i = 0; i < popSize; i++) {
 			vector<int> gene;
 			for (unsigned int i = 0; i < this->groups.size(); i++) {
@@ -528,10 +504,19 @@ vector<vector<int> > TableManager::getRandomPopulation(unsigned int popSize)
 			solutions.push_back(gene);
 		}
 	}
+	if (solutions.size() < popSize) {
+		cout << "The number of possible solutions, " << solutions.size() << ", is lower than the desired population number, " << popSize << ".\n";
+		this->n_gene = solutions.size();
+	}
+
+	while (solutions.size() > popSize) {
+		int ind = rand() % solutions.size();
+		cout << solutions.size() << " | ";
+		solutions.erase(solutions.begin() + ind);
+		cout << "erased\n";
+	}
 
 	return solutions;
-
-
 }
 
 double calcLogTemp(int iteration, double initialTemp, double alpha = 1.0)
