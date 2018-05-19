@@ -94,19 +94,19 @@ int main(int argc, const char *argv[])
 	cout << "Initial population:\n";
 	printVectorVectorInteger(population);
 
-	vector<thread> threads;
-	for (unsigned int i = 0; i < population.size(); i++) {
-		optimalGenes.resize(population.size());
-		threads.emplace_back(getOptimalGene, i, tableManager, max_iters, max_temp, max_tries, population[i], schedule);
-	}
-
-	for (thread &th : threads)
-	{
-		th.join();
-	}
-	cout << "Simulated annealing result:\n";
-	printVectorVectorInteger(optimalGenes);
-	cout << "\n";
+//	vector<thread> threads;
+//	for (unsigned int i = 0; i < population.size(); i++) {
+//		optimalGenes.resize(population.size());
+//		threads.emplace_back(getOptimalGene, i, tableManager, max_iters, max_temp, max_tries, population[i], schedule);
+//	}
+//
+//	for (thread &th : threads)
+//	{
+//		th.join();
+//	}
+//	cout << "Simulated annealing result:\n";
+//	printVectorVectorInteger(optimalGenes);
+//	cout << "\n";
 
 	cout << "Starting Genetic Algorithm.\n";
 	double score = -DBL_MAX;
