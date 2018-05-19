@@ -10,8 +10,6 @@
 #include <iostream>
 #include <stdlib.h>
 
-
-
 #include "Group.h"
 
 void Group::addMember(const Person * newMember){
@@ -31,9 +29,6 @@ AgeGroup getAgeStage(int age) {
 }
 
 Group::Group(int id) : id(id) {
-}
-
-Group::~Group() {
 }
 
 const double* Group::getAgeDistribution() const {
