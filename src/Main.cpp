@@ -83,17 +83,15 @@ int main(int argc, const char *argv[])
 	TableManager tableManager(argv[1], argv[2], p_cross, p_mut, max_stale_gens, max_gens, n_gene, n_elite, max_iters, max_temp, max_tries, schedule, mutType);
 
 	cout << "Calculating initial random population.\n";
-	auto start = chrono::high_resolution_clock::now();
+	auto initialStart = chrono::high_resolution_clock::now();
 	vector<vector<int>> population = tableManager.getRandomPopulation(n_gene);
-	auto finish = chrono::high_resolution_clock::now();
-	myfile << "Time spent for Random Population = " << chrono::duration_cast<chrono::nanoseconds>(finish-start).count() << "ns\n";
-	cout << "Time spent for Random Population = " << chrono::duration_cast<chrono::nanoseconds>(finish-start).count() << "ns\n";
+	auto initialFinish = chrono::high_resolution_clock::now();
 
 	cout << "Initial population:\n";
 	printVectorVectorInteger(population);
 
 	vector<thread> threads;
-	start = chrono::high_resolution_clock::now();
+	auto simAnnealStart = chrono::high_resolution_clock::now();
 	for (unsigned int i = 0; i < population.size(); i++) {
 		optimalGenes.resize(population.size());
 		threads.emplace_back(getOptimalGene, i, tableManager, max_iters, max_temp, max_tries, population[i], schedule);
@@ -102,9 +100,7 @@ int main(int argc, const char *argv[])
 	{
 		th.join();
 	}
-	finish = chrono::high_resolution_clock::now();
-	myfile << "Time spent for simmulated anealing algorithm = " << chrono::duration_cast<chrono::nanoseconds>(finish-start).count() << "ns\n";
-	cout << "Time spent for simmulated anealing algorithm = " << chrono::duration_cast<chrono::nanoseconds>(finish-start).count() << "ns\n";
+	auto simAnnealFinish = chrono::high_resolution_clock::now();
 
 	cout << "Simulated annealing result:\n";
 	printVectorVectorInteger(optimalGenes);
@@ -112,17 +108,28 @@ int main(int argc, const char *argv[])
 
 	cout << "Starting Genetic Algorithm.\n";
 	double score = -DBL_MAX;
-	start = chrono::high_resolution_clock::now();
+	auto geneticStart = chrono::high_resolution_clock::now();
 	vector<int> response = tableManager.geneticAlgorithm(population, score);
-	finish = chrono::high_resolution_clock::now();
-	myfile << "Time spent for genetic algoritm = " << chrono::duration_cast<chrono::nanoseconds>(finish-start).count() << "ns\n";
-	cout << "Time spent for genetic algoritm = " << chrono::duration_cast<chrono::nanoseconds>(finish-start).count() << "ns\n";
-
+	auto geneticFinish = chrono::high_resolution_clock::now();
+	cout << "\n";
+	
+	cout << "Results\n";
+	cout << "Fitness: " << score << "\n";
 	myfile << "Fitness: " << score << "\n";
 	for (unsigned int i = 0; i < response.size(); i++)
 	{
 		printf("The group %d is at table %d.\n", i, response.at(i));
 	}
+	cout << "\n";
+
+	cout << "Time Statistics\n";
+	myfile << "Time spent for Random Population = " << chrono::duration_cast<chrono::nanoseconds>(initialFinish-initialStart).count() << "ns\n";
+	cout << "Time spent for Random Population = " << chrono::duration_cast<chrono::nanoseconds>(initialFinish-initialStart).count() << "ns\n";
+	myfile << "Time spent for simmulated anealing algorithm = " << chrono::duration_cast<chrono::nanoseconds>(simAnnealFinish-simAnnealStart).count() << "ns\n";
+	cout << "Time spent for simmulated anealing algorithm = " << chrono::duration_cast<chrono::nanoseconds>(simAnnealFinish-simAnnealStart).count() << "ns\n";
+	myfile << "Time spent for genetic algoritm = " << chrono::duration_cast<chrono::nanoseconds>(geneticFinish-geneticStart).count() << "ns\n";
+	cout << "Time spent for genetic algoritm = " << chrono::duration_cast<chrono::nanoseconds>(geneticFinish-geneticStart).count() << "ns\n";
+
 	myfile.close();
 	return 0;
 }
