@@ -18,7 +18,3 @@ int Table::getNumberOfSeats() const {
 void Table::setNumberOfSeats(int numberOfSeats) {
 	this->numberOfSeats = numberOfSeats;
 }
-
-Table::~Table() {
-}
-

@@ -13,7 +13,3 @@ Person::Person() {
 	this->religion = Atheism;
 	this->job = Science;
 }
-
-Person::~Person() {
-}
-

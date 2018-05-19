@@ -13,7 +13,6 @@ private:
 	int numberOfSeats;
 public:
 	Table();
-	virtual ~Table();
 	int getNumberOfSeats() const;
 	void setNumberOfSeats(int numberOfSeats);
 };

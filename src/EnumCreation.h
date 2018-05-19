@@ -65,7 +65,6 @@ struct HobbyMap : public map<string, Hobby> {
 		this->operator[]("Shopping") = Shopping;
 		this->operator[]("Traveling") = Traveling;
 	};
-	~HobbyMap(){}
 };
 inline string toString(Hobby v) {
 	switch (v) {
@@ -97,7 +96,6 @@ struct JobAreaMap : public map<string, JobArea> {
 		this->operator[]("Education") = Education;
 		this->operator[]("Politics") = Politics;
 	};
-	~JobAreaMap(){}
 };
 inline string toString(JobArea v) {
 	switch (v) {
@@ -121,7 +119,6 @@ struct ReligionMap : public map<string, Religion>
 		this->operator[]("Hinduism") = Hinduism;
 		this->operator[]("Atheism") = Atheism;
 	};
-	~ReligionMap(){}
 };
 inline string toString(Religion v)
 {
@@ -146,7 +143,6 @@ struct CoolingScheduleMap : public map<const char*, CoolingSchedule>
 		this->operator[]((const char*)"Geometric") = Geometric;
 		this->operator[]((const char*)"Exponential") = Exponential;
 	};
-	~CoolingScheduleMap(){}
 };
 inline const char* toString(CoolingSchedule v)
 {
@@ -167,7 +163,6 @@ struct MutationTypeMap : public map<string, MutationType>
 		this->operator[]("Single") =  Single;
 		this->operator[]("Swap") = Swap;
 	};
-	~MutationTypeMap(){}
 };
 inline const char* toString(MutationType v)
 {
