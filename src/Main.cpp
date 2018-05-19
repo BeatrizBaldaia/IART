@@ -136,8 +136,6 @@ void printVectorVectorInteger(const vector<vector<int>> &v)
 
 void getOptimalGene(int threadId, TableManager tableManager, int iterationsMax, double tempMax, int triesMax, const vector<int> &gene, CoolingSchedule schedule)
 {
-	printf("No corpo da thread\n");
-
 	auto start = chrono::high_resolution_clock::now();
 	vector<int> optimalGene = tableManager.simulatedAnnealingAlgorithm(gene);
 	auto finish = chrono::high_resolution_clock::now();

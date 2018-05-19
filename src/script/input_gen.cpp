@@ -80,7 +80,7 @@ void writePeople(string file_id, const vector<Person> &people) {
 /**
  * Args: file_id max_tables max_table_slots
  */
-int main_(int argc, const char *argv[]) {
+int main(int argc, const char *argv[]) {
 	if (argc != 4) {
 		cerr << argv[0] << " file_id max_tables max_table_slots\n";
 		exit(1);
