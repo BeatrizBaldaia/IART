@@ -69,9 +69,6 @@ public:
 	int getId() const {
 		return id;
 	}
-	void setId(int id) {
-		this->id = id;
-	}
 	const vector<const Person*>& getMembers() const {
 		return members;
 	}
