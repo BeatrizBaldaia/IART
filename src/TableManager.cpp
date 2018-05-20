@@ -139,9 +139,8 @@ void TableManager::getPeopleFromFile(const char *filename)
 		}
 		myfile.close();
 	}
-	myfile.close();
-	return;
 }
+
 void TableManager::getTablesFromFile(const char *filename)
 {
 	fstream myfile;
