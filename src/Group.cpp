@@ -77,7 +77,7 @@ void Group::calculate_attributes() {
 	}
 }
 
-double Group::func_afinity(const Group &other) const {
+double Group::func_affinity(const Group &other) const {
 	return this->eval_age(other)
 			+ this->eval_jobs(other)
 			+ this->eval_hobbies(other)

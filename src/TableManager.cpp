@@ -73,7 +73,7 @@ void TableManager::calcGroupsAffinity()
 	{
 		for (unsigned int col = row + 1; col < groups.size(); col++)
 		{
-			groupsAffinity[row][col] = groups.at(row).func_afinity(groups.at(col));
+			groupsAffinity[row][col] = groups.at(row).func_affinity(groups.at(col));
 		}
 	}
 }
