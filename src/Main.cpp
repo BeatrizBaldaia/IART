@@ -21,7 +21,7 @@ void getOptimalGene(int threadId, TableManager tableManager, int iterationsMax, 
 vector<int> getSimAnnealResponse(const TableManager &tm, const vector<vector<int> > &optimalGenes, double &score);
 
 vector<vector<int>> optimalGenes;
-ofstream myfile;
+ofstream results;
 
 void printUsage() {
 		cout << "Invalid arguments: <people_file> <tables_file>\n"
@@ -73,8 +73,8 @@ int main(int argc, const char *argv[])
 	}
 	srand(time(NULL));
 
-	  myfile.open ("example.txt",ofstream::app);
-	  if(!myfile.is_open()) return 9;
+	  results.open("example.txt",ofstream::app);
+	  if (!results.is_open()) return 9;
 
 	double p_cross = atof(argv[3]);
 	double p_mut = atof(argv[4]);
@@ -114,7 +114,7 @@ int main(int argc, const char *argv[])
 	vector<int> response;
 	double score;
 
-	// declared outside if block so they can be used in the end results
+	// declared outside 'if' block so they can be used in the end results
 	auto simAnnealStart = chrono::high_resolution_clock::now();
 	auto simAnnealFinish = chrono::high_resolution_clock::now();
 	if (progConfig == SimAnneal || progConfig == All) {
@@ -139,7 +139,7 @@ int main(int argc, const char *argv[])
 	}
 	
 
-	// declared outside if block so they can be used in the end results
+	// declared outside 'if' block so they can be used in the end results
 	auto geneticStart = chrono::high_resolution_clock::now();
 	auto geneticFinish = chrono::high_resolution_clock::now();
 	if (progConfig == Genetic || progConfig == All) {
@@ -153,28 +153,28 @@ int main(int argc, const char *argv[])
 	
 	cout << "Results\n";
 	cout << "Fitness: " << score << "\n";
-	myfile << "Fitness: " << score << "\n";
+	results << "Fitness: " << score << "\n";
 	for (unsigned int i = 0; i < response.size(); i++)
 	{
 		printf("The group %d is at table %d.\n", i, response.at(i));
 	}
 	cout << "\n";
 	cout << "Fitness: " << score << "\n";
-	myfile << "Fitness: " << score << "\n";
+	results << "Fitness: " << score << "\n";
 	
 	cout << "Time Statistics\n";
-	myfile << "Time spent for Random Population = " << chrono::duration_cast<chrono::nanoseconds>(initialFinish-initialStart).count() << "ns\n";
+	results << "Time spent for Random Population = " << chrono::duration_cast<chrono::nanoseconds>(initialFinish-initialStart).count() << "ns\n";
 	cout << "Time spent for Random Population = " << chrono::duration_cast<chrono::nanoseconds>(initialFinish-initialStart).count() << "ns\n";
 	if (progConfig == SimAnneal || progConfig == All) {
-		myfile << "Time spent for simmulated anealing algorithm = " << chrono::duration_cast<chrono::nanoseconds>(simAnnealFinish-simAnnealStart).count() << "ns\n";
+		results << "Time spent for simmulated anealing algorithm = " << chrono::duration_cast<chrono::nanoseconds>(simAnnealFinish-simAnnealStart).count() << "ns\n";
 		cout << "Time spent for simmulated anealing algorithm = " << chrono::duration_cast<chrono::nanoseconds>(simAnnealFinish-simAnnealStart).count() << "ns\n";
 	}
 	if (progConfig == Genetic || progConfig == All) {
-		myfile << "Time spent for genetic algoritm = " << chrono::duration_cast<chrono::nanoseconds>(geneticFinish-geneticStart).count() << "ns\n";
+		results << "Time spent for genetic algoritm = " << chrono::duration_cast<chrono::nanoseconds>(geneticFinish-geneticStart).count() << "ns\n";
 		cout << "Time spent for genetic algoritm = " << chrono::duration_cast<chrono::nanoseconds>(geneticFinish-geneticStart).count() << "ns\n";
 	}
 	
-	myfile.close();
+	results.close();
 	return 0;
 }
 
@@ -196,7 +196,7 @@ void getOptimalGene(int threadId, TableManager tableManager, int iterationsMax, 
 	vector<int> optimalGene = tableManager.simulatedAnnealingAlgorithm(gene);
 	auto finish = chrono::high_resolution_clock::now();
 	double fitness = tableManager.fitnessFunction(optimalGene);
-	myfile << "Time for Simulated Annealing = " << chrono::duration_cast<chrono::nanoseconds>(finish-start).count() << "ns\n"
+	results << "Time for Simulated Annealing = " << chrono::duration_cast<chrono::nanoseconds>(finish-start).count() << "ns\n"
 			<< "Fitness: " << fitness << "\n";
 
 	optimalGenes[threadId] = optimalGene;

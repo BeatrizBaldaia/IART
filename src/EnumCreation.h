@@ -7,6 +7,11 @@
 
 using namespace std;
 
+/**
+ * SimAnneal: Only run simulated annealing.
+ * Genetic: Only run genetic algorithm.
+ * All: Run simulated annealing followed by genetic algorithm.
+ */
 enum ProgramConfig {
 	SimAnneal,
 	Genetic,
