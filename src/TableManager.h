@@ -54,12 +54,12 @@ public:
 	void createGroups();
 
 	/**
-	 * Calculates the fitness value of one possible solution
-	 * Sum of affinities of group pairs sharing the same table minus penalty
-	 * Incomplete result for genetic algorithm: Can be negative, must be summed afterwards
-	 * TODO: Missing maximization of empty tables? verificar se uma mesa tem pessoas a mais
+	 * Calculates the fitness value of one possible solution.
+	 * Sum of affinities of group pairs sharing the same table minus penalty.
+	 * Incomplete result for genetic algorithm: Can be negative, must be summed afterwards.
 	 */
 	double fitnessFunction (const vector<int> &solution) const;
+	
 	vector<int> elitismSelection(const vector<double> &eval) const;
 	vector<int> selectParents(const vector<vector<int> > &population, vector<double> eval, int nSelection) const;
 	vector<int> getGenesForCrossover(vector<int> &uncrossedParentInds, int nGenes) const;

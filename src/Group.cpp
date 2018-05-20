@@ -77,12 +77,6 @@ void Group::calculate_attributes() {
 	}
 }
 
-/**
- * Calculates a group's affinity with another.
- * Takes into account their age, job, hobby and religious distributions.
- * @param other Group to compare this one with.
- * @return Affinity.
- */
 double Group::func_afinity(const Group &other) const {
 	return this->eval_age(other)
 			+ this->eval_jobs(other)
@@ -90,11 +84,6 @@ double Group::func_afinity(const Group &other) const {
 			+ this->eval_religions(other);
 }
 
-/**
- * Calculates a group's age affinity with another.
- * @param other Group to compare this one with.
- * @return Age affinity.
- */
 double Group::eval_age(const Group &other) const {
 	double res = 1;
 	int notNullFields = 0;
@@ -120,11 +109,6 @@ double Group::eval_age(const Group &other) const {
 	return res;
 }
 
-/**
- * Calculates a group's job affinity with another.
- * @param other Group to compare this one with.
- * @return Job affinity.
- */
 double Group::eval_jobs(const Group &other) const {
 	double res = 1;
 	int notNullFields = 0;
@@ -150,11 +134,6 @@ double Group::eval_jobs(const Group &other) const {
 	return res;
 }
 
-/**
- * Calculates a group's hobby affinity with another.
- * @param other Group to compare this one with.
- * @return Hobby affinity.
- */
 double Group::eval_hobbies(const Group &other) const {
 	double res = 1;
 	int notNullFields = 0;
@@ -181,11 +160,6 @@ double Group::eval_hobbies(const Group &other) const {
 
 }
 
-/**
- * Calculates a group's religious affinity with another.
- * @param other Group to compare this one with.
- * @return Religious affinity.
- */
 double Group::eval_religions(const Group &other) const {
 	double res = 1;
 	int notNullFields = 0;
@@ -210,5 +184,3 @@ double Group::eval_religions(const Group &other) const {
 	}
 	return res;
 }
-
-

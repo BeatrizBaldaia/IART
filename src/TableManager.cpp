@@ -65,7 +65,7 @@ vector<double> TableManager::evaluatePopulation(const vector<vector<int> > &pop,
 	return res;
 }
 /**
- * Generate the affinity matrix (with all affinities between groups)
+ * Generate the affinity matrix (with all affinities between groups).
  */
 void TableManager::calcGroupsAffinity()
 {
@@ -78,7 +78,7 @@ void TableManager::calcGroupsAffinity()
 	}
 }
 
-double TableManager::fitnessFunction (const vector<int> &solution) const
+double TableManager::fitnessFunction(const vector<int> &solution) const
 {
 	double res = 0, penalty = -pow(10, 4);
 	vector<int> tables = fillTables(solution);
@@ -421,13 +421,10 @@ vector<int> TableManager::fillTables(const vector<int> &gene) const
 
 bool TableManager::invalidGene(const vector<int> &tables) const
 {
-
 	for (unsigned int i = 0; i < tables.size(); i++)
 	{
 		if (this->tables[i].getNumberOfSeats() < tables[i])
 		{
-			//cerr << "Invalid values: The number of people is higher than the number of seats.\n";
-			//cerr << "\tPeople: " << tables[i] << " ; Seats: " << this->tables[i].getNumberOfSeats() << endl;
 			return true;
 		}
 	}
@@ -465,7 +462,6 @@ void TableManager::getGeneBacktracking(int table, vector<int> gene, vector<int> 
 	gene.push_back(table);
 	if (gene.size() == this->groups.size()) {
 		solutions.push_back(gene);
-		//		cout << "valid gene\n";
 		return;
 	}
 	for (unsigned int i = 0; i < this->tables.size(); i++) {
@@ -511,9 +507,7 @@ vector<vector<int> > TableManager::getRandomPopulation(unsigned int popSize)
 
 	while (solutions.size() > popSize) {
 		int ind = rand() % solutions.size();
-		cout << solutions.size() << " | ";
 		solutions.erase(solutions.begin() + ind);
-		cout << "erased\n";
 	}
 
 	return solutions;
