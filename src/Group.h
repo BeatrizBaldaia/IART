@@ -35,7 +35,7 @@ public:
 	 * @param other Group to compare this one with.
 	 * @return Affinity.
 	 */
-	double func_afinity(const Group &other) const;//afinidade entre dois grupos
+	double func_affinity(const Group &other) const;//afinidade entre dois grupos
 
 	/**
 	 * Calculates a group's age affinity with another.
