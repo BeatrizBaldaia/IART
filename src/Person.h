@@ -32,7 +32,6 @@ private:
 	Religion religion;
 public:
 	Person();
-	double eval_func(Person person); //afinidade entre duas pessoas
 
 	int getAge() const {
 		return age;
